@@ -165,6 +165,7 @@ function vanDyke(
   topRow: number,
   bottomRow: number,
   pleats: number,
+  startAt: "upper" | "lower" = "lower",
 ): PlateCourse {
   const segments: CourseSegment[] = [];
   let previousRight: CoursePoint | undefined;
@@ -172,7 +173,8 @@ function vanDyke(
   for (let leftPleat = 1; leftPleat < pleats; leftPleat += 4) {
     const rightPleat = leftPleat + 1;
     if (rightPleat > pleats) break;
-    const row = bindIndex % 2 ? topRow : bottomRow;
+    const startsLower = startAt === "lower";
+    const row = (bindIndex % 2 === 0) === startsLower ? bottomRow : topRow;
     const left = { pleat: leftPleat, row };
     const right = { pleat: rightPleat, row };
     if (previousRight) {
@@ -252,6 +254,110 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
         cable(1, plate),
         cord("outline", "Outline stitch · thread above", "outline-stitch", first, 2, plate.pleats),
         cable(3, plate, first, "cable-3"),
+      ];
+    case "wave-of-three-between-cables":
+      return [cable(1, plate), steppedWave("wave-three", "Wave of three with turn closures", second, 3, 4, plate.pleats, 3), cable(6, plate)];
+    case "outline-framed-baby-wave":
+      return [
+        cord("outline-1", "Upper outline frame · thread above", "outline-stitch", first, 1, plate.pleats),
+        steppedWave("baby-wave", "Wave of two with turn closures", second, 2, 3, plate.pleats, 2),
+        cord("outline-4", "Lower outline frame · thread above", "outline-stitch", first, 4, plate.pleats),
+      ];
+    case "stem-framed-wave-of-three":
+      return [
+        cord("stem-1", "Upper stem frame · thread below", "stem-stitch-smocking", first, 1, plate.pleats),
+        steppedWave("wave-three", "Wave of three with turn closures", second, 3, 4, plate.pleats, 3),
+        cord("stem-6", "Lower stem frame · thread below", "stem-stitch-smocking", first, 6, plate.pleats),
+      ];
+    case "opposed-baby-wave-band":
+      return [
+        cable(1, plate),
+        steppedWave("upper-baby-wave", "Upper baby wave", second, 2, 3, plate.pleats, 2),
+        steppedWave("lower-baby-wave", "Opposed lower baby wave", second, 5, 6, plate.pleats, 2, "upper"),
+        cable(7, plate, first, "cable-7"),
+      ];
+    case "five-row-control-band":
+      return [
+        cable(1, plate),
+        cord("outline", "Outline · thread above", "outline-stitch", second, 2, plate.pleats),
+        cable(3, plate, first, "cable-3"),
+        cord("stem", "Stem · thread below", "stem-stitch-smocking", second, 4, plate.pleats),
+        cable(5, plate, first, "cable-5"),
+      ];
+    case "triple-cable-border":
+      return [cable(1, plate), cable(2, plate, first, "cable-2"), cable(3, plate, first, "cable-3")];
+    case "stem-cuff-band":
+      return [
+        cable(1, plate),
+        cord("stem", "Center stem cord · thread below", "stem-stitch-smocking", second, 2, plate.pleats),
+        cable(3, plate, first, "cable-3"),
+      ];
+    case "small-diamond-trellis":
+      return [cable(1, plate), ...trellisPair("small-trellis", "Small diamond trellis", second, 2, 3, 4, plate.pleats, 2), cable(6, plate)];
+    case "medium-diamond-trellis":
+      return [cable(1, plate), ...trellisPair("medium-trellis", "Medium diamond trellis", second, 2, 4, 6, plate.pleats, 3), cable(7, plate)];
+    case "double-small-trellis":
+      return [
+        cable(1, plate),
+        ...trellisPair("upper-trellis", "Upper small trellis", second, 2, 3, 4, plate.pleats, 2),
+        ...trellisPair("lower-trellis", "Lower small trellis", second, 6, 7, 8, plate.pleats, 2),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "cable-divided-trellis":
+      return [
+        cable(1, plate),
+        ...trellisPair("upper-trellis", "Upper small trellis", second, 2, 3, 4, plate.pleats, 2),
+        cable(5, plate, first, "cable-5"),
+        ...trellisPair("lower-trellis", "Lower small trellis", second, 6, 7, 8, plate.pleats, 2),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "bonnet-trellis-band":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        ...trellisPair("bonnet-trellis", "Small bonnet trellis", second, 2, 3, 4, plate.pleats, 2),
+        cord("outline-5", "Lower outline frame", "outline-stitch", first, 5, plate.pleats),
+      ];
+    case "two-tier-honeycomb-yoke":
+      return [
+        cable(1, plate),
+        honeycomb("upper-honeycomb", "Upper overlapping honeycomb", second, 2, 3, plate.pleats),
+        honeycomb("lower-honeycomb", "Lower overlapping honeycomb", second, 5, 6, plate.pleats),
+        cable(8, plate, first, "cable-8"),
+      ];
+    case "cable-divided-honeycomb":
+      return [
+        cable(1, plate),
+        honeycomb("upper-honeycomb", "Upper overlapping honeycomb", second, 2, 3, plate.pleats),
+        cable(4, plate, first, "cable-4"),
+        honeycomb("lower-honeycomb", "Lower overlapping honeycomb", second, 5, 6, plate.pleats),
+        cable(7, plate, first, "cable-7"),
+      ];
+    case "outline-framed-honeycomb-band":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        honeycomb("honeycomb", "Overlapping honeycomb", second, 2, 3, plate.pleats),
+        cord("outline-4", "Lower outline frame", "outline-stitch", first, 4, plate.pleats),
+      ];
+    case "trellis-and-honeycomb-yoke":
+      return [
+        cable(1, plate),
+        ...trellisPair("small-trellis", "Small upper trellis", second, 2, 3, 4, plate.pleats, 2),
+        honeycomb("honeycomb", "Lower overlapping honeycomb", second, 6, 7, plate.pleats),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "outline-framed-van-dyke":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        vanDyke("van-dyke", "Pair-locked Van Dyke chevron", second, 3, 4, plate.pleats),
+        cord("outline-6", "Lower outline frame", "outline-stitch", first, 6, plate.pleats),
+      ];
+    case "double-van-dyke-band":
+      return [
+        cable(1, plate),
+        vanDyke("upper-van-dyke", "Upper Van Dyke chevron", second, 3, 4, plate.pleats),
+        cable(5, plate, first, "cable-5"),
+        vanDyke("lower-van-dyke", "Opposed lower Van Dyke chevron", second, 6, 7, plate.pleats, "upper"),
+        cable(9, plate, first, "cable-9"),
       ];
     default:
       return [];
