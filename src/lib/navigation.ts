@@ -2,12 +2,11 @@ import type { ContentSection } from "./types";
 
 export const mainNav = [
   { href: "/stitches/", label: "Stitches" },
+  { href: "/plates/", label: "Plates" },
   { href: "/pleater/", label: "Read 16 Pleater" },
+  { href: "/embroidery/", label: "Embroidery" },
   { href: "/theory/", label: "Theory" },
   { href: "/fabrics/", label: "Fabrics" },
-  { href: "/threads/", label: "Threads" },
-  { href: "/needles/", label: "Needles" },
-  { href: "/embroidery/", label: "Embroidery" },
   { href: "/garments/", label: "Garments" },
   { href: "/design/", label: "Design" },
   { href: "/search/", label: "Search" },
@@ -83,6 +82,14 @@ export const sections: ContentSection[] = [
     description:
       "Design your own plates: pleat counts, repeats, centering, borders, and mirror layouts.",
     href: "/design/",
+    status: "complete",
+  },
+  {
+    slug: "plates",
+    title: "Smocking Plate Library",
+    description:
+      "Digitized teaching plates with graphs, thread keys, finished schematics, and instructions.",
+    href: "/plates/",
     status: "complete",
   },
 ];

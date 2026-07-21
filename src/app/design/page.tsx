@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "Design Planning",
   description: "Design smocking plates: pleat counts, repeats, centering, borders, and mirror layouts.",
@@ -46,11 +48,16 @@ export default function DesignPage() {
         Watch stitch direction: cables must maintain their over/under logic when mirrored.
       </p>
 
-      <h2>Plate library (roadmap)</h2>
+      <h2>Plate library</h2>
       <p>
-        Classic plates will be digitized here with graph, finished example, thread colors,
-        instructions, and difficulty — following the Cable Stitch quality bar. Contributions
-        welcome once the illustration system is extended.
+        Digitized teaching plates live in the{" "}
+        <Link href="/plates/">Smocking Plate Library</Link> — each with an interactive graph, thread
+        colors, finished schematic, instructions, and links to the stitch chapters you need.
+      </p>
+      <p>
+        <Link href="/plates/cable-borders/">Start with Cable Borders</Link>, then{" "}
+        <Link href="/plates/wave-between-cables/">Wave Between Cables</Link>, then{" "}
+        <Link href="/plates/classic-trellis/">Classic Trellis</Link>.
       </p>
     </article>
   );

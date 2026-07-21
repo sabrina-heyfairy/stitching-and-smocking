@@ -16,6 +16,7 @@ const types: { value: "" | SearchItem["type"]; label: string }[] = [
   { value: "garment", label: "Garment" },
   { value: "theory", label: "Theory" },
   { value: "embroidery", label: "Embroidery" },
+  { value: "plate", label: "Plate / design" },
 ];
 
 export default function SearchPage() {

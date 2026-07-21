@@ -2,6 +2,7 @@ import type { SearchItem } from "./types";
 import { stitches } from "./stitches";
 import { sections } from "./navigation";
 import { embroideryStitches } from "./embroidery";
+import { plates } from "./plates";
 
 export const searchIndex: SearchItem[] = [
   ...stitches.map((s) => ({
@@ -22,6 +23,23 @@ export const searchIndex: SearchItem[] = [
     tags: [...s.uses, s.difficulty, "embroidery", "surface", "motif"],
     difficulty: s.difficulty,
   })),
+  ...plates.map((p) => ({
+    id: `plate-${p.slug}`,
+    title: p.title,
+    description: p.description,
+    href: `/plates/${p.slug}/`,
+    type: "plate" as const,
+    tags: ["plate", "graph", p.difficulty, ...p.garments, ...p.stitchesUsed, p.subtitle],
+    difficulty: p.difficulty,
+  })),
+  {
+    id: "plates-index",
+    title: "Smocking Plate Library",
+    description: "Digitized teaching plates with graphs, thread keys, and instructions.",
+    href: "/plates/",
+    type: "plate",
+    tags: ["plates", "library", "design", "graph"],
+  },
   {
     id: "embroidery-motifs",
     title: "Decorative Motifs",
@@ -63,7 +81,13 @@ export const searchIndex: SearchItem[] = [
     tags: ["oil", "lubrication", "cleaning", "storage", "maintenance"],
   },
   ...sections
-    .filter((s) => s.slug !== "stitches" && s.slug !== "pleater" && s.slug !== "embroidery")
+    .filter(
+      (s) =>
+        s.slug !== "stitches" &&
+        s.slug !== "pleater" &&
+        s.slug !== "embroidery" &&
+        s.slug !== "plates",
+    )
     .map((s) => ({
       id: `section-${s.slug}`,
       title: s.title,
@@ -140,66 +164,12 @@ export const searchIndex: SearchItem[] = [
     difficulty: "beginner",
   },
   {
-    id: "problem-wave-count",
-    title: "Uneven wave count",
-    description: "When ascent and descent stitch counts don’t match and peaks drift.",
-    href: "/stitches/wave-stitch/#mistakes",
-    type: "stitch",
-    tags: ["problem", "wave", "counting", "chevon", "mistakes"],
-    difficulty: "beginner",
-  },
-  {
     id: "problem-honeycomb-cells",
     title: "Honeycomb cells won’t open",
     description: "Fix sealed cells from stacked binds or over-tight tension without ripping the whole field.",
     href: "/stitches/honeycomb/#troubleshooting",
     type: "stitch",
     tags: ["problem", "honeycomb", "elastic", "cells", "troubleshooting"],
-    difficulty: "intermediate",
-  },
-  {
-    id: "problem-honeycomb-stagger",
-    title: "Honeycomb stagger lost",
-    description: "Stacked binds on both rows create tubes instead of hexagons.",
-    href: "/stitches/honeycomb/#mistakes",
-    type: "stitch",
-    tags: ["problem", "honeycomb", "stagger", "mistakes"],
-    difficulty: "intermediate",
-  },
-  {
-    id: "problem-trellis-diamonds",
-    title: "Trellis diamonds won’t close",
-    description: "Mirror waves that don’t meet — fix shared vertices without ripping both rows.",
-    href: "/stitches/trellis/#troubleshooting",
-    type: "stitch",
-    tags: ["problem", "trellis", "diamonds", "wave", "troubleshooting"],
-    difficulty: "intermediate",
-  },
-  {
-    id: "problem-van-dyke",
-    title: "Van Dyke looks like plain wave",
-    description: "Peaks and valleys missing the two-pleat catch bind.",
-    href: "/stitches/van-dyke/#troubleshooting",
-    type: "stitch",
-    tags: ["problem", "van dyke", "chevron", "bind", "troubleshooting"],
-    difficulty: "advanced",
-  },
-  {
-    id: "problem-stem-vs-cable",
-    title: "Stem vs cable confusion",
-    description: "Twisted rope when you wanted a braid — needle side consistency.",
-    href: "/stitches/stem-stitch-smocking/#mistakes",
-    type: "stitch",
-    tags: ["problem", "stem", "cable", "mistakes"],
-    difficulty: "beginner",
-  },
-  {
-    id: "problem-surface-honeycomb",
-    title: "Surface honeycomb too deep",
-    description: "When the flatter lattice pulls into classic honeycomb cells.",
-    href: "/stitches/surface-honeycomb/#troubleshooting",
-    type: "stitch",
-    tags: ["problem", "surface honeycomb", "honeycomb", "troubleshooting"],
     difficulty: "intermediate",
   },
   {

@@ -48,7 +48,7 @@ export interface SearchItem {
   title: string;
   description: string;
   href: string;
-  type: "stitch" | "pleater" | "fabric" | "thread" | "needle" | "garment" | "theory" | "embroidery";
+  type: "stitch" | "pleater" | "fabric" | "thread" | "needle" | "garment" | "theory" | "embroidery" | "plate";
   tags: string[];
   difficulty?: Difficulty;
 }

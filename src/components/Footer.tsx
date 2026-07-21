@@ -20,6 +20,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/plates/" className="text-ink-muted no-underline hover:text-ink">
+                Plate library
+              </Link>
+            </li>
+            <li>
               <Link href="/pleater/" className="text-ink-muted no-underline hover:text-ink">
                 Read 16 pleater
               </Link>
