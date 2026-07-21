@@ -40,8 +40,9 @@ npm run lint
 | **Van Dyke Stitch** chapter | Complete |
 | **Surface Honeycomb** chapter | Complete |
 | **Embroidery companion** (11 stitches + motifs guide) | Complete |
-| **Smocking Plate Library** (10 teaching plates) | Complete |
+| **Smocking Plate Library** (12 teaching plates) | Complete |
 | **Garment construction** (visual assembly guides) | Complete |
+| **Practice Path** curriculum + materials visuals | Complete |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, garments, design | Foundation chapters |
 

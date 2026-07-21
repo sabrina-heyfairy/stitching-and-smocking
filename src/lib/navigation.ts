@@ -1,14 +1,17 @@
 import type { ContentSection } from "./types";
 
 export const mainNav = [
+  { href: "/learn/", label: "Practice Path" },
   { href: "/stitches/", label: "Stitches" },
   { href: "/plates/", label: "Plates" },
-  { href: "/pleater/", label: "Read 16 Pleater" },
+  { href: "/pleater/", label: "Read 16" },
   { href: "/embroidery/", label: "Embroidery" },
-  { href: "/theory/", label: "Theory" },
-  { href: "/fabrics/", label: "Fabrics" },
   { href: "/garments/", label: "Garments" },
+  { href: "/fabrics/", label: "Fabrics" },
+  { href: "/threads/", label: "Threads" },
+  { href: "/needles/", label: "Needles" },
   { href: "/design/", label: "Design" },
+  { href: "/theory/", label: "Theory" },
   { href: "/search/", label: "Search" },
 ] as const;
 
@@ -90,6 +93,14 @@ export const sections: ContentSection[] = [
     description:
       "Digitized teaching plates with graphs, thread keys, finished schematics, and instructions.",
     href: "/plates/",
+    status: "complete",
+  },
+  {
+    slug: "learn",
+    title: "Practice Path",
+    description:
+      "Beginner-to-advanced curriculum linking pleater, stitches, plates, embroidery, and first garments.",
+    href: "/learn/",
     status: "complete",
   },
 ];

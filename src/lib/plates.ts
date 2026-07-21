@@ -441,6 +441,75 @@ export const plates: PlateMeta[] = [
       return cells;
     })(),
   },
+  {
+    slug: "sampler-five-row",
+    title: "Five-Row Sampler",
+    subtitle: "Cable · outline · wave · stem · cable",
+    difficulty: "beginner",
+    garments: ["wall sampler", "teaching strip", "gift sampler"],
+    rows: 5,
+    pleats: 24,
+    repeatPleats: 8,
+    threads: [
+      { id: "c", name: "Burgundy", hex: burgundy, note: "Cables" },
+      { id: "m", name: "Dusty blue", hex: dusty, note: "Middle rows" },
+    ],
+    stitchesUsed: ["cable-stitch", "outline-stitch", "wave-stitch", "stem-stitch-smocking"],
+    description:
+      "A single strip that practices four foundation stitches under matching cable borders — ideal with the Practice Path.",
+    instructions: [
+      "Cable row 1 in burgundy.",
+      "Outline stitch across row 2 in dusty blue.",
+      "Baby wave (wave of 2) across row 3 — keep ascent and descent counts equal.",
+      "Stem stitch across row 4 in dusty blue.",
+      "Cable row 5 in burgundy.",
+    ],
+    tips: [
+      "Label the strip with thread brand and needle size.",
+      "Compare outline (row 2) vs stem (row 4) side by side.",
+    ],
+    cells: (() => {
+      const cells: PlateMeta["cells"] = {};
+      fillRow(cells, 1, 24, "cable", burgundy);
+      fillRow(cells, 2, 24, "outline", dusty);
+      for (let p = 1; p <= 24; p++) {
+        const pos = (p - 1) % 4;
+        if (pos === 0 || pos === 3) cells[cellKey(3, p)] = { kind: "wave-down", color: dusty };
+        else cells[cellKey(3, p)] = { kind: "wave-up", color: dusty };
+      }
+      fillRow(cells, 4, 24, "stem", dusty);
+      fillRow(cells, 5, 24, "cable", burgundy);
+      return cells;
+    })(),
+  },
+  {
+    slug: "sleeve-band-mini",
+    title: "Sleeve Band Mini",
+    subtitle: "Three-row cuff control band",
+    difficulty: "beginner",
+    garments: ["sleeve band", "cuff", "sock top practice"],
+    rows: 3,
+    pleats: 20,
+    repeatPleats: 1,
+    threads: [{ id: "a", name: "Muted teal", hex: teal }],
+    stitchesUsed: ["cable-stitch", "outline-stitch"],
+    description:
+      "A shallow band for sleeves: cable, outline, cable — enough control without bulk.",
+    instructions: [
+      "Cable row 1.",
+      "Outline row 2.",
+      "Cable row 3.",
+      "Leave plain fabric beyond the band for seams.",
+    ],
+    tips: ["See Garments → Sleeves for how the band sets into an armseye."],
+    cells: (() => {
+      const cells: PlateMeta["cells"] = {};
+      fillRow(cells, 1, 20, "cable", teal);
+      fillRow(cells, 2, 20, "outline", teal);
+      fillRow(cells, 3, 20, "cable", teal);
+      return cells;
+    })(),
+  },
 ];
 
 export function getPlate(slug: string): PlateMeta | undefined {

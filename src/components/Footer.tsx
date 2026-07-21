@@ -15,6 +15,11 @@ export function Footer() {
           <p className="label-caps mb-3">Explore</p>
           <ul className="space-y-2 text-sm">
             <li>
+              <Link href="/learn/" className="text-ink-muted no-underline hover:text-ink">
+                Practice Path
+              </Link>
+            </li>
+            <li>
               <Link href="/stitches/" className="text-ink-muted no-underline hover:text-ink">
                 Stitch encyclopedia
               </Link>

@@ -41,6 +41,14 @@ export const searchIndex: SearchItem[] = [
     tags: ["plates", "library", "design", "graph"],
   },
   {
+    id: "learn-path",
+    title: "Practice Path",
+    description:
+      "Guided curriculum from first pleat to first bishop — checklists linking stitches, plates, and garments.",
+    href: "/learn/",
+    type: "theory",
+    tags: ["learn", "practice", "curriculum", "sampler", "beginner", "checklist"],
+  },  {
     id: "embroidery-motifs",
     title: "Decorative Motifs",
     description: "Flower, bow, vine, monogram, and holiday motif recipes for smocked garments.",

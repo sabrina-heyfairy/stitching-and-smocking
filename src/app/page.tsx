@@ -39,10 +39,16 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/stitches/cable-stitch/"
+                href="/learn/"
                 className="rounded bg-burgundy px-5 py-2.5 text-sm font-medium text-paper no-underline transition hover:bg-burgundy-soft"
               >
-                Start with Cable Stitch
+                Start the Practice Path
+              </Link>
+              <Link
+                href="/stitches/cable-stitch/"
+                className="rounded border border-border bg-paper/80 px-5 py-2.5 text-sm font-medium text-ink no-underline transition hover:bg-cream-deep"
+              >
+                Cable Stitch
               </Link>
               <Link
                 href="/pleater/"
