@@ -108,7 +108,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["children's bishop", "day gown yoke", "sleeve band"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 8,
+    repeatPleats: 10,
     threads: [
       { id: "border", name: "Burgundy cable", hex: burgundy, note: "Borders" },
       { id: "wave", name: "Dusty blue wave", hex: dusty, note: "Field" },
@@ -143,7 +143,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["heirloom bishop", "christening yoke", "special-occasion yoke"],
     rows: 7,
     pleats: 24,
-    repeatPleats: 8,
+    repeatPleats: 10,
     threads: [
       { id: "cable", name: "Soft gold cable", hex: gold },
       { id: "trellis", name: "Muted teal trellis", hex: teal },
@@ -186,7 +186,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["bishop center", "comfortable yoke", "sleeve insert"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 4,
+    repeatPleats: 2,
     threads: [
       { id: "cable", name: "Burgundy cable", hex: burgundy },
       { id: "honey", name: "Sage honeycomb", hex: sage },
@@ -196,8 +196,8 @@ const curatedPlates: PlateMeta[] = [
       "Cable borders with a staggered honeycomb field for give across the chest — classic comfort plate.",
     instructions: [
       "Cable row 1 and row 6 in burgundy.",
-      "On rows 3–4, work classic honeycomb in sage: bind pairs on the lower row, travel up, bind on the upper, travel down.",
-      "Keep the stagger true — never stack binds on the same two mountains on both rows.",
+      "On row 4, bind pleats 1–2; travel inside pleat 2 to row 3, then bind the overlapping pair 2–3.",
+      "Continue by sharing the last pleat of each pair with the next pair, alternating between rows 4 and 3.",
       "Ease the panel sideways after a few repeats to confirm cells open.",
       "Leave rows 2 and 5 empty.",
     ],
@@ -254,19 +254,20 @@ const curatedPlates: PlateMeta[] = [
     garments: ["christening", "heirloom bishop", "exhibition sampler"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 8,
+    repeatPleats: 2,
     threads: [
       { id: "cable", name: "Gold cable", hex: gold },
       { id: "vd", name: "Burgundy Van Dyke", hex: burgundy },
     ],
     stitchesUsed: ["cable-stitch", "van-dyke", "wave-stitch"],
     description:
-      "Cable frame with a Van Dyke chevron field — pair-binds at every peak and valley for a bold heirloom accent.",
+      "Cable frame with an overlapping, double-pass Van Dyke field worked right to left for a bold heirloom accent.",
     instructions: [
       "Cable rows 1 and 6 in gold.",
-      "Across rows 3–4, work Van Dyke: diagonal travel like a wave, but catch two pleats together at each peak and each trough.",
-      "Keep bind depth to the top third of both mountains in the pair.",
-      "If it reads as plain wave, you skipped the catches — see Van Dyke chapter.",
+      "Across rows 3–4, work from right to left, catching an adjacent pair with a traveling stitch.",
+      "Lock the same pair with a second pass, then move to the overlapping pair so every pleat is shared.",
+      "Keep each pair catch in the top third of both mountains and alternate between rows 3 and 4.",
+      "If the pairs do not overlap, stop and compare the sequence with the Van Dyke chapter.",
     ],
     tips: [
       "Sample on scrap before a christening yoke.",
@@ -294,7 +295,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["newborn bishop", "doll dress", "practice band"],
     rows: 4,
     pleats: 16,
-    repeatPleats: 8,
+    repeatPleats: 6,
     threads: [
       { id: "a", name: "Sage", hex: sage, note: "All rows same color for clarity" },
     ],
@@ -330,7 +331,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["bishop yoke", "bonnet band", "sampler"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 4,
+    repeatPleats: 2,
     threads: [
       { id: "cable", name: "Dusty blue cable", hex: dusty },
       { id: "honey", name: "Sage surface honeycomb", hex: sage },
@@ -340,8 +341,8 @@ const curatedPlates: PlateMeta[] = [
       "A tidy surface honeycomb field framed by cable borders, useful when you want the honeycomb texture to sit visibly on the pleat faces.",
     instructions: [
       "Cable rows 1 and 6 in dusty blue to stabilize the band.",
-      "Work surface honeycomb across rows 3–4 in sage, catching paired mountains without drawing the fabric as deeply as classic honeycomb.",
-      "Stagger each bind so the field opens evenly from left to right.",
+      "Work surface honeycomb across rows 3–4 in sage, using overlapping pairs without drawing the fabric as deeply as classic honeycomb.",
+      "Carry the thread visibly up or down the shared pleat before catching the next overlapping pair.",
       "Keep rows 2 and 5 clear so the surface honeycomb has room to show.",
       "Steam lightly from the wrong side only after checking the cells are even.",
     ],
@@ -365,7 +366,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["practice strip", "children's bishop", "sleeve band"],
     rows: 5,
     pleats: 24,
-    repeatPleats: 8,
+    repeatPleats: 10,
     threads: [
       { id: "cable", name: "Burgundy cable", hex: burgundy },
       { id: "wave", name: "Dusty blue wave", hex: dusty },
@@ -402,7 +403,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["christening"],
     rows: 8,
     pleats: 32,
-    repeatPleats: 8,
+    repeatPleats: 10,
     threads: [
       { id: "cable", name: "Gold cable", hex: gold, note: "Frame rows" },
       { id: "trellis", name: "Muted teal trellis", hex: teal, note: "Diamond field" },
@@ -413,8 +414,8 @@ const curatedPlates: PlateMeta[] = [
     instructions: [
       "Reserve the area above row 1 for delicate embroidery after the smocking is complete.",
       "Cable rows 1 and 8 in gold, keeping the upper cable perfectly level for the embroidery placement.",
-      "Work the first teal trellis wave across rows 3–4.",
-      "Mirror the trellis across rows 5–6 so the diamonds lengthen gracefully through the center of the band.",
+      "From the shared middle level between rows 4 and 5, work the upper trellis to row 3 with a level closure at every turn.",
+      "Return to the same middle vertices and work the mirror course down to row 6, closing each elongated diamond at the shared points.",
       "Leave rows 2 and 7 open as heirloom breathing space around the gold cables.",
       "Block carefully before adding embroidery motifs above the band.",
     ],
@@ -449,7 +450,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["wall sampler", "teaching strip", "gift sampler"],
     rows: 5,
     pleats: 24,
-    repeatPleats: 8,
+    repeatPleats: 6,
     threads: [
       { id: "c", name: "Burgundy", hex: burgundy, note: "Cables" },
       { id: "m", name: "Dusty blue", hex: dusty, note: "Middle rows" },

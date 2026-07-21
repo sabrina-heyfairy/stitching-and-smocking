@@ -5,6 +5,7 @@ import type { PlateMeta } from "@/lib/plate-types";
 import { PLATE_COLORWAYS } from "@/lib/plate-colorways";
 import { downloadPng, downloadText, plateHtml, plateSvg, printPlatePdf } from "@/lib/plate-export";
 import { useColorwayPlate, usePlateColorway } from "@/components/plates/PlateColorwayContext";
+import { getPlateCourses } from "@/lib/plate-courses";
 
 export function PlateDownloads({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
@@ -13,7 +14,14 @@ export function PlateDownloads({ plate: sourcePlate }: { plate: PlateMeta }) {
     { label: "SVG", action: () => downloadText(`${plate.slug}.svg`, plateSvg(plate), "image/svg+xml") },
     { label: "PNG", action: async () => downloadPng(plate) },
     { label: "HTML", action: () => downloadText(`${plate.slug}.html`, plateHtml(plate), "text/html") },
-    { label: "JSON", action: () => downloadText(`${plate.slug}.json`, JSON.stringify(plate, null, 2), "application/json") },
+    {
+      label: "JSON",
+      action: () => downloadText(
+        `${plate.slug}.json`,
+        JSON.stringify({ ...plate, cells: undefined, courses: getPlateCourses(plate) }, null, 2),
+        "application/json",
+      ),
+    },
     { label: "Black & white SVG", action: () => downloadText(`${plate.slug}-bw.svg`, plateSvg(plate, true), "image/svg+xml") },
     {
       label: "Print / PDF",

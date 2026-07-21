@@ -2,17 +2,24 @@ import type { PlateMeta, PlateStitchRef } from "./plate-types";
 
 export interface CoursePoint {
   pleat: number;
-  /** Gathering-row coordinate; halves sit between gathering rows. */
+  /** Gathering-row coordinate; fractional values sit between gathering rows. */
   row: number;
 }
+
+export type SegmentRole = "level" | "interval" | "closure" | "travel" | "lock";
 
 export interface CourseSegment {
   from: CoursePoint;
   to: CoursePoint;
-  /** Hidden travel inside a pleat or on the wrong side. */
+  role: SegmentRole;
+  /** Hidden inside a pleat or on the wrong side. */
   hidden?: boolean;
-  /** Two adjacent pleats are caught together here. */
+  /** Whether the working thread stays above or below the needle. */
+  threadSide?: "above" | "below";
+  /** Adjacent pleats caught as a pair. */
   bind?: [number, number];
+  /** Multiple passes through the same pair, as in Van Dyke locks. */
+  passes?: number;
 }
 
 export interface PlateCourse {
@@ -24,43 +31,89 @@ export interface PlateCourse {
   segments: CourseSegment[];
 }
 
-function segmentsThrough(points: CoursePoint[]): CourseSegment[] {
-  return points.slice(1).map((point, index) => ({ from: points[index], to: point }));
-}
-
-function horizontal(
+function cord(
   id: string,
   label: string,
-  stitch: PlateStitchRef,
+  stitch: "cable-stitch" | "outline-stitch" | "stem-stitch-smocking",
   threadId: string,
   row: number,
   pleats: number,
 ): PlateCourse {
-  const points = Array.from({ length: pleats }, (_, index) => ({
-    pleat: index + 1,
-    row: row + (index % 2 === 0 ? -0.07 : 0.07),
-  }));
-  return { id, label, stitch, threadId, direction: "left-to-right", segments: segmentsThrough(points) };
+  const segments: CourseSegment[] = [];
+  for (let pleat = 1; pleat < pleats; pleat++) {
+    const threadSide = stitch === "cable-stitch"
+      ? (pleat % 2 ? "above" : "below")
+      : stitch === "outline-stitch" ? "above" : "below";
+    segments.push({
+      from: { pleat, row },
+      to: { pleat: pleat + 1, row },
+      role: "level",
+      threadSide,
+    });
+  }
+  return { id, label, stitch, threadId, direction: "left-to-right", segments };
 }
 
-function wave(
+/**
+ * A stepped wave with a level closure stitch at each turn.
+ * A wave of four occupies ten pleat intervals: four up, one closure,
+ * four down, one closure.
+ */
+function steppedWave(
   id: string,
   label: string,
   threadId: string,
-  topRow: number,
-  bottomRow: number,
+  upperRow: number,
+  lowerRow: number,
   pleats: number,
-  phase = 0,
+  steps = 4,
+  startAt: "upper" | "lower" = "lower",
   stitch: PlateStitchRef = "wave-stitch",
-  halfWidth = 4,
 ): PlateCourse {
-  const points = Array.from({ length: pleats }, (_, index) => {
-    const period = halfWidth * 2;
-    const position = (index + phase) % period;
-    const triangle = position <= halfWidth ? position / halfWidth : (period - position) / halfWidth;
-    return { pleat: index + 1, row: bottomRow - triangle * (bottomRow - topRow) };
-  });
-  return { id, label, stitch, threadId, direction: "left-to-right", segments: segmentsThrough(points) };
+  const segments: CourseSegment[] = [];
+  let pleat = 1;
+  let row = startAt === "lower" ? lowerRow : upperRow;
+  let movingUp = startAt === "lower";
+  while (pleat < pleats) {
+    for (let step = 0; step < steps && pleat < pleats; step++) {
+      const nextRow = row + (movingUp ? -1 : 1) * ((lowerRow - upperRow) / steps);
+      segments.push({
+        from: { pleat, row },
+        to: { pleat: pleat + 1, row: nextRow },
+        role: "interval",
+        threadSide: movingUp ? "below" : "above",
+      });
+      pleat += 1;
+      row = nextRow;
+    }
+    if (pleat < pleats) {
+      segments.push({
+        from: { pleat, row },
+        to: { pleat: pleat + 1, row },
+        role: "closure",
+        threadSide: movingUp ? "above" : "below",
+      });
+      pleat += 1;
+    }
+    movingUp = !movingUp;
+  }
+  return { id, label, stitch, threadId, direction: "left-to-right", segments };
+}
+
+function trellisPair(
+  id: string,
+  label: string,
+  threadId: string,
+  upperRow: number,
+  middleRow: number,
+  lowerRow: number,
+  pleats: number,
+  steps = 4,
+): PlateCourse[] {
+  return [
+    steppedWave(`${id}-upper`, `${label} · upper closures`, threadId, upperRow, middleRow, pleats, steps, "lower", "trellis"),
+    steppedWave(`${id}-lower`, `${label} · lower closures`, threadId, middleRow, lowerRow, pleats, steps, "upper", "trellis"),
+  ];
 }
 
 function honeycomb(
@@ -73,14 +126,25 @@ function honeycomb(
   surface = false,
 ): PlateCourse {
   const segments: CourseSegment[] = [];
-  let last: CoursePoint | undefined;
-  for (let pleat = 1; pleat < pleats; pleat += 2) {
-    const row = ((pleat - 1) / 2) % 2 === 0 ? bottomRow : topRow;
-    const left = { pleat, row };
-    const right = { pleat: pleat + 1, row };
-    if (last) segments.push({ from: last, to: left, hidden: true });
-    segments.push({ from: left, to: right, bind: [pleat, pleat + 1] });
-    last = right;
+  let previousRow: number | undefined;
+  for (let leftPleat = 1; leftPleat < pleats; leftPleat++) {
+    const row = leftPleat % 2 ? bottomRow : topRow;
+    if (previousRow !== undefined) {
+      segments.push({
+        from: { pleat: leftPleat, row: previousRow },
+        to: { pleat: leftPleat, row },
+        role: "travel",
+        hidden: !surface,
+      });
+    }
+    segments.push({
+      from: { pleat: leftPleat, row },
+      to: { pleat: leftPleat + 1, row },
+      role: "lock",
+      bind: [leftPleat, leftPleat + 1],
+      threadSide: leftPleat % 2 ? "below" : "above",
+    });
+    previousRow = row;
   }
   return {
     id,
@@ -100,18 +164,34 @@ function vanDyke(
   bottomRow: number,
   pleats: number,
 ): PlateCourse {
-  const course = wave(id, label, threadId, topRow, bottomRow, pleats, 0, "van-dyke");
-  course.segments = course.segments.map((segment) => {
-    const atVertex = segment.to.pleat % 4 === 1;
-    return atVertex
-      ? { ...segment, bind: [Math.max(1, segment.to.pleat - 1), segment.to.pleat] }
-      : segment;
-  });
-  return course;
+  const segments: CourseSegment[] = [];
+  let previousRow: number | undefined;
+  for (let rightPleat = pleats; rightPleat > 1; rightPleat--) {
+    const leftPleat = rightPleat - 1;
+    const row = (pleats - rightPleat) % 2 ? topRow : bottomRow;
+    if (previousRow !== undefined) {
+      segments.push({
+        from: { pleat: rightPleat, row: previousRow },
+        to: { pleat: rightPleat, row },
+        role: "travel",
+        hidden: false,
+      });
+    }
+    segments.push({
+      from: { pleat: rightPleat, row },
+      to: { pleat: leftPleat, row },
+      role: "lock",
+      bind: [leftPleat, rightPleat],
+      threadSide: row === topRow ? "above" : "below",
+      passes: 2,
+    });
+    previousRow = row;
+  }
+  return { id, label, stitch: "van-dyke", threadId, direction: "right-to-left", segments };
 }
 
 function cable(row: number, plate: PlateMeta, threadId = plate.threads[0].id, id = `cable-${row}`) {
-  return horizontal(id, `Cable on gathering row ${row}`, "cable-stitch", threadId, row, plate.pleats);
+  return cord(id, `Cable on gathering row ${row}`, "cable-stitch", threadId, row, plate.pleats);
 }
 
 export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
@@ -121,56 +201,48 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
     case "cable-borders":
       return [cable(1, plate), cable(5, plate)];
     case "wave-between-cables":
-      return [cable(1, plate), wave("wave", "Wave of four", second, 3, 4, plate.pleats), cable(6, plate)];
+      return [cable(1, plate), steppedWave("wave", "Wave of four with turn closures", second, 3, 4, plate.pleats), cable(6, plate)];
     case "classic-trellis":
-      return [
-        cable(1, plate),
-        wave("trellis-up", "Upper trellis course", second, 3, 5, plate.pleats),
-        wave("trellis-down", "Mirror trellis course", second, 3, 5, plate.pleats, 4, "trellis"),
-        cable(7, plate),
-      ];
+      return [cable(1, plate), ...trellisPair("trellis", "Diamond trellis", second, 3, 4, 5, plate.pleats), cable(7, plate)];
     case "honeycomb-yoke":
-      return [cable(1, plate), honeycomb("honeycomb", "Alternating honeycomb binds", second, 3, 4, plate.pleats), cable(6, plate)];
+      return [cable(1, plate), honeycomb("honeycomb", "Overlapping honeycomb binds", second, 3, 4, plate.pleats), cable(6, plate)];
     case "outline-and-stem-bands":
       return [
-        horizontal("outline", "Outline stitch", "outline-stitch", first, 2, plate.pleats),
-        horizontal("stem", "Stem stitch", "stem-stitch-smocking", second, 4, plate.pleats),
+        cord("outline", "Outline stitch · thread above", "outline-stitch", first, 2, plate.pleats),
+        cord("stem", "Stem stitch · thread below", "stem-stitch-smocking", second, 4, plate.pleats),
       ];
     case "van-dyke-accent":
-      return [cable(1, plate), vanDyke("van-dyke", "Van Dyke course", second, 3, 4, plate.pleats), cable(6, plate)];
+      return [cable(1, plate), vanDyke("van-dyke", "Overlapping double-pass Van Dyke locks", second, 3, 4, plate.pleats), cable(6, plate)];
     case "baby-bishop-starter":
-      return [cable(1, plate), wave("baby-wave", "Wave of two", first, 2, 3, plate.pleats, 0, "wave-stitch", 2), cable(4, plate)];
+      return [cable(1, plate), steppedWave("baby-wave", "Wave of two with turn closures", first, 2, 3, plate.pleats, 2), cable(4, plate)];
     case "surface-honeycomb-band":
-      return [cable(1, plate), honeycomb("surface-honeycomb", "Surface honeycomb binds", second, 3, 4, plate.pleats, true), cable(6, plate)];
+      return [cable(1, plate), honeycomb("surface-honeycomb", "Overlapping binds with visible surface carries", second, 3, 4, plate.pleats, true), cable(6, plate)];
     case "double-cable-wave":
       return [
         cable(1, plate),
-        wave("upper-wave", "Upper wave", second, 1.7, 2.5, plate.pleats),
+        steppedWave("upper-wave", "Upper wave with closures", second, 1.7, 2.5, plate.pleats),
         cable(3, plate, first, "cable-3"),
-        wave("lower-wave", "Lower wave", second, 3.5, 4.3, plate.pleats, 4),
+        steppedWave("lower-wave", "Lower wave with closures", second, 3.5, 4.3, plate.pleats, 4, "upper"),
         cable(5, plate, first, "cable-5"),
       ];
     case "christening-trellis":
       return [
         cable(1, plate),
-        wave("upper-trellis-a", "Upper trellis course", second, 3, 4, plate.pleats),
-        wave("upper-trellis-b", "Upper mirror course", second, 3, 4, plate.pleats, 4, "trellis"),
-        wave("lower-trellis-a", "Lower trellis course", second, 5, 6, plate.pleats),
-        wave("lower-trellis-b", "Lower mirror course", second, 5, 6, plate.pleats, 4, "trellis"),
+        ...trellisPair("christening-trellis", "Long diamond trellis", second, 3, 4.5, 6, plate.pleats),
         cable(8, plate),
       ];
     case "sampler-five-row":
       return [
         cable(1, plate),
-        horizontal("outline", "Outline stitch", "outline-stitch", second, 2, plate.pleats),
-        wave("baby-wave", "Wave of two", second, 2.6, 3.4, plate.pleats, 0, "wave-stitch", 2),
-        horizontal("stem", "Stem stitch", "stem-stitch-smocking", second, 4, plate.pleats),
+        cord("outline", "Outline stitch · thread above", "outline-stitch", second, 2, plate.pleats),
+        steppedWave("baby-wave", "Wave of two with closures", second, 2.6, 3.4, plate.pleats, 2),
+        cord("stem", "Stem stitch · thread below", "stem-stitch-smocking", second, 4, plate.pleats),
         cable(5, plate),
       ];
     case "sleeve-band-mini":
       return [
         cable(1, plate),
-        horizontal("outline", "Outline stitch", "outline-stitch", first, 2, plate.pleats),
+        cord("outline", "Outline stitch · thread above", "outline-stitch", first, 2, plate.pleats),
         cable(3, plate, first, "cable-3"),
       ];
     default:

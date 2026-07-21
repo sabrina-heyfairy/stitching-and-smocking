@@ -81,8 +81,9 @@ export default async function PlateDetailPage({
           <h2 className="font-serif text-3xl text-ink">Graph</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Follow the numbered courses in order. Solid lines are thread visible on the front;
-            dashed lines are travel inside a pleat. Arcs bind two adjacent pleats. R1 is the top
-            gathering row. Use “Working repeat” to stitch and “Full placement” to center the band.
+            dashed lines are travel inside a pleat. Arcs bind two adjacent pleats; level stitches
+            close wave and trellis turns. R1 is the top gathering row. Use “Working repeat” to
+            stitch and “Full placement” to center the band.
           </p>
           <PlateGraph plate={plate} />
         </section>

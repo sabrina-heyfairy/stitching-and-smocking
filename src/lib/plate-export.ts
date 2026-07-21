@@ -27,11 +27,23 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
     const thread = plate.threads.find((item) => item.id === course.threadId);
     const color = monochrome ? ink : (thread?.hex ?? ink);
     const segments = course.segments.map((segment) => {
-      const path = `<path d="M ${x(segment.from.pleat)} ${y(segment.from.row)} L ${x(segment.to.pleat)} ${y(segment.to.row)}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : 3}" ${segment.hidden ? 'stroke-dasharray="5 4"' : ""} stroke-linecap="round"/>`;
-      const bind = segment.bind
-        ? `<path d="M ${x(segment.to.pleat) - 7} ${y(segment.to.row) - 6} Q ${x(segment.to.pleat)} ${y(segment.to.row) + 7} ${x(segment.to.pleat) + 7} ${y(segment.to.row) - 6}" fill="none" stroke="${color}" stroke-width="2"/>`
+      const from = { x: x(segment.from.pleat), y: y(segment.from.row) };
+      const to = { x: x(segment.to.pleat), y: y(segment.to.row) };
+      const side = segment.threadSide === "above" ? -1 : 1;
+      const third = (to.x - from.x) / 3;
+      const d = segment.role === "level" || segment.role === "closure" || segment.role === "lock"
+        ? `M ${from.x} ${from.y} C ${from.x + third} ${from.y + side * 5}, ${to.x - third} ${to.y + side * 5}, ${to.x} ${to.y}`
+        : segment.role === "travel"
+          ? `M ${from.x} ${from.y} C ${from.x + (from.x <= to.x ? 5 : -5)} ${from.y}, ${to.x + (from.x <= to.x ? 5 : -5)} ${to.y}, ${to.x} ${to.y}`
+          : `M ${from.x} ${from.y} C ${from.x + third} ${from.y}, ${to.x - third} ${to.y}, ${to.x} ${to.y}`;
+      const path = `<path d="${d}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : 3}" ${segment.hidden ? 'stroke-dasharray="5 4"' : ""} stroke-linecap="round"/>`;
+      const secondPass = (segment.passes ?? 1) > 1
+        ? `<path d="${d}" transform="translate(0 2.4)" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>`
         : "";
-      return path + bind;
+      const bind = segment.bind
+        ? `<path d="M ${Math.min(from.x, to.x)} ${to.y - 6} Q ${(from.x + to.x) / 2} ${to.y + 7} ${Math.max(from.x, to.x)} ${to.y - 6}" fill="none" stroke="${color}" stroke-width="2"/>`
+        : "";
+      return path + secondPass + bind;
     }).join("");
     const first = course.segments[0]?.from;
     const order = first

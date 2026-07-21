@@ -25,17 +25,49 @@ function pointPosition(point: CoursePoint, startPleat: number) {
 function bindDisplacement(courses: PlateCourse[], point: CoursePoint): number {
   let displacement = 0;
   for (const course of courses) {
-    if (course.stitch !== "honeycomb" && course.stitch !== "surface-honeycomb") continue;
-    const strength = course.stitch === "honeycomb" ? 9 : 6;
     for (const segment of course.segments) {
-      if (!segment.bind) continue;
+      const pair = segment.bind ??
+        (segment.role === "closure"
+          ? [Math.min(segment.from.pleat, segment.to.pleat), Math.max(segment.from.pleat, segment.to.pleat)] as [number, number]
+          : undefined);
+      if (!pair) continue;
+      const strength = course.stitch === "honeycomb"
+        ? 9
+        : course.stitch === "surface-honeycomb"
+          ? 6
+          : course.stitch === "van-dyke"
+            ? 8
+            : 3;
       const distance = Math.abs(point.row - segment.to.row);
       const influence = Math.max(0, 1 - distance / 1.25);
-      if (point.pleat === segment.bind[0]) displacement += strength * influence;
-      if (point.pleat === segment.bind[1]) displacement -= strength * influence;
+      if (point.pleat === pair[0]) displacement += strength * influence;
+      if (point.pleat === pair[1]) displacement -= strength * influence;
     }
   }
   return displacement;
+}
+
+function stitchPath(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  segment: PlateCourse["segments"][number],
+): string {
+  const side = segment.threadSide === "above" ? -1 : 1;
+  if (segment.role === "level" || segment.role === "closure" || segment.role === "lock") {
+    const bow = segment.role === "lock" ? 4 : 5;
+    const third = (to.x - from.x) / 3;
+    return `M ${from.x} ${from.y} C ${from.x + third} ${from.y + side * bow}, ${to.x - third} ${to.y + side * bow}, ${to.x} ${to.y}`;
+  }
+  if (segment.role === "travel") {
+    const bend = courseTravelBend(from, to);
+    return `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ${to.x + bend} ${to.y}, ${to.x} ${to.y}`;
+  }
+  const third = (to.x - from.x) / 3;
+  return `M ${from.x} ${from.y} C ${from.x + third} ${from.y}, ${to.x - third} ${to.y}, ${to.x} ${to.y}`;
+}
+
+function courseTravelBend(from: { x: number }, to: { x: number }): number {
+  return from.x <= to.x ? 5 : -5;
 }
 
 function CoursePaths({
@@ -46,6 +78,7 @@ function CoursePaths({
   showHidden,
   showOrder,
   deformBinds = false,
+  finished = false,
 }: {
   plate: PlateMeta;
   courses: PlateCourse[];
@@ -54,6 +87,7 @@ function CoursePaths({
   showHidden: boolean;
   showOrder: boolean;
   deformBinds?: boolean;
+  finished?: boolean;
 }) {
   return courses.map((course, courseIndex) => {
     const color = threadColor(plate, course.threadId);
@@ -76,18 +110,27 @@ function CoursePaths({
           return (
             <g key={`${course.id}-${index}`}>
               <path
-                d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
+                d={stitchPath(from, to, segment)}
                 fill="none"
                 stroke={segment.hidden ? ILLUSTRATION.inkFaint : color}
-                strokeWidth={segment.hidden ? 1.4 : 3}
+                strokeWidth={segment.hidden ? 1.4 : finished ? 3.5 : 3}
                 strokeDasharray={segment.hidden ? "5 4" : undefined}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-              {!segment.hidden && (
+              {(segment.passes ?? 1) > 1 && (
+                <path
+                  d={stitchPath({ x: from.x, y: from.y + 2.4 }, { x: to.x, y: to.y + 2.4 }, segment)}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={finished ? 3 : 2.4}
+                  strokeLinecap="round"
+                />
+              )}
+              {!segment.hidden && !finished && (
                 <circle cx={to.x} cy={to.y} r="2.8" fill={color} stroke={ILLUSTRATION.fabric} strokeWidth=".8" />
               )}
-              {segment.bind && (
+              {segment.bind && !finished && (
                 <path
                   d={`M ${(from.x + to.x) / 2 - Math.max(5, Math.abs(to.x - from.x) / 2)} ${to.y - 6} Q ${(from.x + to.x) / 2} ${to.y + 7} ${(from.x + to.x) / 2 + Math.max(5, Math.abs(to.x - from.x) / 2)} ${to.y - 6}`}
                   fill="none"
@@ -104,7 +147,14 @@ function CoursePaths({
             <text x={first.x - 9} y={first.y - 7} textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff">
               {courseIndex + 1}
             </text>
-            <path d={`M ${first.x - 1} ${first.y - 1} l 9 0 l -4 -4 m 4 4 l -4 4`} fill="none" stroke={color} strokeWidth="1.5" />
+            <path
+              d={course.direction === "left-to-right"
+                ? `M ${first.x - 1} ${first.y - 1} l 9 0 l -4 -4 m 4 4 l -4 4`
+                : `M ${first.x - 17} ${first.y - 1} l -9 0 l 4 -4 m -4 4 l 4 4`}
+              fill="none"
+              stroke={color}
+              strokeWidth="1.5"
+            />
           </>
         )}
       </g>
@@ -207,6 +257,7 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
         ))}
         <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = hidden travel inside the pleat.</div>
         <div className="flex items-center gap-2"><span className="text-lg">⌒</span>Arc = catch the marked pleat pair together.</div>
+        <div className="flex items-center gap-2"><span className="inline-block h-3 w-8 rounded-full border-t-2 border-ink" />Level stitch at a peak or trough = turn closure.</div>
       </div>
     </IllustrationFrame>
   );
@@ -215,8 +266,8 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
 export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
-  const hasHoneycomb = courses.some(
-    (course) => course.stitch === "honeycomb" || course.stitch === "surface-honeycomb",
+  const hasDeformation = courses.some((course) =>
+    course.segments.some((segment) => segment.bind || segment.role === "closure"),
   );
   const width = LEFT * 2 + plate.pleats * PLEAT_WIDTH;
   const height = TOP + plate.rows * ROW_HEIGHT + 24;
@@ -233,8 +284,8 @@ export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta 
         </defs>
         <rect width={width} height={height} rx="8" fill={ILLUSTRATION.fabric} />
         {Array.from({ length: plate.pleats }, (_, index) => {
-          if (!hasHoneycomb) {
-            return <rect key={index} x={LEFT + index * PLEAT_WIDTH} y={TOP} width={PLEAT_WIDTH} height={plate.rows * ROW_HEIGHT} fill={`url(#pleat-${plate.slug})`} opacity={index % 2 ? ".55" : ".9"} />;
+          if (!hasDeformation) {
+            return <rect key={index} x={LEFT + index * PLEAT_WIDTH} y={TOP} width={PLEAT_WIDTH} height={plate.rows * ROW_HEIGHT} fill={`url(#pleat-${plate.slug})`} opacity=".9" />;
           }
           const pleat = index + 1;
           const points = Array.from({ length: plate.rows * 4 + 1 }, (_, sample) => {
@@ -249,12 +300,12 @@ export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta 
           return (
             <g key={index}>
               <path d={path} fill="none" stroke={ILLUSTRATION.fabricShadow} strokeWidth={PLEAT_WIDTH - 1} strokeLinejoin="round" opacity=".5" />
-              <path d={path} fill="none" stroke={index % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} strokeWidth={PLEAT_WIDTH - 4} strokeLinejoin="round" opacity={index % 2 ? ".78" : ".96"} />
+              <path d={path} fill="none" stroke={ILLUSTRATION.mountain} strokeWidth={PLEAT_WIDTH - 4} strokeLinejoin="round" opacity=".9" />
               <path d={path} fill="none" stroke={ILLUSTRATION.fabricShadow} strokeWidth=".7" />
             </g>
           );
         })}
-        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} deformBinds />
+        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} deformBinds finished />
       </svg>
     </IllustrationFrame>
   );
@@ -276,7 +327,7 @@ export function PlateProgression({ plate: sourcePlate }: { plate: PlateMeta }) {
               const x = LEFT + pleat * PLEAT_WIDTH + PLEAT_WIDTH / 2;
               return <path key={pleat} d={`M${x - 14} ${TOP} Q${x} ${TOP + 10} ${x + 14} ${TOP} V${height - 10} Q${x} ${height - 20} ${x - 14} ${height - 10}Z`} fill={pleat % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".5" />;
             })}
-            <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1} />
+            <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1} finished={index === 2} deformBinds={index === 2} />
           </svg>
           <figcaption className="px-1 py-2 text-sm text-ink-muted">{index + 1} · {["Blank pleats", "Foundation in progress", "Finished repeat"][index]}</figcaption>
         </figure>
