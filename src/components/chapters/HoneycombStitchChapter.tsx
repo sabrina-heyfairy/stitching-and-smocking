@@ -329,7 +329,11 @@ export function HoneycombStitchChapter() {
                 <Link href="/theory/" className="text-dusty-blue-deep">
                   Smocking Theory
                 </Link>
-                . Surface honeycomb (flatter cells) is listed as a planned companion chapter.
+                . For flatter cells, see the{" "}
+                <Link href="/stitches/surface-honeycomb/" className="text-dusty-blue-deep">
+                  Surface Honeycomb
+                </Link>{" "}
+                chapter.
               </p>
             </div>
           </section>
@@ -357,13 +361,13 @@ export function HoneycombStitchChapter() {
               href="/stitches/outline-stitch/"
               className="rounded border border-border px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
             >
-              Outline (planned) →
+              Outline →
             </Link>
             <Link
               href="/stitches/surface-honeycomb/"
               className="rounded border border-border px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
             >
-              Surface Honeycomb (planned)
+              Surface Honeycomb →
             </Link>
           </div>
         </div>
