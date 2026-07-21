@@ -53,6 +53,9 @@ function stitchPath(
   segment: PlateCourse["segments"][number],
 ): string {
   const side = segment.threadSide === "above" ? -1 : 1;
+  if (segment.straight) {
+    return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+  }
   if (segment.role === "level" || segment.role === "closure" || segment.role === "lock") {
     const bow = segment.role === "lock" ? 4 : 5;
     const third = (to.x - from.x) / 3;

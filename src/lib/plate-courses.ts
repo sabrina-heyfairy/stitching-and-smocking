@@ -20,6 +20,8 @@ export interface CourseSegment {
   bind?: [number, number];
   /** Multiple passes through the same pair, as in Van Dyke locks. */
   passes?: number;
+  /** Preserve a crisp diagonal instead of easing the interval. */
+  straight?: boolean;
 }
 
 export interface PlateCourse {
@@ -179,6 +181,7 @@ function vanDyke(
         to: left,
         role: "interval",
         threadSide: row === topRow ? "below" : "above",
+        straight: true,
       });
     }
     segments.push({
