@@ -14,9 +14,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "fuse.js": "^7.5.0",
-    "gray-matter": "^4.0.3",
     "next": "15.5.20",
-    "next-mdx-remote": "^6.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -24,7 +22,6 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",
-    "@types/mdx": "^2.0.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

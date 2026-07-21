@@ -188,7 +188,7 @@ export function HoneycombVariations() {
     { name: "Wide cell", note: "More space between gathering rows; larger hex openings" },
     { name: "Narrow / baby", note: "Closer rows; denser lattice for small yokes" },
     { name: "Double honeycomb", note: "Two stacked honeycomb bands with a cable separator" },
-    { name: "Surface honeycomb", note: "Flatter variant without deep cell pull — see planned chapter" },
+    { name: "Surface honeycomb", note: "Flatter variant without deep cell pull — see its own chapter" },
     { name: "Partial field", note: "Honeycomb center with cable borders for structure" },
   ];
 

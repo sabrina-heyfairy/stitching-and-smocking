@@ -357,7 +357,7 @@ export function WaveStitchChapter() {
               href="/stitches/trellis/"
               className="rounded border border-border px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
             >
-              Trellis (planned) →
+              Trellis →
             </Link>
           </div>
         </div>
