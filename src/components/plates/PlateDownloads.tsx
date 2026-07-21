@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { PlateMeta } from "@/lib/plate-types";
-import { PLATE_COLORWAYS } from "@/lib/generated-plates";
+import { PLATE_COLORWAYS } from "@/lib/plate-colorways";
 import { downloadPng, downloadText, plateHtml, plateSvg, printPlatePdf } from "@/lib/plate-export";
 
 export function PlateDownloads({ plate }: { plate: PlateMeta }) {
@@ -13,7 +13,14 @@ export function PlateDownloads({ plate }: { plate: PlateMeta }) {
     { label: "HTML", action: () => downloadText(`${plate.slug}.html`, plateHtml(plate), "text/html") },
     { label: "JSON", action: () => downloadText(`${plate.slug}.json`, JSON.stringify(plate, null, 2), "application/json") },
     { label: "Black & white SVG", action: () => downloadText(`${plate.slug}-bw.svg`, plateSvg(plate, true), "image/svg+xml") },
-    { label: "Print / PDF", action: () => printPlatePdf(plate) },
+    {
+      label: "Print / PDF",
+      action: () => {
+        if (!printPlatePdf(plate)) {
+          downloadText(`${plate.slug}-print.html`, plateHtml(plate), "text/html");
+        }
+      },
+    },
   ];
 
   return (
@@ -37,7 +44,7 @@ export function PlateDownloads({ plate }: { plate: PlateMeta }) {
                 setWorking(false);
               }
             }}
-            className="rounded border border-border bg-cream px-3 py-2 text-sm text-ink hover:bg-cream-deep disabled:opacity-50"
+            className="min-h-11 rounded border border-border bg-cream px-4 py-2 text-sm text-ink hover:bg-cream-deep disabled:opacity-50"
           >
             {label}
           </button>
@@ -58,9 +65,9 @@ export function PlateColorways({ plate }: { plate: PlateMeta }) {
           return (
             <div key={name} className="flex items-center justify-between rounded border border-border bg-paper/60 px-3 py-2">
               <span className="text-sm text-ink-muted">{name}</span>
-              <span className="flex overflow-hidden rounded-full border border-border">
+              <span className="flex overflow-hidden rounded-full border border-border" aria-label={`${name}: ${colors.join(", ")}`}>
                 {colors.map((color) => (
-                  <span key={color} className="h-5 w-5" style={{ backgroundColor: color }} />
+                  <span key={color} className="h-6 w-6" style={{ backgroundColor: color }} title={color} />
                 ))}
               </span>
             </div>

@@ -31,6 +31,7 @@ export const navGroups: NavEntry[] = [
   { kind: "link", href: "/stitches/", label: "Stitches" },
   { kind: "link", href: "/plates/", label: "Plates" },
   { kind: "link", href: "/pleater/", label: "Read 16" },
+  { kind: "link", href: "/calculator/", label: "Calculator" },
   {
     kind: "menu",
     label: "Materials",

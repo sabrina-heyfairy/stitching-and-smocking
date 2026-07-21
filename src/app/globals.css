@@ -186,11 +186,16 @@
 
   .label-caps {
     font-family: var(--font-body), sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-faint);
+  }
+
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--dusty-blue);
+    outline-offset: 3px;
   }
 
   .illustration-frame {
@@ -199,6 +204,12 @@
     border-radius: var(--radius);
     padding: 1rem;
     overflow: hidden;
+  }
+
+  .stitch-controls button,
+  .stitch-controls a,
+  .stitch-controls select {
+    min-height: 2.75rem;
   }
 
   @media (min-width: 768px) {

@@ -34,9 +34,12 @@ export default function SearchPage() {
   );
 
   const results = useMemo(() => {
-    const base = q.trim() ? fuse.search(q.trim()).map((r) => r.item) : searchIndex;
+    const term = q.trim();
+    if (term.length < 2 && !type) return [];
+    const base = term.length >= 2 ? fuse.search(term).map((r) => r.item) : searchIndex;
     return type ? base.filter((i) => i.type === type) : base;
   }, [q, type, fuse]);
+  const hasSearch = q.trim().length >= 2 || Boolean(type);
 
   return (
     <div className="site-container py-12 md:py-16">
@@ -47,18 +50,21 @@ export default function SearchPage() {
       </p>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <label htmlFor="encyclopedia-search" className="sr-only">Search the encyclopedia</label>
         <input
+          id="encyclopedia-search"
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="e.g. twisted pleats, cable, batiste, floche…"
-          className="flex-1 rounded border border-border bg-paper px-4 py-3 text-ink outline-none focus:border-dusty-blue"
+          className="flex-1 rounded border border-border bg-paper px-4 py-3 text-ink focus-visible:ring-2 focus-visible:ring-dusty-blue focus-visible:ring-offset-2"
           autoFocus
         />
         <select
+          aria-label="Filter search results by type"
           value={type}
           onChange={(e) => setType(e.target.value as "" | SearchItem["type"])}
-          className="rounded border border-border bg-paper px-4 py-3 text-ink"
+          className="rounded border border-border bg-paper px-4 py-3 text-ink focus-visible:ring-2 focus-visible:ring-dusty-blue focus-visible:ring-offset-2"
         >
           {types.map((t) => (
             <option key={t.label} value={t.value}>
@@ -68,7 +74,9 @@ export default function SearchPage() {
         </select>
       </div>
 
-      <p className="mt-4 text-xs text-ink-faint">{results.length} results</p>
+      <p className="mt-4 text-sm text-ink-faint">
+        {hasSearch ? `${results.length} results` : "Enter at least two characters or choose a type."}
+      </p>
 
       <ul className="mt-6 space-y-3">
         {results.map((item) => (
@@ -91,6 +99,12 @@ export default function SearchPage() {
           </li>
         ))}
       </ul>
+      {hasSearch && results.length === 0 && (
+        <div className="mt-8 rounded border border-border bg-paper/70 p-5 text-ink-muted">
+          No matches. Try a shorter term, remove the type filter, or search for a stitch such as
+          “cable” or “honeycomb.”
+        </div>
+      )}
     </div>
   );
 }

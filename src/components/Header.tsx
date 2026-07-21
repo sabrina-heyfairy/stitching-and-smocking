@@ -11,6 +11,7 @@ export function Header() {
   const pathname = usePathname();
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const [desktopMenu, setDesktopMenu] = useState<string | null>(null);
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-border/80 bg-paper/90 backdrop-blur-md">
@@ -33,7 +34,7 @@ export function Header() {
                   key={entry.href}
                   href={entry.href}
                   className={clsx(
-                    "rounded px-2.5 py-1.5 text-sm no-underline transition",
+                    "inline-flex min-h-11 items-center rounded px-2.5 py-1.5 text-sm no-underline transition",
                     active
                       ? "bg-cream-deep text-ink"
                       : "text-ink-muted hover:bg-cream-deep/60 hover:text-ink",
@@ -50,20 +51,29 @@ export function Header() {
               <div key={entry.label} className="group relative">
                 <button
                   type="button"
+                  onClick={() => setDesktopMenu((current) => current === entry.label ? null : entry.label)}
                   className={clsx(
-                    "flex items-center gap-1 rounded px-2.5 py-1.5 text-sm transition",
+                    "flex min-h-11 items-center gap-1 rounded px-2.5 py-1.5 text-sm transition",
                     groupActive
                       ? "bg-cream-deep text-ink"
                       : "text-ink-muted group-hover:bg-cream-deep/60 group-hover:text-ink",
                   )}
                   aria-haspopup="true"
+                  aria-expanded={desktopMenu === entry.label}
+                  aria-controls={`desktop-menu-${entry.label.toLowerCase()}`}
                 >
                   {entry.label}
                   <span aria-hidden="true" className="text-[0.6rem]">
                     ▾
                   </span>
                 </button>
-                <div className="invisible absolute left-0 top-full z-50 min-w-[11rem] pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div
+                  id={`desktop-menu-${entry.label.toLowerCase()}`}
+                  className={clsx(
+                    "absolute left-0 top-full z-50 min-w-[11rem] pt-1 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100",
+                    desktopMenu === entry.label ? "visible opacity-100" : "invisible opacity-0",
+                  )}
+                >
                   <ul className="rounded border border-border bg-paper py-1 shadow-md">
                     {entry.items.map((item) => {
                       const active = pathname === item.href || pathname.startsWith(item.href);
@@ -71,6 +81,7 @@ export function Header() {
                         <li key={item.href}>
                           <Link
                             href={item.href}
+                            onClick={() => setDesktopMenu(null)}
                             className={clsx(
                               "block px-4 py-2 text-sm no-underline transition",
                               active
@@ -90,7 +101,7 @@ export function Header() {
           })}
           <Link
             href="/search/"
-            className="ml-1 rounded px-2.5 py-1.5 text-sm text-ink-muted no-underline hover:bg-cream-deep/60 hover:text-ink"
+            className="ml-1 inline-flex min-h-11 items-center rounded px-2.5 py-1.5 text-sm text-ink-muted no-underline hover:bg-cream-deep/60 hover:text-ink"
           >
             Search
           </Link>
@@ -100,17 +111,18 @@ export function Header() {
           <button
             type="button"
             onClick={toggle}
-            className="theme-toggle rounded border border-border px-2.5 py-1.5 text-xs text-ink-muted hover:bg-cream-deep"
+            className="theme-toggle min-h-11 rounded border border-border px-3 py-2 text-sm text-ink-muted hover:bg-cream-deep"
             aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
           >
             {theme === "light" ? "Dark" : "Light"}
           </button>
           <button
             type="button"
-            className="rounded border border-border px-2.5 py-1.5 text-xs text-ink-muted lg:hidden"
+            className="min-h-11 rounded border border-border px-3 py-2 text-sm text-ink-muted lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
+            aria-label={open ? "Close site menu" : "Open site menu"}
           >
             Menu
           </button>
@@ -128,7 +140,7 @@ export function Header() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="block rounded px-3 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
+                  className="flex min-h-11 items-center rounded px-3 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}

@@ -25,8 +25,8 @@ export default function PlatesIndexPage() {
       <p className="label-caps mb-3 text-dusty-blue">Design library</p>
       <h1 className="font-serif text-4xl text-ink md:text-5xl">Smocking Plate Library</h1>
       <p className="mt-4 max-w-2xl text-ink-muted">
-        A complete Read 16-needle collection: geometric foundations, traditional bands, surface
-        motifs, alphabets, monograms, seasonal designs, borders, corners, and garment layouts.
+        Tested teaching plates with connected thread paths, hidden travel, working order, repeat
+        markers, full-width placement, and printable references for a Read 16-needle pleater.
       </p>
       <p className="mt-2 text-sm text-ink-faint">
         {plates.length} plates · See also{" "}

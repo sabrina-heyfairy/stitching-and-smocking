@@ -65,10 +65,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${display.variable} ${body.variable} antialiased`}>
+        <a
+          href="#main-content"
+          className="fixed top-2 left-2 z-[100] -translate-y-20 rounded bg-ink px-4 py-3 text-paper transition focus:translate-y-0"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <ServiceWorkerRegister />
           <Header />
-          <main className="min-h-[70vh]">{children}</main>
+          <main id="main-content" className="min-h-[70vh]" tabIndex={-1}>{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

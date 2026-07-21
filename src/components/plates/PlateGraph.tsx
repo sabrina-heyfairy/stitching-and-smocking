@@ -1,378 +1,236 @@
 "use client";
 
-import { useState } from "react";
-import type { PlateCell, PlateMeta } from "@/lib/plate-types";
-import { getPlateCell } from "@/lib/plate-types";
-import { ILLUSTRATION, IllustrationFrame, SvgRoot } from "@/components/illustrations/IllustrationFrame";
+import { useMemo, useState } from "react";
+import type { PlateMeta } from "@/lib/plate-types";
+import { getPlateCourses, type PlateCourse, type CoursePoint } from "@/lib/plate-courses";
+import { ILLUSTRATION, IllustrationFrame } from "@/components/illustrations/IllustrationFrame";
 
-const KIND_LABEL: Record<PlateCell["kind"], string> = {
-  empty: "Empty",
-  cable: "Cable",
-  outline: "Outline",
-  stem: "Stem",
-  "wave-up": "Wave ↑",
-  "wave-down": "Wave ↓",
-  honeycomb: "Honeycomb",
-  trellis: "Trellis",
-  "van-dyke": "Van Dyke",
-  surface: "Surface embroidery",
-  knot: "French knot",
-};
+const PLEAT_WIDTH = 28;
+const ROW_HEIGHT = 42;
+const LEFT = 52;
+const TOP = 54;
 
-function cellSymbol(kind: PlateCell["kind"]): string {
-  switch (kind) {
-    case "cable":
-      return "C";
-    case "outline":
-      return "O";
-    case "stem":
-      return "S";
-    case "wave-up":
-      return "↗";
-    case "wave-down":
-      return "↘";
-    case "honeycomb":
-      return "H";
-    case "trellis":
-      return "T";
-    case "van-dyke":
-      return "V";
-    case "surface":
-      return "E";
-    case "knot":
-      return "•";
-    default:
-      return "";
-  }
+function threadColor(plate: PlateMeta, threadId: string): string {
+  return plate.threads.find((thread) => thread.id === threadId)?.hex ?? ILLUSTRATION.thread;
 }
 
-export function PlateGraph({ plate }: { plate: PlateMeta }) {
-  const [showLabels, setShowLabels] = useState(true);
-  const [hover, setHover] = useState<{ row: number; pleat: number } | null>(null);
-  const cellW = Math.min(28, 520 / plate.pleats);
-  const cellH = 28;
-  const originX = 48;
-  const originY = 36;
-  const width = originX + plate.pleats * cellW + 16;
-  const height = originY + plate.rows * cellH + 40;
+function pointPosition(point: CoursePoint, startPleat: number) {
+  return {
+    x: LEFT + (point.pleat - startPleat) * PLEAT_WIDTH + PLEAT_WIDTH / 2,
+    y: TOP + (point.row - 1) * ROW_HEIGHT + ROW_HEIGHT / 2,
+  };
+}
 
-  const hovered = hover ? getPlateCell(plate, hover.row, hover.pleat) : null;
-
-  return (
-    <IllustrationFrame
-      caption={`${plate.rows} gathering rows × ${plate.pleats} pleats · repeat every ${plate.repeatPleats} pleat${plate.repeatPleats === 1 ? "" : "s"}`}
-      controls={
-        <>
-          <button
-            type="button"
-            className="rounded border border-border bg-paper px-3 py-1 text-xs text-ink-muted hover:bg-cream-deep"
-            onClick={() => setShowLabels((v) => !v)}
-          >
-            {showLabels ? "Hide labels" : "Show labels"}
-          </button>
-          {hover && (
-            <span className="text-xs text-ink-faint">
-              Row {hover.row}, Pleat {hover.pleat}
-              {hovered && hovered.kind !== "empty" ? ` · ${KIND_LABEL[hovered.kind]}` : " · empty"}
-            </span>
-          )}
-        </>
-      }
-    >
-      <SvgRoot
-        viewBox={`0 0 ${width} ${height}`}
-        aria-label={`Smocking plate graph for ${plate.title}`}
-        className="max-w-full"
-      >
-        {/* Column headers — pleat numbers */}
-        {showLabels &&
-          Array.from({ length: plate.pleats }, (_, i) => (
-            <text
-              key={`p-${i}`}
-              x={originX + i * cellW + cellW / 2}
-              y={originY - 10}
-              textAnchor="middle"
-              fontSize="8"
-              fill={ILLUSTRATION.inkFaint}
-              fontFamily="var(--font-body), sans-serif"
-            >
-              {i + 1}
-            </text>
-          ))}
-        {Array.from({ length: plate.rows }, (_, r) => {
-          const row = r + 1;
+function CoursePaths({
+  plate,
+  courses,
+  startPleat,
+  endPleat,
+  showHidden,
+  showOrder,
+}: {
+  plate: PlateMeta;
+  courses: PlateCourse[];
+  startPleat: number;
+  endPleat: number;
+  showHidden: boolean;
+  showOrder: boolean;
+}) {
+  return courses.map((course, courseIndex) => {
+    const color = threadColor(plate, course.threadId);
+    const segments = course.segments.filter(
+      (segment) =>
+        segment.from.pleat >= startPleat &&
+        segment.to.pleat <= endPleat &&
+        (showHidden || !segment.hidden),
+    );
+    const first = segments[0] ? pointPosition(segments[0].from, startPleat) : null;
+    return (
+      <g key={course.id}>
+        {segments.map((segment, index) => {
+          const from = pointPosition(segment.from, startPleat);
+          const to = pointPosition(segment.to, startPleat);
           return (
-            <g key={`row-${row}`}>
-              {showLabels && (
-                <text
-                  x={originX - 8}
-                  y={originY + r * cellH + cellH / 2 + 3}
-                  textAnchor="end"
-                  fontSize="9"
-                  fill={ILLUSTRATION.dustyBlue}
-                  fontFamily="var(--font-body), sans-serif"
-                >
-                  R{row}
-                </text>
+            <g key={`${course.id}-${index}`}>
+              <path
+                d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
+                fill="none"
+                stroke={segment.hidden ? ILLUSTRATION.inkFaint : color}
+                strokeWidth={segment.hidden ? 1.4 : 3}
+                strokeDasharray={segment.hidden ? "5 4" : undefined}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {!segment.hidden && (
+                <circle cx={to.x} cy={to.y} r="2.8" fill={color} stroke={ILLUSTRATION.fabric} strokeWidth=".8" />
               )}
-              {Array.from({ length: plate.pleats }, (_, p) => {
-                const pleat = p + 1;
-                const cell = getPlateCell(plate, row, pleat);
-                const x = originX + p * cellW;
-                const y = originY + r * cellH;
-                const active = hover?.row === row && hover?.pleat === pleat;
-                const color = cell.kind === "empty" ? "transparent" : (cell.color ?? ILLUSTRATION.thread);
-                return (
-                  <g
-                    key={`${row}-${pleat}`}
-                    onMouseEnter={() => setHover({ row, pleat })}
-                    onMouseLeave={() => setHover(null)}
-                    className="cursor-crosshair"
-                  >
-                    <rect
-                      x={x}
-                      y={y}
-                      width={cellW}
-                      height={cellH}
-                      fill={cell.kind === "empty" ? ILLUSTRATION.fabric : `${color}33`}
-                      stroke={active ? ILLUSTRATION.gold : ILLUSTRATION.fabricShadow}
-                      strokeWidth={active ? 1.5 : 0.6}
-                    />
-                    {cell.kind !== "empty" && (
-                      <>
-                        <circle
-                          cx={x + cellW / 2}
-                          cy={y + cellH / 2}
-                          r={Math.min(6, cellW / 3)}
-                          fill={color}
-                          opacity="0.9"
-                        />
-                        {showLabels && cellW >= 18 && (
-                          <text
-                            x={x + cellW / 2}
-                            y={y + cellH / 2 + 3}
-                            textAnchor="middle"
-                            fontSize="7"
-                            fill="#fff"
-                            fontFamily="var(--font-body), sans-serif"
-                            fontWeight="600"
-                          >
-                            {cellSymbol(cell.kind)}
-                          </text>
-                        )}
-                      </>
-                    )}
-                  </g>
-                );
-              })}
+              {segment.bind && (
+                <path
+                  d={`M ${to.x - 7} ${to.y - 6} Q ${to.x} ${to.y + 7} ${to.x + 7} ${to.y - 6}`}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth="2"
+                />
+              )}
             </g>
           );
         })}
-        {/* Repeat markers */}
-        {plate.repeatPleats > 1 && showLabels && (
-          <g>
-            {[0, plate.repeatPleats].map((repeat) => (
-              <line
-                key={repeat}
-                x1={originX + repeat * cellW}
-                y1={originY - 4}
-                x2={originX + repeat * cellW}
-                y2={originY + plate.rows * cellH + 4}
-                stroke={ILLUSTRATION.gold}
-                strokeWidth="1"
-                strokeDasharray="3 2"
+        {showOrder && first && (
+          <>
+            <circle cx={first.x - 9} cy={first.y - 10} r="9" fill={color} />
+            <text x={first.x - 9} y={first.y - 7} textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff">
+              {courseIndex + 1}
+            </text>
+            <path d={`M ${first.x - 1} ${first.y - 1} l 9 0 l -4 -4 m 4 4 l -4 4`} fill="none" stroke={color} strokeWidth="1.5" />
+          </>
+        )}
+      </g>
+    );
+  });
+}
+
+export function PlateGraph({ plate }: { plate: PlateMeta }) {
+  const courses = useMemo(() => getPlateCourses(plate), [plate]);
+  const [fullWidth, setFullWidth] = useState(false);
+  const repeatEnd = plate.repeatPleats > 1 ? Math.min(plate.pleats, plate.repeatPleats + 1) : Math.min(plate.pleats, 12);
+  const endPleat = fullWidth ? plate.pleats : repeatEnd;
+  const shownPleats = endPleat;
+  const width = LEFT + shownPleats * PLEAT_WIDTH + 24;
+  const height = TOP + plate.rows * ROW_HEIGHT + 54;
+  const centerX = LEFT + (plate.pleats / 2) * PLEAT_WIDTH;
+
+  return (
+    <IllustrationFrame
+      caption={fullWidth
+        ? `Full placement · ${plate.pleats} pleats · scroll sideways to inspect`
+        : `Enlarged working repeat · ${shownPleats} pleats shown`}
+      controls={
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            aria-pressed={!fullWidth}
+            onClick={() => setFullWidth(false)}
+            className="min-h-11 rounded border border-border bg-paper px-4 py-2 text-sm text-ink hover:bg-cream-deep"
+          >
+            Working repeat
+          </button>
+          <button
+            type="button"
+            aria-pressed={fullWidth}
+            onClick={() => setFullWidth(true)}
+            className="min-h-11 rounded border border-border bg-paper px-4 py-2 text-sm text-ink hover:bg-cream-deep"
+          >
+            Full placement
+          </button>
+        </div>
+      }
+    >
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width={width}
+        style={{ minWidth: width }}
+        className="h-auto max-w-none"
+        role="img"
+        aria-label={`Connected stitch graph for ${plate.title}`}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width={width} height={height} rx="8" fill={ILLUSTRATION.fabric} />
+        {Array.from({ length: plate.rows }, (_, rowIndex) => {
+          const y = TOP + rowIndex * ROW_HEIGHT + ROW_HEIGHT / 2;
+          return (
+            <g key={`row-${rowIndex + 1}`}>
+              <line x1={LEFT} y1={y} x2={LEFT + shownPleats * PLEAT_WIDTH} y2={y} stroke={ILLUSTRATION.fabricShadow} strokeDasharray="3 4" />
+              <text x={LEFT - 10} y={y + 4} textAnchor="end" fontSize="12" fill={ILLUSTRATION.inkMuted}>R{rowIndex + 1}</text>
+            </g>
+          );
+        })}
+        {Array.from({ length: shownPleats }, (_, index) => {
+          const x = LEFT + index * PLEAT_WIDTH + PLEAT_WIDTH / 2;
+          return (
+            <g key={`pleat-${index + 1}`}>
+              <path
+                d={`M ${x - PLEAT_WIDTH / 2} ${TOP - 4} Q ${x} ${TOP + 5} ${x + PLEAT_WIDTH / 2} ${TOP - 4} V ${TOP + plate.rows * ROW_HEIGHT} Q ${x} ${TOP + plate.rows * ROW_HEIGHT - 9} ${x - PLEAT_WIDTH / 2} ${TOP + plate.rows * ROW_HEIGHT} Z`}
+                fill={index % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain}
+                opacity=".56"
               />
-            ))}
-            <text
-              x={originX + (plate.repeatPleats * cellW) / 2}
-              y={height - 8}
-              textAnchor="middle"
-              fontSize="8"
-              fill={ILLUSTRATION.gold}
-            >
-              REPEAT
-            </text>
-          </g>
-        )}
-        {showLabels && (
+              <line x1={x} y1={TOP - 4} x2={x} y2={TOP + plate.rows * ROW_HEIGHT} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".6" />
+              <text x={x} y={TOP - 14} textAnchor="middle" fontSize="11" fill={ILLUSTRATION.inkMuted}>{index + 1}</text>
+            </g>
+          );
+        })}
+        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={endPleat} showHidden showOrder />
+        {plate.repeatPleats > 1 && !fullWidth && (
           <g>
-            <line
-              x1={originX + (plate.pleats / 2) * cellW}
-              y1={originY - 8}
-              x2={originX + (plate.pleats / 2) * cellW}
-              y2={originY + plate.rows * cellH + 8}
-              stroke={ILLUSTRATION.thread}
-              strokeWidth="1.5"
-              strokeDasharray="5 3"
-            />
-            <text
-              x={originX + (plate.pleats / 2) * cellW}
-              y={originY - 14}
-              textAnchor="middle"
-              fontSize="8"
-              fill={ILLUSTRATION.thread}
-            >
-              CENTER
-            </text>
+            {[LEFT, LEFT + plate.repeatPleats * PLEAT_WIDTH].map((x) => (
+              <line key={x} x1={x} y1={TOP - 8} x2={x} y2={TOP + plate.rows * ROW_HEIGHT + 8} stroke={ILLUSTRATION.gold} strokeWidth="1.5" strokeDasharray="5 3" />
+            ))}
+            <text x={LEFT + plate.repeatPleats * PLEAT_WIDTH / 2} y={height - 15} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.gold}>ONE REPEAT</text>
           </g>
         )}
-      </SvgRoot>
-      <div className="mt-3 flex flex-wrap gap-3 text-xs text-ink-muted">
-        {Object.entries(KIND_LABEL)
-          .filter(([k]) => k !== "empty")
-          .filter(([k]) =>
-            Object.values(plate.cells).some((c) => c.kind === k),
-          )
-          .map(([k, label]) => (
-            <span key={k} className="inline-flex items-center gap-1.5">
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-sm bg-cream-deep text-[9px] font-semibold text-ink">
-                {cellSymbol(k as PlateCell["kind"])}
-              </span>
-              {label}
-            </span>
-          ))}
+        {fullWidth && (
+          <g>
+            <line x1={centerX} y1={TOP - 18} x2={centerX} y2={TOP + plate.rows * ROW_HEIGHT + 10} stroke={ILLUSTRATION.burgundy} strokeWidth="2" strokeDasharray="6 4" />
+            <text x={centerX} y={height - 14} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.burgundy}>CENTER VALLEY</text>
+          </g>
+        )}
+      </svg>
+      <div className="mt-4 grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
+        {courses.map((course, index) => (
+          <div key={course.id} className="flex items-start gap-2">
+            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: threadColor(plate, course.threadId) }}>{index + 1}</span>
+            <span><strong className="font-medium text-ink">{course.label}</strong><br />Work {course.direction.replaceAll("-", " ")}.</span>
+          </div>
+        ))}
+        <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = hidden travel inside the pleat.</div>
+        <div className="flex items-center gap-2"><span className="text-lg">⌒</span>Arc = catch the marked pleat pair together.</div>
       </div>
     </IllustrationFrame>
   );
 }
 
-/** Simplified finished rendering of the plate on stylized pleats. */
 export function PlateFinishedPreview({ plate }: { plate: PlateMeta }) {
-  const startX = 30;
-  const width = 540;
-  const count = Math.min(plate.pleats, 20);
-  const pleatW = width / count;
-  const top = 50;
-  const rowGap = 140 / Math.max(plate.rows - 1, 1);
+  const courses = getPlateCourses(plate);
+  const width = LEFT * 2 + plate.pleats * PLEAT_WIDTH;
+  const height = TOP + plate.rows * ROW_HEIGHT + 24;
 
   return (
-    <IllustrationFrame caption="Finished appearance (schematic) — stitch colors match the plate thread key">
-      <SvgRoot viewBox="0 0 600 240" aria-label={`Finished preview of ${plate.title}`}>
-        {/* Pleat background */}
-        {Array.from({ length: count }).map((_, i) => {
-          const x = startX + i * pleatW;
-          return (
-            <path
-              key={i}
-              d={`M ${x} 40 L ${x + pleatW / 2} 70 L ${x + pleatW} 40 L ${x + pleatW} 210 L ${x + pleatW / 2} 180 L ${x} 210 Z`}
-              fill={i % 2 === 0 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain}
-              stroke={ILLUSTRATION.fabricShadow}
-              strokeWidth="0.5"
-              opacity="0.95"
-            />
-          );
-        })}
-        {/* Draw stitches per row as connected paths where consecutive cells share a kind */}
-        {Array.from({ length: plate.rows }, (_, r) => {
-          const row = r + 1;
-          const y = top + r * rowGap;
-          const pts: { x: number; color: string; kind: string }[] = [];
-          for (let p = 1; p <= count; p++) {
-            const cell = getPlateCell(plate, row, p);
-            if (cell.kind !== "empty") {
-              pts.push({
-                x: startX + (p - 1) * pleatW + pleatW / 2,
-                color: cell.color ?? ILLUSTRATION.thread,
-                kind: cell.kind,
-              });
-            }
-          }
-          if (pts.length < 2) {
-            return pts.map((pt, i) => (
-              <circle key={`${row}-${i}`} cx={pt.x} cy={y} r={3} fill={pt.color} />
-            ));
-          }
-          // Group consecutive
-          const d = pts.map((pt, i) => `${i === 0 ? "M" : "L"} ${pt.x} ${y}`).join(" ");
-          return (
-            <g key={row}>
-              <path
-                d={d}
-                fill="none"
-                stroke={pts[0].color}
-                strokeWidth={pts[0].kind.includes("wave") || pts[0].kind === "trellis" || pts[0].kind === "van-dyke" ? 2.4 : 3}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              {pts.map((pt, i) => (
-                <circle key={i} cx={pt.x} cy={y} r={2.5} fill={pt.color} />
-              ))}
-            </g>
-          );
-        })}
-        {plate.motifPath && (
-          <g transform="translate(55 72) scale(4.8 1.25)">
-            <path
-              d={plate.motifPath}
-              fill="none"
-              stroke={plate.threads[1]?.hex ?? ILLUSTRATION.thread}
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
-          </g>
-        )}
-        {plate.motifMark && (
-          <text
-            x="300"
-            y="145"
-            textAnchor="middle"
-            fontFamily="Georgia, serif"
-            fontSize={plate.motifMark.length > 2 ? "18" : "34"}
-            fontStyle={plate.category?.includes("Script") ? "italic" : "normal"}
-            fontWeight={plate.category?.includes("Block") ? "700" : "400"}
-            fill={plate.threads[1]?.hex ?? ILLUSTRATION.thread}
-            stroke={ILLUSTRATION.fabric}
-            strokeWidth="1.5"
-            paintOrder="stroke"
-          >
-            {plate.motifMark}
-          </text>
-        )}
-      </SvgRoot>
+    <IllustrationFrame caption={`Complete ${plate.pleats}-pleat stitched sample · scroll sideways on mobile`}>
+      <svg viewBox={`0 0 ${width} ${height}`} width={width} style={{ minWidth: width }} className="h-auto max-w-none" role="img" aria-label={`Finished stitched sample for ${plate.title}`}>
+        <defs>
+          <linearGradient id={`pleat-${plate.slug}`} x1="0" x2="1">
+            <stop offset="0" stopColor={ILLUSTRATION.fabricShadow} />
+            <stop offset=".5" stopColor={ILLUSTRATION.mountain} />
+            <stop offset="1" stopColor={ILLUSTRATION.fabricShadow} />
+          </linearGradient>
+        </defs>
+        <rect width={width} height={height} rx="8" fill={ILLUSTRATION.fabric} />
+        {Array.from({ length: plate.pleats }, (_, index) => (
+          <rect key={index} x={LEFT + index * PLEAT_WIDTH} y={TOP} width={PLEAT_WIDTH} height={plate.rows * ROW_HEIGHT} fill={`url(#pleat-${plate.slug})`} opacity={index % 2 ? ".55" : ".9"} />
+        ))}
+        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} />
+      </svg>
     </IllustrationFrame>
   );
 }
 
 export function PlateProgression({ plate }: { plate: PlateMeta }) {
-  const accent = plate.threads[1]?.hex ?? plate.threads[0]?.hex ?? ILLUSTRATION.thread;
+  const courses = getPlateCourses(plate);
+  const shown = plate.repeatPleats > 1 ? Math.min(plate.repeatPleats + 1, plate.pleats) : Math.min(12, plate.pleats);
+  const width = LEFT + shown * PLEAT_WIDTH + 20;
+  const height = TOP + plate.rows * ROW_HEIGHT + 16;
   return (
-    <div className="mt-5 grid gap-3 sm:grid-cols-3">
-      {[
-        { label: "1 · Blank pleats", stitches: false, motif: false },
-        { label: "2 · Geometric foundation", stitches: true, motif: false },
-        { label: "3 · Finished embroidery", stitches: true, motif: true },
-      ].map((stage, stageIndex) => (
-        <figure key={stage.label} className="rounded border border-border bg-paper/60 p-2">
-          <svg viewBox="0 0 220 125" role="img" aria-label={stage.label} className="w-full">
-            {Array.from({ length: 12 }, (_, index) => (
-              <path
-                key={index}
-                d={`M${12 + index * 17} 12 Q${20.5 + index * 17} 25 ${29 + index * 17} 12 V112 Q${20.5 + index * 17} 99 ${12 + index * 17} 112 Z`}
-                fill={index % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain}
-                stroke={ILLUSTRATION.fabricShadow}
-                strokeWidth=".6"
-              />
-            ))}
-            {stage.stitches && (
-              <>
-                <path d="M15 34 Q55 22 95 34 T175 34 T215 34" fill="none" stroke={plate.threads[0]?.hex} strokeWidth="3" strokeLinecap="round" />
-                <path d="M15 91 Q55 103 95 91 T175 91 T215 91" fill="none" stroke={plate.threads[0]?.hex} strokeWidth="3" strokeLinecap="round" />
-              </>
-            )}
-            {stage.motif && plate.motifPath && (
-              <path d={plate.motifPath} transform="translate(5 8) scale(2 .85)" fill="none" stroke={accent} strokeWidth="2.5" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-            )}
-            {stageIndex === 1 && (
-              <g transform="rotate(-12 175 58)">
-                <line x1="154" y1="58" x2="208" y2="58" stroke="#777" strokeWidth="2" />
-                <ellipse cx="205" cy="58" rx="4" ry="2" fill="none" stroke="#777" />
-                <path d="M154 58 Q139 68 128 61" fill="none" stroke={accent} strokeWidth="1.8" />
-              </g>
-            )}
+    <div className="mt-5 grid gap-3 lg:grid-cols-3">
+      {[0, Math.max(1, Math.ceil(courses.length / 2)), courses.length].map((count, index) => (
+        <figure key={index} className="overflow-x-auto rounded border border-border bg-paper/60 p-2">
+          <svg viewBox={`0 0 ${width} ${height}`} width={width} style={{ minWidth: width }} className="h-auto max-w-none" role="img" aria-label={["Blank pleats", "Foundation in progress", "Finished repeat"][index]}>
+            <rect width={width} height={height} fill={ILLUSTRATION.fabric} />
+            {Array.from({ length: shown }, (_, pleat) => {
+              const x = LEFT + pleat * PLEAT_WIDTH + PLEAT_WIDTH / 2;
+              return <path key={pleat} d={`M${x - 14} ${TOP} Q${x} ${TOP + 10} ${x + 14} ${TOP} V${height - 10} Q${x} ${height - 20} ${x - 14} ${height - 10}Z`} fill={pleat % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".5" />;
+            })}
+            <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1} />
           </svg>
-          <figcaption className="px-1 pb-1 text-xs text-ink-muted">{stage.label}</figcaption>
+          <figcaption className="px-1 py-2 text-sm text-ink-muted">{index + 1} · {["Blank pleats", "Foundation in progress", "Finished repeat"][index]}</figcaption>
         </figure>
       ))}
     </div>

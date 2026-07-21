@@ -45,8 +45,8 @@ export default function StitchesIndexPage() {
       <p className="label-caps mb-3">Encyclopedia</p>
       <h1 className="font-serif text-4xl text-ink md:text-5xl">Stitch Index</h1>
       <p className="mt-4 max-w-2xl text-ink-muted">
-        Clickable index of English smocking stitches. Filter by difficulty and type. Cable
-        Stitch is complete; remaining chapters follow its publication template.
+        Eight complete English smocking stitch chapters with needle paths, working order,
+        tension guidance, troubleshooting, and practice exercises. Filter by difficulty and type.
       </p>
 
       <div className="stitch-controls mt-8 flex flex-col gap-3 rounded border border-border bg-paper/80 p-4 sm:flex-row sm:flex-wrap sm:items-center">
