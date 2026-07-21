@@ -53,8 +53,10 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
       : "";
     return `<g>${segments}${order}</g>`;
   }).join("");
-  const repeatX = left + plate.repeatPleats * cell;
+  const repeatStartX = left + cell / 2;
+  const repeatX = repeatStartX + plate.repeatPleats * cell;
   const centerX = left + (plate.pleats / 2) * cell;
+  const centerLabel = escape((plate.centerLine ?? "center reference").toUpperCase());
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${escape(plate.title)} connected stitch graph">
   <style>text{font-family:Arial,sans-serif;fill:${ink}}.title{font:700 16px Georgia,serif}.label{font-size:9px}.order{font-size:9px;font-weight:700;fill:#fff}</style>
@@ -62,11 +64,11 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
   <text x="${left}" y="24" class="title">${escape(plate.title)}</text>
   <text x="${left}" y="41" class="label">${plate.rows} gathering rows · ${plate.pleats} pleats · solid = front stitch · dashed = hidden travel</text>
   ${rowGuides}${pleatGuides}${coursePaths}
-  <line x1="${left}" y1="${top - 7}" x2="${left}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
+  <line x1="${repeatStartX}" y1="${top - 7}" x2="${repeatStartX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
   <line x1="${repeatX}" y1="${top - 7}" x2="${repeatX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
-  <text x="${left + plate.repeatPleats * cell / 2}" y="${height - 28}" text-anchor="middle" class="label">ONE REPEAT</text>
+  <text x="${repeatStartX + plate.repeatPleats * cell / 2}" y="${height - 28}" text-anchor="middle" class="label">ONE REPEAT</text>
   <line x1="${centerX}" y1="${top - 12}" x2="${centerX}" y2="${top + plate.rows * rowHeight + 12}" stroke="${monochrome ? ink : "#8e405c"}" stroke-width="1.5" stroke-dasharray="7 4"/>
-  <text x="${centerX}" y="${height - 10}" text-anchor="middle" class="label">CENTER VALLEY</text>
+  <text x="${centerX}" y="${height - 10}" text-anchor="middle" class="label">${centerLabel}</text>
   </svg>`;
 }
 

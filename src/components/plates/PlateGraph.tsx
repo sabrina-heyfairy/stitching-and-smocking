@@ -177,6 +177,8 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
   const width = LEFT + shownPleats * PLEAT_WIDTH + 24;
   const height = TOP + plate.rows * ROW_HEIGHT + 54;
   const centerX = LEFT + (plate.pleats / 2) * PLEAT_WIDTH;
+  const repeatStartX = LEFT + PLEAT_WIDTH / 2;
+  const centerLabel = (plate.centerLine ?? "center reference").toUpperCase();
 
   return (
     <IllustrationFrame
@@ -240,16 +242,16 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
         <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={endPleat} showHidden showOrder />
         {plate.repeatPleats > 1 && !fullWidth && (
           <g>
-            {[LEFT, LEFT + plate.repeatPleats * PLEAT_WIDTH].map((x) => (
+            {[repeatStartX, repeatStartX + plate.repeatPleats * PLEAT_WIDTH].map((x) => (
               <line key={x} x1={x} y1={TOP - 8} x2={x} y2={TOP + plate.rows * ROW_HEIGHT + 8} stroke={ILLUSTRATION.gold} strokeWidth="1.5" strokeDasharray="5 3" />
             ))}
-            <text x={LEFT + plate.repeatPleats * PLEAT_WIDTH / 2} y={height - 15} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.gold}>ONE REPEAT</text>
+            <text x={repeatStartX + plate.repeatPleats * PLEAT_WIDTH / 2} y={height - 15} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.gold}>ONE REPEAT</text>
           </g>
         )}
         {fullWidth && (
           <g>
             <line x1={centerX} y1={TOP - 18} x2={centerX} y2={TOP + plate.rows * ROW_HEIGHT + 10} stroke={ILLUSTRATION.burgundy} strokeWidth="2" strokeDasharray="6 4" />
-            <text x={centerX} y={height - 14} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.burgundy}>CENTER VALLEY</text>
+            <text x={centerX} y={height - 14} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.burgundy}>{centerLabel}</text>
           </g>
         )}
       </svg>
