@@ -165,29 +165,34 @@ function vanDyke(
   pleats: number,
 ): PlateCourse {
   const segments: CourseSegment[] = [];
-  let previousRow: number | undefined;
-  for (let rightPleat = pleats; rightPleat > 1; rightPleat--) {
-    const leftPleat = rightPleat - 1;
-    const row = (pleats - rightPleat) % 2 ? topRow : bottomRow;
-    if (previousRow !== undefined) {
+  let previousRight: CoursePoint | undefined;
+  let bindIndex = 0;
+  for (let leftPleat = 1; leftPleat < pleats; leftPleat += 4) {
+    const rightPleat = leftPleat + 1;
+    if (rightPleat > pleats) break;
+    const row = bindIndex % 2 ? topRow : bottomRow;
+    const left = { pleat: leftPleat, row };
+    const right = { pleat: rightPleat, row };
+    if (previousRight) {
       segments.push({
-        from: { pleat: rightPleat, row: previousRow },
-        to: { pleat: rightPleat, row },
-        role: "travel",
-        hidden: false,
+        from: previousRight,
+        to: left,
+        role: "interval",
+        threadSide: row === topRow ? "below" : "above",
       });
     }
     segments.push({
-      from: { pleat: rightPleat, row },
-      to: { pleat: leftPleat, row },
+      from: left,
+      to: right,
       role: "lock",
       bind: [leftPleat, rightPleat],
       threadSide: row === topRow ? "above" : "below",
       passes: 2,
     });
-    previousRow = row;
+    previousRight = right;
+    bindIndex += 1;
   }
-  return { id, label, stitch: "van-dyke", threadId, direction: "right-to-left", segments };
+  return { id, label, stitch: "van-dyke", threadId, direction: "left-to-right", segments };
 }
 
 function cable(row: number, plate: PlateMeta, threadId = plate.threads[0].id, id = `cable-${row}`) {
@@ -212,7 +217,7 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
         cord("stem", "Stem stitch · thread below", "stem-stitch-smocking", second, 4, plate.pleats),
       ];
     case "van-dyke-accent":
-      return [cable(1, plate), vanDyke("van-dyke", "Overlapping double-pass Van Dyke locks", second, 3, 4, plate.pleats), cable(6, plate)];
+      return [cable(1, plate), vanDyke("van-dyke", "Broad Van Dyke chevron with pair-locked turns", second, 3, 4, plate.pleats), cable(6, plate)];
     case "baby-bishop-starter":
       return [cable(1, plate), steppedWave("baby-wave", "Wave of two with turn closures", first, 2, 3, plate.pleats, 2), cable(4, plate)];
     case "surface-honeycomb-band":
@@ -248,5 +253,33 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
     default:
       return [];
   }
+}
+
+export function validatePlateCourses(plate: PlateMeta): string[] {
+  const errors: string[] = [];
+  const threadIds = new Set(plate.threads.map((thread) => thread.id));
+  const courses = getPlateCourses(plate);
+  if (courses.length === 0) errors.push("has no stitch courses");
+  for (const course of courses) {
+    if (!threadIds.has(course.threadId)) errors.push(`${course.id} references missing thread ${course.threadId}`);
+    if (course.segments.length === 0) errors.push(`${course.id} has no segments`);
+    for (const [index, segment] of course.segments.entries()) {
+      for (const point of [segment.from, segment.to]) {
+        if (point.pleat < 1 || point.pleat > plate.pleats) {
+          errors.push(`${course.id} segment ${index} uses pleat ${point.pleat} outside 1–${plate.pleats}`);
+        }
+        if (point.row < 0.5 || point.row > plate.rows + 0.5) {
+          errors.push(`${course.id} segment ${index} uses row ${point.row} outside the plate`);
+        }
+      }
+    }
+    if (course.stitch === "honeycomb" && course.segments.some((segment) => segment.role === "travel" && !segment.hidden)) {
+      errors.push(`${course.id} exposes classic honeycomb travel`);
+    }
+    if (course.stitch === "surface-honeycomb" && course.segments.some((segment) => segment.role === "travel" && segment.hidden)) {
+      errors.push(`${course.id} hides surface honeycomb travel`);
+    }
+  }
+  return errors;
 }
 

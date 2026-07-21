@@ -166,7 +166,9 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = useMemo(() => getPlateCourses(plate), [plate]);
   const [fullWidth, setFullWidth] = useState(false);
-  const repeatEnd = plate.repeatPleats > 1 ? Math.min(plate.pleats, plate.repeatPleats + 1) : Math.min(plate.pleats, 12);
+  const repeatEnd = plate.repeatPleats > 1
+    ? Math.min(plate.pleats, plate.repeatPleats <= 4 ? plate.repeatPleats * 2 + 1 : plate.repeatPleats + 1)
+    : Math.min(plate.pleats, 12);
   const endPleat = fullWidth ? plate.pleats : repeatEnd;
   const shownPleats = endPleat;
   const width = LEFT + shownPleats * PLEAT_WIDTH + 24;

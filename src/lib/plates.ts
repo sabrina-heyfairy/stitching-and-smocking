@@ -1,5 +1,6 @@
 import type { PlateMeta } from "./plate-types";
 import { cellKey } from "./plate-types";
+import { validatePlateCourses } from "./plate-courses";
 
 const dusty = "#6b8a9e";
 const burgundy = "#7a3f45";
@@ -254,20 +255,20 @@ const curatedPlates: PlateMeta[] = [
     garments: ["christening", "heirloom bishop", "exhibition sampler"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 2,
+    repeatPleats: 8,
     threads: [
       { id: "cable", name: "Gold cable", hex: gold },
       { id: "vd", name: "Burgundy Van Dyke", hex: burgundy },
     ],
     stitchesUsed: ["cable-stitch", "van-dyke", "wave-stitch"],
     description:
-      "Cable frame with an overlapping, double-pass Van Dyke field worked right to left for a bold heirloom accent.",
+      "Cable frame with broad diagonal Van Dyke chevrons and two-pleat locks at every peak and valley.",
     instructions: [
       "Cable rows 1 and 6 in gold.",
-      "Across rows 3–4, work from right to left, catching an adjacent pair with a traveling stitch.",
-      "Lock the same pair with a second pass, then move to the overlapping pair so every pleat is shared.",
-      "Keep each pair catch in the top third of both mountains and alternate between rows 3 and 4.",
-      "If the pairs do not overlap, stop and compare the sequence with the Van Dyke chapter.",
+      "Bind the first adjacent pair on row 4, keeping both catches in the top third of the mountains.",
+      "Travel diagonally across the face to row 3, then bind the peak pair before descending.",
+      "Continue with equal-width diagonals, locking two pleats together at every alternating peak and valley.",
+      "If the field reads as narrow loops or a plain wave, stop and compare the turn sequence with the Van Dyke chapter.",
     ],
     tips: [
       "Sample on scrap before a christening yoke.",
@@ -532,6 +533,13 @@ export const plates: PlateMeta[] = [
     ...plate,
   })),
 ];
+
+const courseErrors = plates.flatMap((plate) =>
+  validatePlateCourses(plate).map((error) => `${plate.slug}: ${error}`),
+);
+if (courseErrors.length > 0) {
+  throw new Error(`Invalid smocking plate definitions:\n${courseErrors.join("\n")}`);
+}
 
 export function getPlate(slug: string): PlateMeta | undefined {
   return plates.find((p) => p.slug === slug);
