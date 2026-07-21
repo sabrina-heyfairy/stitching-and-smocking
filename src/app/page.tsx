@@ -131,8 +131,8 @@ export default function HomePage() {
         <div className="site-container">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="label-caps mb-3">Gold-standard chapter</p>
-              <h2 className="font-serif text-3xl text-ink">Cable Stitch</h2>
+              <p className="label-caps mb-3">Publication-quality chapters</p>
+              <h2 className="font-serif text-3xl text-ink">Completed stitches</h2>
             </div>
             <Link href="/stitches/" className="text-sm text-dusty-blue-deep no-underline hover:text-burgundy">
               Full stitch index →
@@ -153,17 +153,17 @@ export default function HomePage() {
                 <p className="mt-2 text-ink-muted">{s.description}</p>
               </Link>
             ))}
-            <div className="rounded border border-dashed border-border bg-cream/40 p-6">
-              <p className="label-caps mb-2">Build strategy</p>
-              <p className="text-sm leading-relaxed text-ink-muted">
-                Chapters are completed one at a time to publication quality. Cable Stitch is the
-                template — wave, honeycomb, trellis, and the rest follow the same structure.
-              </p>
-              <p className="mt-3 text-sm text-ink-faint">
-                {stitches.filter((s) => s.status === "planned").length} stitches planned ·{" "}
-                {complete.length} complete
-              </p>
-            </div>
+          </div>
+          <div className="mt-4 rounded border border-dashed border-border bg-cream/40 p-6">
+            <p className="label-caps mb-2">Build strategy</p>
+            <p className="text-sm leading-relaxed text-ink-muted">
+              Chapters are completed one at a time to publication quality. Cable and Wave set the
+              template — honeycomb, trellis, and the rest follow the same structure.
+            </p>
+            <p className="mt-3 text-sm text-ink-faint">
+              {stitches.filter((s) => s.status === "planned").length} stitches planned ·{" "}
+              {complete.length} complete
+            </p>
           </div>
         </div>
       </section>

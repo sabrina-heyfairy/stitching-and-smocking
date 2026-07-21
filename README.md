@@ -31,10 +31,11 @@ npm run lint
 | Design system (palette, typography, layout) | Complete |
 | Reusable pleat / needle / thread illustrations | Complete |
 | Read 16 pleater encyclopedia | Complete |
-| **Cable Stitch** chapter (gold-standard template) | Complete |
+| **Cable Stitch** chapter | Complete |
+| **Wave Stitch** chapter | Complete |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, embroidery, garments, design | Foundation chapters |
-| Remaining stitches (wave, honeycomb, trellis, …) | Planned — follow Cable template |
+| Remaining stitches (honeycomb, trellis, outline, …) | Planned — follow Cable/Wave template |
 
 ## Project structure
 

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { DifficultyBadge, StatusBadge } from "@/components/Badge";
 import { getStitch, stitches } from "@/lib/stitches";
 import { CableStitchChapter } from "@/components/chapters/CableStitchChapter";
+import { WaveStitchChapter } from "@/components/chapters/WaveStitchChapter";
 import { PlannedStitchChapter } from "@/components/chapters/PlannedStitchChapter";
 
 export function generateStaticParams() {
@@ -63,6 +64,8 @@ export default async function StitchPage({ params }: { params: Promise<{ slug: s
 
       {stitch.slug === "cable-stitch" ? (
         <CableStitchChapter />
+      ) : stitch.slug === "wave-stitch" ? (
+        <WaveStitchChapter />
       ) : (
         <PlannedStitchChapter stitch={stitch} />
       )}

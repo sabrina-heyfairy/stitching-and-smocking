@@ -105,4 +105,22 @@ export const searchIndex: SearchItem[] = [
     tags: ["problem", "tension", "troubleshooting", "cable"],
     difficulty: "beginner",
   },
+  {
+    id: "problem-wave-peaks",
+    title: "Wave peaks miss the upper row",
+    description: "Fix short peaks and collapsed amplitude in wave stitch without ripping the whole panel.",
+    href: "/stitches/wave-stitch/#troubleshooting",
+    type: "stitch",
+    tags: ["problem", "wave", "troubleshooting", "amplitude", "peaks"],
+    difficulty: "beginner",
+  },
+  {
+    id: "problem-wave-count",
+    title: "Uneven wave count",
+    description: "When ascent and descent stitch counts don’t match and peaks drift.",
+    href: "/stitches/wave-stitch/#mistakes",
+    type: "stitch",
+    tags: ["problem", "wave", "counting", "chevon", "mistakes"],
+    difficulty: "beginner",
+  },
 ];

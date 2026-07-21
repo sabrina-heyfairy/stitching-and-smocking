@@ -28,13 +28,21 @@ export const stitches: StitchMeta[] = [
   {
     slug: "wave-stitch",
     title: "Wave Stitch",
-    subtitle: "Also called trellis or chevron when combined",
+    subtitle: "Traveling stitch between two gathering rows",
     difficulty: "beginner",
     categories: ["wave", "structural"],
-    uses: ["bishop dresses", "yokes", "bonnets", "sleeves"],
-    status: "planned",
+    uses: [
+      "bishop dresses",
+      "yokes",
+      "bonnets",
+      "sleeves",
+      "children's clothing",
+      "heirloom sewing",
+    ],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
-      "A stitch that travels up and down between rows, creating a flowing wave. The building block of trellis and diamond patterns.",
+      "A stitch that travels up and down between two gathering rows, creating a flowing wave. The building block of trellis and diamond patterns.",
   },
   {
     slug: "honeycomb",
