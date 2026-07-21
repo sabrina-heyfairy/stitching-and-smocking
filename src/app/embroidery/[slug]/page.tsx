@@ -11,6 +11,9 @@ import { StemEmbroideryChapter } from "@/components/chapters/StemEmbroideryChapt
 import { SatinChapter } from "@/components/chapters/SatinChapter";
 import { BackStitchChapter } from "@/components/chapters/BackStitchChapter";
 import { ChainStitchChapter } from "@/components/chapters/ChainStitchChapter";
+import { BlanketChapter } from "@/components/chapters/BlanketChapter";
+import { OutlineEmbroideryChapter } from "@/components/chapters/OutlineEmbroideryChapter";
+import { RunningStitchChapter } from "@/components/chapters/RunningStitchChapter";
 import { PlannedEmbroideryChapter } from "@/components/chapters/PlannedEmbroideryChapter";
 
 const chapters: Record<string, ComponentType> = {
@@ -22,6 +25,9 @@ const chapters: Record<string, ComponentType> = {
   "satin-stitch": SatinChapter,
   "back-stitch": BackStitchChapter,
   "chain-stitch": ChainStitchChapter,
+  "blanket-stitch": BlanketChapter,
+  "outline-embroidery": OutlineEmbroideryChapter,
+  "running-stitch": RunningStitchChapter,
 };
 
 export function generateStaticParams() {

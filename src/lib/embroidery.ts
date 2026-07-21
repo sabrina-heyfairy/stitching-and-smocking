@@ -109,7 +109,7 @@ export const embroideryStitches: EmbroideryMeta[] = [
     subtitle: "Edge and appliqué stitch",
     difficulty: "beginner",
     uses: ["edges", "appliqué", "hems", "felt motifs"],
-    status: "planned",
+    status: "complete",
     description:
       "A looped edge stitch for hems, appliqué, and decorative boundaries on garments with smocked inserts.",
     withSmocking: "Finish appliqué animals or lace edges near smocked yokes.",
@@ -120,7 +120,7 @@ export const embroideryStitches: EmbroideryMeta[] = [
     subtitle: "Smooth surface line — not smocking outline",
     difficulty: "beginner",
     uses: ["outlines", "stems", "fine lines"],
-    status: "planned",
+    status: "complete",
     description:
       "Surface outline related to stem; keep thread position consistent for a smooth cord on flat fabric.",
     withSmocking: "Fine botanical lines on batiste surrounding the smocked area.",
@@ -131,7 +131,7 @@ export const embroideryStitches: EmbroideryMeta[] = [
     subtitle: "Utility and light texture",
     difficulty: "beginner",
     uses: ["guidelines", "quilting look", "utility"],
-    status: "planned",
+    status: "complete",
     description:
       "Even in-and-out stitches for temporary guidelines or delicate textured lines.",
     withSmocking: "Mark motif placement before permanent embroidery above the smocking.",
