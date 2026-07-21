@@ -45,10 +45,10 @@ export default function HomePage() {
                 Start the Practice Path
               </Link>
               <Link
-                href="/stitches/cable-stitch/"
+                href="/calculator/"
                 className="rounded border border-border bg-paper/80 px-5 py-2.5 text-sm font-medium text-ink no-underline transition hover:bg-cream-deep"
               >
-                Cable Stitch
+                Fabric Calculator
               </Link>
               <Link
                 href="/pleater/"

@@ -42,6 +42,7 @@ npm run lint
 | **Embroidery companion** (11 stitches + motifs guide) | Complete |
 | **Smocking Plate Library** (12 teaching plates) | Complete |
 | **Garment construction** (visual assembly guides) | Complete |
+| **Fabric calculator** (Read 16 yardage: finished width → length to pleat) | Complete |
 | **Practice Path** curriculum + materials visuals | Complete |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, garments, design | Foundation chapters |

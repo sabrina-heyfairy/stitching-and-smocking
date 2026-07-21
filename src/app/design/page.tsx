@@ -62,6 +62,14 @@ export default function DesignPage() {
         <Link href="/plates/wave-between-cables/">Wave Between Cables</Link>, then{" "}
         <Link href="/plates/classic-trellis/">Classic Trellis</Link>.
       </p>
+
+      <div className="callout mt-8">
+        <p className="text-sm text-ink-muted">
+          Need yardage before you chart? Use the{" "}
+          <Link href="/calculator/">Read 16 fabric calculator</Link> to convert finished smocked
+          width into fabric length to pleat — then size your plate to that pleat count.
+        </p>
+      </div>
     </article>
   );
 }
