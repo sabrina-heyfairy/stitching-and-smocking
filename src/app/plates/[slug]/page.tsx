@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { DifficultyBadge } from "@/components/Badge";
 import { getPlate, plates } from "@/lib/plates";
 import { PlateFinishedPreview, PlateGraph, PlateProgression } from "@/components/plates/PlateGraph";
-import { PlateBlackWhiteGraph, PlateColorways, PlateDownloads } from "@/components/plates/PlateDownloads";
+import { PlateBlackWhiteGraph, PlateColorways, PlateDownloads, PlateThreadKey } from "@/components/plates/PlateDownloads";
+import { PlateColorwayProvider } from "@/components/plates/PlateColorwayContext";
 
 export function generateStaticParams() {
   return plates.map((p) => ({ slug: p.slug }));
@@ -42,7 +43,8 @@ export default async function PlateDetailPage({
   const next = idx < plates.length - 1 ? plates[idx + 1] : null;
 
   return (
-    <article className="pb-20">
+    <PlateColorwayProvider>
+      <article className="pb-20">
       <header className="border-b border-border bg-paper/40">
         <div className="site-container py-12 md:py-16">
           <nav className="mb-4 text-sm text-ink-faint">
@@ -73,7 +75,9 @@ export default async function PlateDetailPage({
       </header>
 
       <div className="site-container max-w-3xl py-10">
-        <section id="graph" className="scroll-mt-24">
+        <PlateColorways plate={plate} />
+
+        <section id="graph" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Graph</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Follow the numbered courses in order. Solid lines are thread visible on the front;
@@ -97,29 +101,7 @@ export default async function PlateDetailPage({
           <PlateProgression plate={plate} />
         </section>
 
-        <PlateColorways plate={plate} />
-
-        <section id="threads" className="mt-12 scroll-mt-24">
-          <h2 className="font-serif text-3xl text-ink">Thread colors</h2>
-          <ul className="mt-4 space-y-3">
-            {plate.threads.map((t) => (
-              <li
-                key={t.id}
-                className="flex items-start gap-3 rounded border border-border bg-paper/60 px-4 py-3"
-              >
-                <span
-                  className="mt-1 inline-block h-5 w-5 shrink-0 rounded-full border border-border"
-                  style={{ background: t.hex }}
-                />
-                <div>
-                  <p className="font-medium text-ink">{t.name}</p>
-                  {t.note && <p className="text-sm text-ink-muted">{t.note}</p>}
-                  <p className="text-xs text-ink-faint">{t.hex}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <PlateThreadKey plate={plate} />
 
         <section id="instructions" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Instructions</h2>
@@ -192,6 +174,7 @@ export default async function PlateDetailPage({
           </Link>
         </div>
       </div>
-    </article>
+      </article>
+    </PlateColorwayProvider>
   );
 }

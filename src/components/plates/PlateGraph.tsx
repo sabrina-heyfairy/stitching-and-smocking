@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { PlateMeta } from "@/lib/plate-types";
 import { getPlateCourses, type PlateCourse, type CoursePoint } from "@/lib/plate-courses";
 import { ILLUSTRATION, IllustrationFrame } from "@/components/illustrations/IllustrationFrame";
+import { useColorwayPlate } from "@/components/plates/PlateColorwayContext";
 
 const PLEAT_WIDTH = 28;
 const ROW_HEIGHT = 42;
@@ -89,7 +90,8 @@ function CoursePaths({
   });
 }
 
-export function PlateGraph({ plate }: { plate: PlateMeta }) {
+export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
+  const plate = useColorwayPlate(sourcePlate);
   const courses = useMemo(() => getPlateCourses(plate), [plate]);
   const [fullWidth, setFullWidth] = useState(false);
   const repeatEnd = plate.repeatPleats > 1 ? Math.min(plate.pleats, plate.repeatPleats + 1) : Math.min(plate.pleats, 12);
@@ -188,7 +190,8 @@ export function PlateGraph({ plate }: { plate: PlateMeta }) {
   );
 }
 
-export function PlateFinishedPreview({ plate }: { plate: PlateMeta }) {
+export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta }) {
+  const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
   const width = LEFT * 2 + plate.pleats * PLEAT_WIDTH;
   const height = TOP + plate.rows * ROW_HEIGHT + 24;
@@ -213,7 +216,8 @@ export function PlateFinishedPreview({ plate }: { plate: PlateMeta }) {
   );
 }
 
-export function PlateProgression({ plate }: { plate: PlateMeta }) {
+export function PlateProgression({ plate: sourcePlate }: { plate: PlateMeta }) {
+  const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
   const shown = plate.repeatPleats > 1 ? Math.min(plate.repeatPleats + 1, plate.pleats) : Math.min(12, plate.pleats);
   const width = LEFT + shown * PLEAT_WIDTH + 20;
