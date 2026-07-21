@@ -1,6 +1,7 @@
 import type { SearchItem } from "./types";
 import { stitches } from "./stitches";
 import { sections } from "./navigation";
+import { embroideryStitches } from "./embroidery";
 
 export const searchIndex: SearchItem[] = [
   ...stitches.map((s) => ({
@@ -12,6 +13,23 @@ export const searchIndex: SearchItem[] = [
     tags: [...s.categories, s.difficulty, ...s.uses, "smocking", "stitch"],
     difficulty: s.difficulty,
   })),
+  ...embroideryStitches.map((s) => ({
+    id: `embroidery-${s.slug}`,
+    title: s.title,
+    description: s.description,
+    href: `/embroidery/${s.slug}/`,
+    type: "embroidery" as const,
+    tags: [...s.uses, s.difficulty, "embroidery", "surface", "motif"],
+    difficulty: s.difficulty,
+  })),
+  {
+    id: "embroidery-motifs",
+    title: "Decorative Motifs",
+    description: "Flower, bow, vine, monogram, and holiday motif recipes for smocked garments.",
+    href: "/embroidery/motifs/",
+    type: "embroidery",
+    tags: ["motifs", "flowers", "bows", "monogram", "borders", "embroidery"],
+  },
   {
     id: "pleater-overview",
     title: "Read 16-Needle Pleater",
@@ -45,25 +63,32 @@ export const searchIndex: SearchItem[] = [
     tags: ["oil", "lubrication", "cleaning", "storage", "maintenance"],
   },
   ...sections
-    .filter((s) => s.slug !== "stitches" && s.slug !== "pleater")
+    .filter((s) => s.slug !== "stitches" && s.slug !== "pleater" && s.slug !== "embroidery")
     .map((s) => ({
       id: `section-${s.slug}`,
       title: s.title,
       description: s.description,
       href: s.href,
-      type: (s.slug === "embroidery"
-        ? "embroidery"
-        : s.slug === "fabrics"
-          ? "fabric"
-          : s.slug === "threads"
-            ? "thread"
-            : s.slug === "needles"
-              ? "needle"
-              : s.slug === "garments"
-                ? "garment"
-                : "theory") as SearchItem["type"],
+      type: (s.slug === "fabrics"
+        ? "fabric"
+        : s.slug === "threads"
+          ? "thread"
+          : s.slug === "needles"
+            ? "needle"
+            : s.slug === "garments"
+              ? "garment"
+              : "theory") as SearchItem["type"],
       tags: [s.slug, "guide", "encyclopedia"],
     })),
+  {
+    id: "section-embroidery",
+    title: "Embroidery Companion",
+    description:
+      "Surface embroidery stitches commonly combined with English smocking — bullion, knots, daisy, and more.",
+    href: "/embroidery/",
+    type: "embroidery",
+    tags: ["embroidery", "companion", "motifs"],
+  },
   {
     id: "fabric-batiste",
     title: "Batiste",
@@ -176,5 +201,14 @@ export const searchIndex: SearchItem[] = [
     type: "stitch",
     tags: ["problem", "surface honeycomb", "honeycomb", "troubleshooting"],
     difficulty: "intermediate",
+  },
+  {
+    id: "problem-bullion-coil",
+    title: "Bullion coil won’t slide",
+    description: "Wrapped bullion stuck on the needle — ease wraps and shorten the bite.",
+    href: "/embroidery/bullion/#troubleshooting",
+    type: "embroidery",
+    tags: ["problem", "bullion", "rose", "troubleshooting"],
+    difficulty: "advanced",
   },
 ];

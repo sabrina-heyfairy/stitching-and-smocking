@@ -39,8 +39,9 @@ npm run lint
 | **Stem Stitch (Smocking)** chapter | Complete |
 | **Van Dyke Stitch** chapter | Complete |
 | **Surface Honeycomb** chapter | Complete |
+| **Embroidery companion** (8 stitches + motifs guide) | Complete |
 | Stitch index + filters + search | Complete |
-| Theory, fabrics, threads, needles, embroidery, garments, design | Foundation chapters |
+| Theory, fabrics, threads, needles, garments, design | Foundation chapters |
 
 ## Project structure
 

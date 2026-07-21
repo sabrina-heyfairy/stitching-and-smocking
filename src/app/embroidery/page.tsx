@@ -1,55 +1,106 @@
-const stitches = [
-  { name: "Bullion", use: "Roses and buds on bishop yokes and bonnets" },
-  { name: "French knots", use: "Flower centers, filler texture, berry clusters" },
-  { name: "Lazy Daisy", use: "Petals and leaves combined with smocked grounds" },
-  { name: "Feather stitch", use: "Vines climbing beside smocked panels" },
-  { name: "Stem stitch", use: "Outlines and stems (distinct from smocking stem cable)" },
-  { name: "Outline stitch", use: "Smooth lines; related family to stem" },
-  { name: "Back stitch", use: "Structural outlines, lettering bases" },
-  { name: "Satin stitch", use: "Solid petals, bows, small motifs" },
-  { name: "Blanket stitch", use: "Edges, appliqué on garments with smocked inserts" },
-  { name: "Chain stitch", use: "Decorative borders framing smocking" },
-  { name: "Running stitch", use: "Guidelines, light texture, utility" },
-];
+"use client";
 
-export const metadata = {
-  title: "Embroidery Companion",
-  description: "Surface embroidery stitches commonly combined with English smocking.",
-};
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { DifficultyBadge, StatusBadge } from "@/components/Badge";
+import { embroideryStitches, filterEmbroidery } from "@/lib/embroidery";
+import type { Difficulty } from "@/lib/types";
 
-export default function EmbroideryPage() {
+export default function EmbroideryIndexPage() {
+  const [q, setQ] = useState("");
+  const [difficulty, setDifficulty] = useState<"" | Difficulty>("");
+
+  const filtered = useMemo(
+    () =>
+      filterEmbroidery({
+        q,
+        difficulty: difficulty || undefined,
+      }),
+    [q, difficulty],
+  );
+
+  const complete = embroideryStitches.filter((s) => s.status === "complete").length;
+
   return (
-    <article className="site-container max-w-3xl prose-guide py-12 md:py-16">
+    <div className="site-container py-12 md:py-16">
       <p className="label-caps mb-3 text-dusty-blue">Companion skills</p>
-      <h1 className="font-serif text-4xl text-ink md:!text-5xl">Embroidery</h1>
-      <p>
-        Smocking often shares the garment with surface embroidery. Master these companions so
-        motifs sit gracefully above a cable or trellis field.
+      <h1 className="font-serif text-4xl text-ink md:text-5xl">Embroidery</h1>
+      <p className="mt-4 max-w-2xl text-ink-muted">
+        Surface embroidery stitches commonly combined with English smocking — so motifs sit
+        gracefully above a cable, wave, or trellis field. Same visual standard as the smocking
+        chapters: needle path, tension, mistakes, and construction you can follow without a video.
       </p>
-      <p className="text-sm text-ink-faint">
-        Full animated construction for each embroidery stitch will follow the same publication
-        standard as Cable Stitch. Below is the working index and design intent.
+      <p className="mt-2 text-sm text-ink-faint">
+        {complete} of {embroideryStitches.length} companion stitches complete ·{" "}
+        <Link href="/embroidery/motifs/" className="text-dusty-blue-deep">
+          Decorative motifs
+        </Link>
       </p>
 
-      <div className="not-prose mt-8 grid gap-3 sm:grid-cols-2">
-        {stitches.map((s) => (
-          <div key={s.name} className="rounded border border-border bg-paper/70 p-4">
-            <h2 className="font-serif text-xl text-ink">{s.name}</h2>
-            <p className="mt-1 text-sm text-ink-muted">{s.use}</p>
-          </div>
-        ))}
+      <div className="stitch-controls mt-8 flex flex-col gap-3 rounded border border-border bg-paper/80 p-4 sm:flex-row sm:flex-wrap sm:items-center">
+        <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs text-ink-faint">
+          Search
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Bullion, daisy, vine…"
+            className="rounded border border-border bg-cream px-3 py-2 text-sm text-ink outline-none focus:border-dusty-blue"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-ink-faint">
+          Difficulty
+          <select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as "" | Difficulty)}
+            className="rounded border border-border bg-cream px-3 py-2 text-sm text-ink"
+          >
+            <option value="">All levels</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+        <p className="text-xs text-ink-faint sm:ml-auto">
+          {filtered.length} of {embroideryStitches.length}
+        </p>
       </div>
 
-      <h2 className="mt-12">Decorative motifs</h2>
-      <p>Common motif families on smocked garments:</p>
-      <ul>
-        <li>Flowers &amp; leaves (bullion roses, lazy daisy sprays)</li>
-        <li>Bows and ribbons</li>
-        <li>Animals for children’s wear</li>
-        <li>Monograms and alphabets</li>
-        <li>Holiday motifs</li>
-        <li>Border repeats framing the smocked panel</li>
+      <ul className="mt-8 grid gap-4 md:grid-cols-2">
+        {filtered.map((s) => (
+          <li key={s.slug}>
+            <Link
+              href={`/embroidery/${s.slug}/`}
+              className="block h-full rounded border border-border bg-paper/70 p-5 no-underline transition hover:border-dusty-blue/40"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <DifficultyBadge difficulty={s.difficulty} />
+                <StatusBadge status={s.status} />
+              </div>
+              <h2 className="mt-3 font-serif text-2xl text-ink">{s.title}</h2>
+              {s.subtitle && <p className="text-sm text-ink-faint">{s.subtitle}</p>}
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">{s.description}</p>
+              <p className="mt-3 text-xs text-ink-faint">
+                <span className="font-medium text-ink-muted">With smocking:</span> {s.withSmocking}
+              </p>
+            </Link>
+          </li>
+        ))}
       </ul>
-    </article>
+
+      <section className="mt-16 max-w-3xl">
+        <h2 className="font-serif text-3xl text-ink">Decorative motifs</h2>
+        <p className="mt-3 text-ink-muted">
+          Combine these stitches into roses, sprays, bows, and borders that live on the flat fabric
+          around your smocking.
+        </p>
+        <Link
+          href="/embroidery/motifs/"
+          className="mt-4 inline-flex rounded border border-border bg-paper px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
+        >
+          Open motif guide
+        </Link>
+      </section>
+    </div>
   );
 }
