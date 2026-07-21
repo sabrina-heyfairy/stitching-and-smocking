@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DifficultyBadge } from "@/components/Badge";
 import { getPlate, plates } from "@/lib/plates";
-import { PlateFinishedPreview, PlateGraph } from "@/components/plates/PlateGraph";
+import { PlateFinishedPreview, PlateGraph, PlateProgression } from "@/components/plates/PlateGraph";
+import { PlateBlackWhiteGraph, PlateColorways, PlateDownloads } from "@/components/plates/PlateDownloads";
 
 export function generateStaticParams() {
   return plates.map((p) => ({ slug: p.slug }));
@@ -60,6 +61,14 @@ export default async function PlateDetailPage({
           <h1 className="mt-4 font-serif text-4xl text-ink md:text-5xl">{plate.title}</h1>
           <p className="mt-3 max-w-2xl text-xl text-ink-muted">{plate.subtitle}</p>
           <p className="mt-4 max-w-2xl text-ink-muted">{plate.description}</p>
+          <dl className="mt-6 grid max-w-3xl gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
+            <div><dt className="text-ink-faint">Finished width</dt><dd className="text-ink">{plate.finishedWidth ?? "Size to garment"}</dd></div>
+            <div><dt className="text-ink-faint">Fabric before pleating</dt><dd className="text-ink">{plate.fabricWidth ?? "3× finished width"}</dd></div>
+            <div><dt className="text-ink-faint">Center line</dt><dd className="text-ink">{plate.centerLine ?? `valley at pleat ${plate.pleats / 2}`}</dd></div>
+            <div><dt className="text-ink-faint">Symmetry</dt><dd className="text-ink">{plate.symmetry ?? "Repeating horizontal band"}</dd></div>
+            <div><dt className="text-ink-faint">Repeat</dt><dd className="text-ink">{plate.repeatPleats} pleats</dd></div>
+            <div><dt className="text-ink-faint">Thread weight</dt><dd className="text-ink">{plate.threadWeight ?? "3 strands cotton floss or No. 8 pearl cotton"}</dd></div>
+          </dl>
         </div>
       </header>
 
@@ -73,10 +82,19 @@ export default async function PlateDetailPage({
           <PlateGraph plate={plate} />
         </section>
 
+        <section id="black-and-white" className="mt-12 scroll-mt-24">
+          <h2 className="font-serif text-3xl text-ink">Black-and-white graph</h2>
+          <p className="mt-2 text-sm text-ink-muted">Print-safe reference with pleat numbers, embroidery rows, repeat markers, and center line.</p>
+          <PlateBlackWhiteGraph plate={plate} />
+        </section>
+
         <section id="finished" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Finished example</h2>
           <PlateFinishedPreview plate={plate} />
+          <PlateProgression plate={plate} />
         </section>
+
+        <PlateColorways plate={plate} />
 
         <section id="threads" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Thread colors</h2>
@@ -134,12 +152,19 @@ export default async function PlateDetailPage({
               </li>
             ))}
           </ul>
+          {plate.embroideryStitches && (
+            <p className="mt-3 text-sm text-ink-muted">
+              Surface embroidery: {plate.embroideryStitches.join(" · ")}
+            </p>
+          )}
         </section>
 
         <section id="garments" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Suggested garments</h2>
           <p className="mt-3 text-ink-muted">{plate.garments.join(" · ")}</p>
         </section>
+
+        <PlateDownloads plate={plate} />
 
         <div className="mt-16 flex flex-wrap gap-3">
           {prev && (

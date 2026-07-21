@@ -9,10 +9,15 @@ import type { Difficulty } from "@/lib/types";
 export default function PlatesIndexPage() {
   const [q, setQ] = useState("");
   const [difficulty, setDifficulty] = useState<"" | Difficulty>("");
+  const [category, setCategory] = useState("");
+  const categories = useMemo(
+    () => [...new Set(plates.map((plate) => plate.category ?? "Curated Classics"))].sort(),
+    [],
+  );
 
   const filtered = useMemo(
-    () => filterPlates({ q, difficulty: difficulty || undefined }),
-    [q, difficulty],
+    () => filterPlates({ q, difficulty: difficulty || undefined, category: category || undefined }),
+    [q, difficulty, category],
   );
 
   return (
@@ -20,8 +25,8 @@ export default function PlatesIndexPage() {
       <p className="label-caps mb-3 text-dusty-blue">Design library</p>
       <h1 className="font-serif text-4xl text-ink md:text-5xl">Smocking Plate Library</h1>
       <p className="mt-4 max-w-2xl text-ink-muted">
-        Digitized teaching plates with graphs, thread keys, finished schematics, and step
-        instructions. Start with Cable Borders, then add waves, trellis, and honeycomb fields.
+        A complete Read 16-needle collection: geometric foundations, traditional bands, surface
+        motifs, alphabets, monograms, seasonal designs, borders, corners, and garment layouts.
       </p>
       <p className="mt-2 text-sm text-ink-faint">
         {plates.length} plates · See also{" "}
@@ -54,6 +59,17 @@ export default function PlatesIndexPage() {
             <option value="advanced">Advanced</option>
           </select>
         </label>
+        <label className="flex min-w-[12rem] flex-col gap-1 text-xs text-ink-faint">
+          Category
+          <select
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+            className="rounded border border-border bg-cream px-3 py-2 text-sm text-ink"
+          >
+            <option value="">All categories</option>
+            {categories.map((name) => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </label>
         <p className="text-xs text-ink-faint sm:ml-auto">
           {filtered.length} of {plates.length}
         </p>
@@ -68,6 +84,9 @@ export default function PlatesIndexPage() {
             >
               <div className="flex flex-wrap items-center gap-2">
                 <DifficultyBadge difficulty={p.difficulty} />
+                <span className="text-[0.65rem] tracking-wide text-dusty-blue uppercase">
+                  {p.category ?? "Curated classic"}
+                </span>
                 <span className="text-[0.65rem] tracking-wide text-ink-faint uppercase">
                   {p.rows}×{p.pleats} · repeat {p.repeatPleats}
                 </span>
