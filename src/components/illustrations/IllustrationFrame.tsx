@@ -21,6 +21,9 @@ export const ILLUSTRATION = {
   burgundy: "var(--burgundy)",
   burgundySoft: "var(--burgundy-soft)",
   creamDeeper: "var(--cream-deeper)",
+  paper: "var(--paper)",
+  border: "var(--border)",
+  teal: "var(--muted-teal)",
 } as const;
 
 export function IllustrationFrame({

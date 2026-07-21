@@ -181,4 +181,28 @@ export const searchIndex: SearchItem[] = [
     tags: ["problem", "bullion", "rose", "troubleshooting"],
     difficulty: "advanced",
   },
+  {
+    id: "garment-bishop",
+    title: "Bishop dress construction",
+    description: "Pleat, smock, and assemble a bishop — visual stages and checklist.",
+    href: "/garments/#bishop",
+    type: "garment",
+    tags: ["bishop", "construction", "neckline", "assembly"],
+  },
+  {
+    id: "garment-yoke",
+    title: "Smocked yoke insert",
+    description: "Set a compressed smocked insert into a bodice yoke opening.",
+    href: "/garments/#yokes",
+    type: "garment",
+    tags: ["yoke", "insert", "construction"],
+  },
+  {
+    id: "garment-bonnet",
+    title: "Bonnet smocking",
+    description: "Horizontal brim/crown smocking with soft tension for head curve.",
+    href: "/garments/#bonnets",
+    type: "garment",
+    tags: ["bonnet", "construction", "brim"],
+  },
 ];
