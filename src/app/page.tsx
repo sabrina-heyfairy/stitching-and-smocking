@@ -157,8 +157,8 @@ export default function HomePage() {
           <div className="mt-4 rounded border border-dashed border-border bg-cream/40 p-6">
             <p className="label-caps mb-2">Build strategy</p>
             <p className="text-sm leading-relaxed text-ink-muted">
-              Chapters are completed one at a time to publication quality. Cable and Wave set the
-              template — honeycomb, trellis, and the rest follow the same structure.
+              Chapters are completed one at a time to publication quality. Cable, Wave, and
+              Honeycomb set the template — trellis, outline, and the rest follow the same structure.
             </p>
             <p className="mt-3 text-sm text-ink-faint">
               {stitches.filter((s) => s.status === "planned").length} stitches planned ·{" "}

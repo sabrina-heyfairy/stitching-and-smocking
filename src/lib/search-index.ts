@@ -123,4 +123,22 @@ export const searchIndex: SearchItem[] = [
     tags: ["problem", "wave", "counting", "chevon", "mistakes"],
     difficulty: "beginner",
   },
+  {
+    id: "problem-honeycomb-cells",
+    title: "Honeycomb cells won’t open",
+    description: "Fix sealed cells from stacked binds or over-tight tension without ripping the whole field.",
+    href: "/stitches/honeycomb/#troubleshooting",
+    type: "stitch",
+    tags: ["problem", "honeycomb", "elastic", "cells", "troubleshooting"],
+    difficulty: "intermediate",
+  },
+  {
+    id: "problem-honeycomb-stagger",
+    title: "Honeycomb stagger lost",
+    description: "Stacked binds on both rows create tubes instead of hexagons.",
+    href: "/stitches/honeycomb/#mistakes",
+    type: "stitch",
+    tags: ["problem", "honeycomb", "stagger", "mistakes"],
+    difficulty: "intermediate",
+  },
 ];

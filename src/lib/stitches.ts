@@ -50,8 +50,16 @@ export const stitches: StitchMeta[] = [
     subtitle: "The classic elastic lattice",
     difficulty: "intermediate",
     categories: ["honeycomb", "elastic"],
-    uses: ["bishop dresses", "yokes", "sleeves", "home decor"],
-    status: "planned",
+    uses: [
+      "bishop dresses",
+      "yokes",
+      "sleeves",
+      "home decor",
+      "children's clothing",
+      "heirloom sewing",
+    ],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
       "Pairs of stitches that gather and release, forming hexagonal cells. Provides stretch and a distinctive open texture.",
   },

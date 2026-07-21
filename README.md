@@ -33,9 +33,10 @@ npm run lint
 | Read 16 pleater encyclopedia | Complete |
 | **Cable Stitch** chapter | Complete |
 | **Wave Stitch** chapter | Complete |
+| **Honeycomb Stitch** chapter | Complete |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, embroidery, garments, design | Foundation chapters |
-| Remaining stitches (honeycomb, trellis, outline, …) | Planned — follow Cable/Wave template |
+| Remaining stitches (trellis, outline, stem, …) | Planned — follow Cable/Wave/Honeycomb template |
 
 ## Project structure
 
