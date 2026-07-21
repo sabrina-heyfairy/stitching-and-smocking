@@ -182,6 +182,7 @@ function buildPlate(seed: PlateSeed, index: number): PlateMeta {
   const repeatPleats = index % 4 === 0 ? 4 : 8;
   const center = pleats / 2;
   const paletteNames = Object.keys(PLATE_COLORWAYS);
+  const identityHash = hash(`${seed.category}:${seed.name}`);
   const isTemplate = /Monogram|Birth Year|Age|Milestone|Birthday/.test(seed.name);
   const article = /^[AEIOU]/i.test(seed.name) ? "an" : "a";
   const embroidery = index % 3 === 0
@@ -214,8 +215,12 @@ function buildPlate(seed: PlateSeed, index: number): PlateMeta {
     ],
     stitchesUsed: stitchesFor(index),
     embroideryStitches: embroidery,
-    motifPath: motifPaths[index % motifPaths.length],
-    motifMark: motifMarks[index % motifMarks.length],
+    motifPath: motifPaths[identityHash % motifPaths.length],
+    motifMark: seed.category.startsWith("Alphabet ·") && !seed.category.includes("Templates")
+      ? seed.name.slice(-1)
+      : seed.category === "Numbers" && /^\d$/.test(seed.name)
+        ? seed.name
+        : motifMarks[identityHash % motifMarks.length],
     description: `An original ${seed.name.toLowerCase()} plate built on a stable geometric foundation for a vintage Read 16-needle pleater. The surface motif is added only after the holding rows are secured, so it remains practical to embroider by hand.`,
     instructions: [
       `Pleat ${seed.category === "Complete Dress Layouts" ? "12" : "8"} gathering rows, leaving two needle spaces above and below the working area.`,

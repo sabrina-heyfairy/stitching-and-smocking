@@ -313,6 +313,23 @@ export function PlateFinishedPreview({ plate }: { plate: PlateMeta }) {
             />
           </g>
         )}
+        {plate.motifMark && (
+          <text
+            x="300"
+            y="145"
+            textAnchor="middle"
+            fontFamily="Georgia, serif"
+            fontSize={plate.motifMark.length > 2 ? "18" : "34"}
+            fontStyle={plate.category?.includes("Script") ? "italic" : "normal"}
+            fontWeight={plate.category?.includes("Block") ? "700" : "400"}
+            fill={plate.threads[1]?.hex ?? ILLUSTRATION.thread}
+            stroke={ILLUSTRATION.fabric}
+            strokeWidth="1.5"
+            paintOrder="stroke"
+          >
+            {plate.motifMark}
+          </text>
+        )}
       </SvgRoot>
     </IllustrationFrame>
   );
