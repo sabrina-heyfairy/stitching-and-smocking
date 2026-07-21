@@ -1,4 +1,11 @@
 import Link from "next/link";
+import {
+  BiteDepthDiagram,
+  CableVsStemDiagram,
+  CompressionDiagram,
+  TensionScaleDiagram,
+  WaveStepDiagram,
+} from "@/components/illustrations/TheoryDiagrams";
 
 export const metadata = {
   title: "Smocking Theory",
@@ -24,6 +31,7 @@ export default function TheoryPage() {
         Elastic stitches (honeycomb) compress in pairs and release between pairs, creating cells
         that stretch.
       </p>
+      <CompressionDiagram />
 
       <h2>Fabric geometry</h2>
       <p>
@@ -33,6 +41,7 @@ export default function TheoryPage() {
         collapse the accordion — mountains flatten and the surface loses its characteristic
         ribbed light-and-shadow.
       </p>
+      <BiteDepthDiagram />
 
       <h2>Pleat physics</h2>
       <ul>
@@ -57,6 +66,7 @@ export default function TheoryPage() {
         needle on the same side of the thread), you get stem stitch — a twisted rope, not a
         braid. That is geometry, not preference.
       </p>
+      <CableVsStemDiagram />
 
       <h2>Why waves curve</h2>
       <p>
@@ -65,6 +75,7 @@ export default function TheoryPage() {
         diagonals on a corrugated surface — keep step height even or the “wave” breaks into
         zigzags of uneven amplitude.
       </p>
+      <WaveStepDiagram />
 
       <h2>Why honeycomb opens</h2>
       <p>
@@ -82,6 +93,7 @@ export default function TheoryPage() {
         <li>Ideal → mountains remain round; design reads clearly</li>
         <li>Tight → over-compressed; cups the work; gathering rows bow</li>
       </ul>
+      <TensionScaleDiagram />
       <p>
         Practice on a 6&quot; sample until your hand knows ideal tension without looking. Then
         move to the garment.
