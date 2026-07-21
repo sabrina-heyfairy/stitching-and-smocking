@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PracticeCheckbox } from "@/components/PracticeCheckbox";
 
 export const metadata = {
   title: "Practice Path",
@@ -175,8 +176,8 @@ export default function PracticePathPage() {
           <p className="label-caps mb-3 text-dusty-blue">Curriculum</p>
           <h1 className="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">Practice Path</h1>
           <p className="mt-4 max-w-2xl text-lg text-ink-muted">
-            A guided route through the encyclopedia — from first pleat to first bishop. Print this
-            page and check off each step as you sample.
+            A guided route through the encyclopedia — from first pleat to first bishop. Checkmarks
+            are saved on this device, or print the page for a paper checklist.
           </p>
           <p className="mt-3 text-sm text-ink-faint no-print">
             Tip: use your browser’s print dialog — navigation hides automatically on print.
@@ -207,12 +208,8 @@ export default function PracticePathPage() {
                     key={step.title}
                     className="rounded border border-border bg-paper/70 p-5 print:border-cream-deeper"
                   >
-                    <label className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        className="mt-1.5 h-4 w-4 accent-[var(--burgundy)] print:accent-black"
-                        aria-label={`Mark complete: ${step.title}`}
-                      />
+                    <div className="flex items-start gap-2">
+                      <PracticeCheckbox id={`${pi}-${step.title}`} label={step.title} />
                       <span className="min-w-0">
                         <span className="font-serif text-xl text-ink">{step.title}</span>
                         <span className="mt-1 block text-sm text-ink-muted">{step.body}</span>
@@ -221,14 +218,14 @@ export default function PracticePathPage() {
                             <Link
                               key={l.href}
                               href={l.href}
-                              className="rounded border border-border bg-cream px-2.5 py-1 text-xs text-dusty-blue-deep no-underline hover:bg-cream-deep"
+                              className="inline-flex min-h-11 items-center rounded border border-border bg-cream px-3 py-2 text-sm text-dusty-blue-deep no-underline hover:bg-cream-deep"
                             >
                               {l.label}
                             </Link>
                           ))}
                         </span>
                       </span>
-                    </label>
+                    </div>
                   </li>
                 ))}
               </ul>

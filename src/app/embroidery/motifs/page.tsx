@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Decorative Motifs",
+  title: "Decorative Motif Planning",
   description:
-    "Flower, leaf, bow, animal, monogram, and border motifs built from embroidery stitches for smocked garments.",
+    "Choose compatible embroidery stitches when planning motifs for smocked garments.",
 };
 
 const families = [
@@ -67,12 +67,12 @@ export default function MotifsPage() {
         <span className="mx-2">/</span>
         <span className="text-ink-muted">Motifs</span>
       </nav>
-      <p className="label-caps mb-3 text-dusty-blue">Design combinations</p>
-      <h1 className="font-serif text-4xl text-ink md:text-5xl">Decorative Motifs</h1>
+      <p className="label-caps mb-3 text-dusty-blue">Planning reference</p>
+      <h1 className="font-serif text-4xl text-ink md:text-5xl">Decorative Motif Planning</h1>
       <p className="mt-4 max-w-2xl text-ink-muted">
-        Motifs are recipes: which companion stitches to combine, and where they sit relative to the
-        smocked field. Work embroidery on flat fabric above or beside the smocking — not through
-        active pleats.
+        This is a stitch-selection index, not a tracing pattern. Use it to choose compatible
+        stitches, then transfer a tested motif drawing to flat fabric above or beside the smocking.
+        Do not embroider through active pleats.
       </p>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">

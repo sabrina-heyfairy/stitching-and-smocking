@@ -2,20 +2,20 @@
   "name": "Sabrina's Guide to Smocking & Stitching",
   "short_name": "Smocking Guide",
   "description": "Interactive encyclopedia for the Read 16-needle pleater and hand smocking",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f7f3eb",
   "theme_color": "#f7f3eb",
   "lang": "en",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

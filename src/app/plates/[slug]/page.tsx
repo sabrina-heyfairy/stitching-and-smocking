@@ -76,11 +76,14 @@ export default async function PlateDetailPage({
         <section id="graph" className="scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Graph</h2>
           <p className="mt-2 text-sm text-ink-muted">
-            Rows are gathering rows (R1 at the top). Columns are pleats numbered left to right.
-            Hover a cell for coordinates. Gold dashed line marks one repeat when applicable.
+            Follow the numbered courses in order. Solid lines are thread visible on the front;
+            dashed lines are travel inside a pleat. Arcs bind two adjacent pleats. R1 is the top
+            gathering row. Use “Working repeat” to stitch and “Full placement” to center the band.
           </p>
           <PlateGraph plate={plate} />
         </section>
+
+        <PlateDownloads plate={plate} />
 
         <section id="black-and-white" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Black-and-white graph</h2>
@@ -163,8 +166,6 @@ export default async function PlateDetailPage({
           <h2 className="font-serif text-3xl text-ink">Suggested garments</h2>
           <p className="mt-3 text-ink-muted">{plate.garments.join(" · ")}</p>
         </section>
-
-        <PlateDownloads plate={plate} />
 
         <div className="mt-16 flex flex-wrap gap-3">
           {prev && (

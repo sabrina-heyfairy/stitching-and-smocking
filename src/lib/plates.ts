@@ -1,6 +1,5 @@
 import type { PlateMeta } from "./plate-types";
 import { cellKey } from "./plate-types";
-import { generatedPlates } from "./generated-plates";
 
 const dusty = "#6b8a9e";
 const burgundy = "#7a3f45";
@@ -187,7 +186,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["bishop center", "comfortable yoke", "sleeve insert"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 2,
+    repeatPleats: 4,
     threads: [
       { id: "cable", name: "Burgundy cable", hex: burgundy },
       { id: "honey", name: "Sage honeycomb", hex: sage },
@@ -331,7 +330,7 @@ const curatedPlates: PlateMeta[] = [
     garments: ["bishop yoke", "bonnet band", "sampler"],
     rows: 6,
     pleats: 24,
-    repeatPleats: 2,
+    repeatPleats: 4,
     threads: [
       { id: "cable", name: "Dusty blue cable", hex: dusty },
       { id: "honey", name: "Sage surface honeycomb", hex: sage },
@@ -522,8 +521,8 @@ const colorwayNames = [
 export const plates: PlateMeta[] = [
   ...curatedPlates.map((plate) => ({
     category: "Curated Classics",
-    finishedWidth: `${(plate.pleats / 6).toFixed(1)} in / ${((plate.pleats / 6) * 2.54).toFixed(1)} cm`,
-    fabricWidth: `${(plate.pleats / 2).toFixed(1)} in / ${((plate.pleats / 2) * 2.54).toFixed(1)} cm`,
+    finishedWidth: `About ${(plate.pleats / 6).toFixed(1)} in at 6 pleats/in; confirm with a tension sample`,
+    fabricWidth: `Start with about ${(plate.pleats / 2).toFixed(1)} in at 3:1 compression; test this fabric first`,
     centerLine: `valley between pleats ${plate.pleats / 2} and ${plate.pleats / 2 + 1}`,
     symmetry: "Mirror the repeat about the marked center valley",
     threadWeight: "3 strands cotton floss or No. 8 pearl cotton",
@@ -531,7 +530,6 @@ export const plates: PlateMeta[] = [
     embroideryStitches: [],
     ...plate,
   })),
-  ...generatedPlates,
 ];
 
 export function getPlate(slug: string): PlateMeta | undefined {
