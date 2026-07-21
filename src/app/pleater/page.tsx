@@ -285,6 +285,10 @@ export default function PleaterPage() {
           <p>Once you can pleat a clean strip of batiste:</p>
           <ol>
             <li>
+              Use the <Link href="/calculator/">fabric calculator</Link> to size length for your
+              finished width before you cut a garment.
+            </li>
+            <li>
               <Link href="/stitches/cable-stitch/">Learn the Cable Stitch</Link> on your sample.
             </li>
             <li>

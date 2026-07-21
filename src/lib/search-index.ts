@@ -48,7 +48,27 @@ export const searchIndex: SearchItem[] = [
     href: "/learn/",
     type: "theory",
     tags: ["learn", "practice", "curriculum", "sampler", "beginner", "checklist"],
-  },  {
+  },
+  {
+    id: "fabric-calculator",
+    title: "Fabric Calculator — Read 16",
+    description:
+      "Enter finished smocked width (e.g. 3T dress) and get fabric length to feed through the Read 16 needle pleater.",
+    href: "/calculator/",
+    type: "pleater",
+    tags: [
+      "calculator",
+      "fabric",
+      "yardage",
+      "pleater",
+      "read 16",
+      "3t",
+      "fullness",
+      "ratio",
+      "pleat",
+    ],
+  },
+  {
     id: "embroidery-motifs",
     title: "Decorative Motifs",
     description: "Flower, bow, vine, monogram, and holiday motif recipes for smocked garments.",
@@ -94,7 +114,8 @@ export const searchIndex: SearchItem[] = [
         s.slug !== "stitches" &&
         s.slug !== "pleater" &&
         s.slug !== "embroidery" &&
-        s.slug !== "plates",
+        s.slug !== "plates" &&
+        s.slug !== "calculator",
     )
     .map((s) => ({
       id: `section-${s.slug}`,

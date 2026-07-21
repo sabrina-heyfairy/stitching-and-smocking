@@ -20,6 +20,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/calculator/" className="text-ink-muted no-underline hover:text-ink">
+                Fabric calculator
+              </Link>
+            </li>
+            <li>
               <Link href="/stitches/" className="text-ink-muted no-underline hover:text-ink">
                 Stitch encyclopedia
               </Link>

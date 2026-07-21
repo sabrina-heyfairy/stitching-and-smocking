@@ -34,6 +34,14 @@ const phases: { name: string; goal: string; steps: Step[] }[] = [
           { href: "/needles/", label: "Needles" },
         ],
       },
+      {
+        title: "Calculate fabric for your size",
+        body: "Before cutting a dress: finished width X → fabric length Y for the Read 16.",
+        links: [
+          { href: "/calculator/", label: "Fabric calculator" },
+          { href: "/design/", label: "Design planning" },
+        ],
+      },
     ],
   },
   {
@@ -231,6 +239,9 @@ export default function PracticePathPage() {
         <section className="mt-16 rounded border border-border bg-cream-deep/30 p-6 print:break-inside-avoid">
           <h2 className="font-serif text-2xl text-ink">Quick links</h2>
           <ul className="mt-3 flex flex-wrap gap-3 text-sm">
+            <li>
+              <Link href="/calculator/">Fabric calculator</Link>
+            </li>
             <li>
               <Link href="/stitches/">All stitches</Link>
             </li>

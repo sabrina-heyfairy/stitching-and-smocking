@@ -5,8 +5,9 @@ export const mainNav = [
   { href: "/stitches/", label: "Stitches" },
   { href: "/plates/", label: "Plates" },
   { href: "/pleater/", label: "Read 16" },
-  { href: "/embroidery/", label: "Embroidery" },
+  { href: "/calculator/", label: "Calculator" },
   { href: "/garments/", label: "Garments" },
+  { href: "/embroidery/", label: "Embroidery" },
   { href: "/fabrics/", label: "Fabrics" },
   { href: "/threads/", label: "Threads" },
   { href: "/needles/", label: "Needles" },
@@ -30,6 +31,14 @@ export const sections: ContentSection[] = [
     description:
       "History, threading, maintenance, timing, parts diagrams, and troubleshooting for the vintage Read pleater.",
     href: "/pleater/",
+    status: "complete",
+  },
+  {
+    slug: "calculator",
+    title: "Fabric Calculator",
+    description:
+      "Finished smocked width X → fabric length Y to pleat on your Read 16 — size presets, fabric ratios, and strip depth.",
+    href: "/calculator/",
     status: "complete",
   },
   {

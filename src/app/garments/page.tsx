@@ -177,8 +177,10 @@ export default function GarmentsPage() {
         <div className="callout mt-10">
           <p className="text-sm">
             Pair this chapter with the{" "}
-            <Link href="/pleater/">Read 16 pleater</Link> guide for fabric feed, and the{" "}
-            <Link href="/stitches/">stitch encyclopedia</Link> for the stitches named in your plate.
+            <Link href="/pleater/">Read 16 pleater</Link> guide for fabric feed, the{" "}
+            <Link href="/calculator/">fabric calculator</Link> for how much length to pleat for your
+            size, and the <Link href="/stitches/">stitch encyclopedia</Link> for the stitches named
+            in your plate.
           </p>
         </div>
       </div>

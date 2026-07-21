@@ -311,6 +311,10 @@ export default function FabricsPage() {
           <Link href="/pleater/#pleating" className="text-dusty-blue-deep">
             Read 16 pleating setup
           </Link>{" "}
+          and the{" "}
+          <Link href="/calculator/" className="text-dusty-blue-deep">
+            fabric calculator
+          </Link>{" "}
           before cutting heirloom yardage, then choose a design from the{" "}
           <Link href="/plates/" className="text-dusty-blue-deep">
             smocking plate library
