@@ -1,6 +1,6 @@
 /* Minimal offline-friendly cache for static export / GitHub Pages */
-const CACHE = "smocking-guide-v1";
-const PRECACHE = ["/", "/stitches/", "/pleater/", "/search/", "/manifest.webmanifest"];
+const CACHE = "smocking-guide-v2";
+const PRECACHE = ["./", "./stitches/", "./pleater/", "./search/", "./manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -19,6 +19,18 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("./"))),
+    );
+    return;
+  }
   event.respondWith(
     caches.match(request).then((cached) => {
       const fetched = fetch(request)
