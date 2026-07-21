@@ -1,4 +1,9 @@
 import Link from "next/link";
+import {
+  FiberBehaviorDiagram,
+  GrainDiagram,
+  PrewashDiagram,
+} from "@/components/illustrations/FabricDiagrams";
 
 const fabrics = [
   {
@@ -304,7 +309,82 @@ export default function FabricsPage() {
         ))}
       </div>
 
-      <nav className="mt-10 rounded border border-border bg-paper/80 p-5 text-sm text-ink-muted">
+      <div className="mt-14 max-w-3xl prose-guide">
+        <h2>Grain &amp; bias</h2>
+        <p>
+          Woven fabric has three directions, and smocking cares about all of them. The{" "}
+          <strong className="text-ink">warp</strong> runs the length of the bolt (parallel to the
+          selvage) and is the most stable. The <strong className="text-ink">weft</strong> runs
+          across it and gives slightly more. The <strong className="text-ink">bias</strong> — 45°
+          to both — stretches the most.
+        </p>
+        <p>
+          Pleat <strong className="text-ink">on-grain</strong>: your pleats and gathering rows
+          should run parallel to the warp or the weft. A panel cut or fed on the bias stretches
+          unevenly under the Read 16 roller, and the finished smocking will pull crooked no matter
+          how even your stitching is. Checked fabrics like gingham are a gift here — the grid lets
+          you verify grain at a glance before pleating.
+        </p>
+      </div>
+      <GrainDiagram />
+
+      <div className="mt-12 max-w-3xl prose-guide">
+        <h2>Prepare before you pleat</h2>
+        <p>
+          Fabric preparation is not optional for a garment that will be washed. Do it once, at the
+          start, and the smocking holds its geometry for the life of the piece.
+        </p>
+        <ol>
+          <li>
+            <strong className="text-ink">Prewash and dry</strong> the same way the finished garment
+            will be laundered. Raw cotton can shrink 3–8% on the first wash; if you smock first and
+            wash later, the pleats crowd and the design distorts.
+          </li>
+          <li>
+            <strong className="text-ink">Straighten the grain</strong> — pull a weft thread and cut
+            along the gap, or tug gently on the bias to square a skewed weave before cutting.
+          </li>
+          <li>
+            <strong className="text-ink">Press flat</strong> with no folds or creases through the
+            pleating zone; a pressed crease feeds unevenly through the pleater.
+          </li>
+          <li>
+            <strong className="text-ink">Test a strip</strong> whenever the fiber, weave, or finish
+            is unfamiliar — pleat it, smock a cable row, and measure the compression before
+            committing heirloom yardage.
+          </li>
+        </ol>
+      </div>
+      <PrewashDiagram />
+
+      <div className="mt-12 max-w-3xl prose-guide">
+        <h2>Why fiber and weave matter</h2>
+        <p>
+          The pleating ratings above come down to one question: does the cloth hold a{" "}
+          <strong className="text-ink">round, defined mountain</strong> after the gathering threads
+          are drawn? A crisp, tightly woven cotton like batiste peaks sharply and keeps the ribbed
+          light-and-shadow that makes smocking read. Softer, more open weaves round off — still
+          workable, but the pattern reads gentler and needs a lighter tension.
+        </p>
+        <ul>
+          <li>
+            <strong className="text-ink">Thread count &amp; weave:</strong> higher, tighter weaves
+            (batiste, lawn) form crisper mountains; open or loose weaves slump.
+          </li>
+          <li>
+            <strong className="text-ink">Finish:</strong> a little sizing helps a fabric feed and
+            peak; heavy permanent-press finishes resist pleating and should be avoided.
+          </li>
+          <li>
+            <strong className="text-ink">Nap &amp; slip:</strong> napped flannel sheds lint into
+            the pleater and needs frequent cleaning; slippery silk shifts under the needles and is
+            an experienced-hands fabric — tissue-backing it while pleating helps.
+          </li>
+        </ul>
+      </div>
+      <FiberBehaviorDiagram />
+
+      <nav className="mt-14 rounded border border-border bg-paper/80 p-5 text-sm text-ink-muted">
         <p className="label-caps mb-2 text-dusty-blue">Next steps</p>
         <p>
           Review{" "}

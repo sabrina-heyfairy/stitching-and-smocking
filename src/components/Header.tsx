@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { mainNav } from "@/lib/navigation";
+import { mainNav, navGroups } from "@/lib/navigation";
 import { useTheme } from "./ThemeProvider";
 import { clsx } from "clsx";
 
@@ -25,21 +25,67 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
-          {mainNav.slice(0, 6).map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href);
+          {navGroups.map((entry) => {
+            if (entry.kind === "link") {
+              const active = pathname === entry.href || pathname.startsWith(entry.href);
+              return (
+                <Link
+                  key={entry.href}
+                  href={entry.href}
+                  className={clsx(
+                    "rounded px-2.5 py-1.5 text-sm no-underline transition",
+                    active
+                      ? "bg-cream-deep text-ink"
+                      : "text-ink-muted hover:bg-cream-deep/60 hover:text-ink",
+                  )}
+                >
+                  {entry.label}
+                </Link>
+              );
+            }
+            const groupActive = entry.items.some(
+              (i) => pathname === i.href || pathname.startsWith(i.href),
+            );
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={clsx(
-                  "rounded px-2.5 py-1.5 text-sm no-underline transition",
-                  active
-                    ? "bg-cream-deep text-ink"
-                    : "text-ink-muted hover:bg-cream-deep/60 hover:text-ink",
-                )}
-              >
-                {item.label}
-              </Link>
+              <div key={entry.label} className="group relative">
+                <button
+                  type="button"
+                  className={clsx(
+                    "flex items-center gap-1 rounded px-2.5 py-1.5 text-sm transition",
+                    groupActive
+                      ? "bg-cream-deep text-ink"
+                      : "text-ink-muted group-hover:bg-cream-deep/60 group-hover:text-ink",
+                  )}
+                  aria-haspopup="true"
+                >
+                  {entry.label}
+                  <span aria-hidden="true" className="text-[0.6rem]">
+                    ▾
+                  </span>
+                </button>
+                <div className="invisible absolute left-0 top-full z-50 min-w-[11rem] pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <ul className="rounded border border-border bg-paper py-1 shadow-md">
+                    {entry.items.map((item) => {
+                      const active = pathname === item.href || pathname.startsWith(item.href);
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            className={clsx(
+                              "block px-4 py-2 text-sm no-underline transition",
+                              active
+                                ? "bg-cream-deep text-ink"
+                                : "text-ink-muted hover:bg-cream-deep/60 hover:text-ink",
+                            )}
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
             );
           })}
           <Link

@@ -121,12 +121,9 @@ export default function HomePage() {
               href={section.href}
               className="group rounded border border-border bg-paper/70 p-5 no-underline transition hover:border-dusty-blue/40 hover:bg-paper"
             >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="font-serif text-xl text-ink group-hover:text-burgundy">
-                  {section.title}
-                </h3>
-                <StatusBadge status={section.status} />
-              </div>
+              <h3 className="font-serif text-xl text-ink group-hover:text-burgundy">
+                {section.title}
+              </h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">{section.description}</p>
             </Link>
           ))}
