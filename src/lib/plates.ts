@@ -322,6 +322,125 @@ export const plates: PlateMeta[] = [
       return cells;
     })(),
   },
+  {
+    slug: "surface-honeycomb-band",
+    title: "Surface Honeycomb Band",
+    subtitle: "Cable borders with a surface honeycomb field",
+    difficulty: "intermediate",
+    garments: ["bishop yoke", "bonnet band", "sampler"],
+    rows: 6,
+    pleats: 24,
+    repeatPleats: 2,
+    threads: [
+      { id: "cable", name: "Dusty blue cable", hex: dusty },
+      { id: "honey", name: "Sage surface honeycomb", hex: sage },
+    ],
+    stitchesUsed: ["surface-honeycomb", "cable-stitch"],
+    description:
+      "A tidy surface honeycomb field framed by cable borders, useful when you want the honeycomb texture to sit visibly on the pleat faces.",
+    instructions: [
+      "Cable rows 1 and 6 in dusty blue to stabilize the band.",
+      "Work surface honeycomb across rows 3–4 in sage, catching paired mountains without drawing the fabric as deeply as classic honeycomb.",
+      "Stagger each bind so the field opens evenly from left to right.",
+      "Keep rows 2 and 5 clear so the surface honeycomb has room to show.",
+      "Steam lightly from the wrong side only after checking the cells are even.",
+    ],
+    tips: [
+      "Use a slightly relaxed tension; surface honeycomb should texture the fabric, not cinch it hard.",
+      "If the band collapses, work every few repeats over a laying thread until your spacing is reliable.",
+    ],
+    cells: (() => {
+      const cells: PlateMeta["cells"] = {};
+      fillRow(cells, 1, 24, "cable", dusty);
+      fillRow(cells, 6, 24, "cable", dusty);
+      honeycombField(cells, 4, 3, 24, sage);
+      return cells;
+    })(),
+  },
+  {
+    slug: "double-cable-wave",
+    title: "Double Cable Wave",
+    subtitle: "Three cable rows with two wave bands between",
+    difficulty: "beginner",
+    garments: ["practice strip", "children's bishop", "sleeve band"],
+    rows: 5,
+    pleats: 24,
+    repeatPleats: 8,
+    threads: [
+      { id: "cable", name: "Burgundy cable", hex: burgundy },
+      { id: "wave", name: "Dusty blue wave", hex: dusty },
+    ],
+    stitchesUsed: ["cable-stitch", "wave-stitch"],
+    description:
+      "A structured beginner band: cable rows on 1, 3, and 5 with simple waves crossing the open rows between them.",
+    instructions: [
+      "Cable row 1 in burgundy.",
+      "Work a wave line on row 2 in dusty blue, keeping the movement centered between the upper and middle cables.",
+      "Cable row 3 in burgundy after confirming the first wave line has settled evenly.",
+      "Work the second wave line on row 4 in dusty blue.",
+      "Cable row 5 in burgundy to finish the lower edge.",
+    ],
+    tips: [
+      "The center cable is both a design line and a tension check; keep it straight before adding the lower wave.",
+      "Use the same wave start on both bands for a stacked rhythm, or offset by four pleats for a softer movement.",
+    ],
+    cells: (() => {
+      const cells: PlateMeta["cells"] = {};
+      fillRow(cells, 1, 24, "cable", burgundy);
+      fillWaveBand(cells, 2, 2, 24, dusty);
+      fillRow(cells, 3, 24, "cable", burgundy);
+      fillWaveBand(cells, 4, 4, 24, dusty);
+      fillRow(cells, 5, 24, "cable", burgundy);
+      return cells;
+    })(),
+  },
+  {
+    slug: "christening-trellis",
+    title: "Christening Trellis",
+    subtitle: "Gold cable frame with teal trellis and embroidery space",
+    difficulty: "advanced",
+    garments: ["christening"],
+    rows: 8,
+    pleats: 32,
+    repeatPleats: 8,
+    threads: [
+      { id: "cable", name: "Gold cable", hex: gold, note: "Frame rows" },
+      { id: "trellis", name: "Muted teal trellis", hex: teal, note: "Diamond field" },
+    ],
+    stitchesUsed: ["cable-stitch", "trellis"],
+    description:
+      "An advanced christening band with gold cables, a muted teal trellis field, and a quiet upper area reserved for embroidery above the smocking.",
+    instructions: [
+      "Reserve the area above row 1 for delicate embroidery after the smocking is complete.",
+      "Cable rows 1 and 8 in gold, keeping the upper cable perfectly level for the embroidery placement.",
+      "Work the first teal trellis wave across rows 3–4.",
+      "Mirror the trellis across rows 5–6 so the diamonds lengthen gracefully through the center of the band.",
+      "Leave rows 2 and 7 open as heirloom breathing space around the gold cables.",
+      "Block carefully before adding embroidery motifs above the band.",
+    ],
+    tips: [
+      "Mark the center pleat and both edges before beginning; christening panels show small alignment errors.",
+      "Choose embroidery motifs that sit above the smocking without crowding the top cable.",
+    ],
+    cells: (() => {
+      const cells: PlateMeta["cells"] = {};
+      fillRow(cells, 1, 32, "cable", gold);
+      fillRow(cells, 8, 32, "cable", gold);
+      for (let p = 1; p <= 32; p++) {
+        const pos = (p - 1) % 8;
+        if (pos === 0 || pos === 7) cells[cellKey(4, p)] = { kind: "trellis", color: teal };
+        else if (pos === 4) cells[cellKey(3, p)] = { kind: "trellis", color: teal };
+        else if (pos < 4) cells[cellKey(3, p)] = { kind: "trellis", color: teal };
+        else cells[cellKey(4, p)] = { kind: "trellis", color: teal };
+
+        if (pos === 0 || pos === 7) cells[cellKey(5, p)] = { kind: "trellis", color: teal };
+        else if (pos === 4) cells[cellKey(6, p)] = { kind: "trellis", color: teal };
+        else if (pos < 4) cells[cellKey(5, p)] = { kind: "trellis", color: teal };
+        else cells[cellKey(6, p)] = { kind: "trellis", color: teal };
+      }
+      return cells;
+    })(),
+  },
 ];
 
 export function getPlate(slug: string): PlateMeta | undefined {
