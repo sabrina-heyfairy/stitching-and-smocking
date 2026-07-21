@@ -15,6 +15,42 @@ export const mainNav = [
   { href: "/search/", label: "Search" },
 ] as const;
 
+/**
+ * Grouped navigation for the desktop header. Top-level items are the primary
+ * learning flow; menus collect the remaining sections so all twelve stay
+ * reachable without crowding the bar.
+ */
+export type NavItem = { href: string; label: string };
+export type NavEntry =
+  | { kind: "link"; href: string; label: string }
+  | { kind: "menu"; label: string; items: NavItem[] };
+
+export const navGroups: NavEntry[] = [
+  { kind: "link", href: "/learn/", label: "Practice Path" },
+  { kind: "link", href: "/stitches/", label: "Stitches" },
+  { kind: "link", href: "/plates/", label: "Plates" },
+  { kind: "link", href: "/pleater/", label: "Read 16" },
+  {
+    kind: "menu",
+    label: "Materials",
+    items: [
+      { href: "/fabrics/", label: "Fabrics" },
+      { href: "/threads/", label: "Threads" },
+      { href: "/needles/", label: "Needles" },
+    ],
+  },
+  {
+    kind: "menu",
+    label: "Reference",
+    items: [
+      { href: "/embroidery/", label: "Embroidery" },
+      { href: "/garments/", label: "Garments" },
+      { href: "/design/", label: "Design" },
+      { href: "/theory/", label: "Theory" },
+    ],
+  },
+];
+
 export const sections: ContentSection[] = [
   {
     slug: "stitches",
