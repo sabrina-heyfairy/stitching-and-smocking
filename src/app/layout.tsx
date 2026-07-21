@@ -20,6 +20,9 @@ const body = Source_Sans_3({
   display: "swap",
 });
 
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const publicBasePath = process.env.GITHUB_PAGES === "true" && repoName ? `/${repoName}` : "";
+
 export const metadata: Metadata = {
   title: {
     default: "Sabrina's Guide to Smocking & Stitching",
@@ -38,7 +41,7 @@ export const metadata: Metadata = {
     "hand smocking",
     "heirloom sewing",
   ],
-  manifest: "/manifest.webmanifest",
+  manifest: `${publicBasePath}/manifest.webmanifest`,
   appleWebApp: {
     capable: true,
     title: "Sabrina's Smocking Guide",
