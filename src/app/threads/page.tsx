@@ -85,6 +85,53 @@ export default function ThreadsPage() {
           </section>
         ))}
 
+        <h2>Choosing weight to match the stitch</h2>
+        <p>
+          Thread weight is really a <strong className="text-ink">coverage</strong> decision: it
+          sets how much of each mountain the stitch hides and how proud the cord sits. Too heavy
+          and structural rows look clumsy on fine batiste; too light and they disappear.
+        </p>
+        <ul>
+          <li>
+            <strong className="text-ink">Cable &amp; outline (structural):</strong> want a defined
+            cord — perle #8 or floche read crisply.
+          </li>
+          <li>
+            <strong className="text-ink">Trellis &amp; fine diamonds:</strong> want delicacy —
+            perle #12 or 2 strands so the lattice does not overwhelm the ground.
+          </li>
+          <li>
+            <strong className="text-ink">Honeycomb:</strong> a slightly softer thread (floche or
+            2–3 strands) lets cells open without stiffening the elastic.
+          </li>
+        </ul>
+
+        <h2>Stranded cotton in practice</h2>
+        <p>
+          With mouliné, strand count is your dial. Always{" "}
+          <strong className="text-ink">separate and recombine</strong> strands — pull each strand
+          out singly, then lay them back together — so they sit flat and parallel instead of
+          twisting into an uneven cord. Two strands is the common smocking default; drop to one for
+          the finest lawn, rise to three or four for folk-weight boldness.
+        </p>
+
+        <h2>Handling &amp; length</h2>
+        <ul>
+          <li>
+            <strong className="text-ink">Keep lengths short:</strong> ~18 inches. Longer thread
+            abrades against the fabric on every pass and starts to fuzz — worst with floche and
+            silk.
+          </li>
+          <li>
+            <strong className="text-ink">Mind the twist:</strong> let the needle dangle
+            periodically to unwind accumulated twist, which otherwise kinks and knots.
+          </li>
+          <li>
+            <strong className="text-ink">Colorfastness:</strong> test any strong color on a damp
+            scrap before committing it to a christening piece that may be washed.
+          </li>
+        </ul>
+
         <h2>Quick recommendations</h2>
         <ul>
           <li>Learning cable on batiste → floche or perle #8</li>

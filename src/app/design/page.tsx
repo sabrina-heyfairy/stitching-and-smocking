@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CenteringDiagram, RepeatMathDiagram } from "@/components/illustrations/DesignDiagrams";
 
 export const metadata = {
   title: "Design Planning",
@@ -28,6 +29,7 @@ export default function DesignPage() {
         8 pleats). Garment width in pleats should be a multiple of the repeat, plus any border
         pleats.
       </p>
+      <RepeatMathDiagram />
 
       <h2>Centering motifs</h2>
       <ol>
@@ -35,6 +37,7 @@ export default function DesignPage() {
         <li>Place the motif center on that pleat (or straddling two center pleats for even repeats).</li>
         <li>Work outward symmetrically.</li>
       </ol>
+      <CenteringDiagram />
 
       <h2>Border spacing</h2>
       <p>
