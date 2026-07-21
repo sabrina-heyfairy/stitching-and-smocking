@@ -1,5 +1,6 @@
 import type { PlateMeta } from "./plate-types";
 import { cellKey } from "./plate-types";
+import { generatedPlates } from "./generated-plates";
 
 const dusty = "#6b8a9e";
 const burgundy = "#7a3f45";
@@ -66,7 +67,7 @@ function honeycombField(
   }
 }
 
-export const plates: PlateMeta[] = [
+const curatedPlates: PlateMeta[] = [
   {
     slug: "cable-borders",
     title: "Cable Borders",
@@ -512,6 +513,27 @@ export const plates: PlateMeta[] = [
   },
 ];
 
+const colorwayNames = [
+  "Traditional heirloom", "Pink", "Blue", "Pastel", "Christmas", "Modern neutral",
+  "Rainbow", "Monochrome", "Vintage", "French country", "Liberty floral",
+  "William Morris inspired", "Beatrix Potter inspired",
+];
+
+export const plates: PlateMeta[] = [
+  ...curatedPlates.map((plate) => ({
+    category: "Curated Classics",
+    finishedWidth: `${(plate.pleats / 6).toFixed(1)} in / ${((plate.pleats / 6) * 2.54).toFixed(1)} cm`,
+    fabricWidth: `${(plate.pleats / 2).toFixed(1)} in / ${((plate.pleats / 2) * 2.54).toFixed(1)} cm`,
+    centerLine: `valley between pleats ${plate.pleats / 2} and ${plate.pleats / 2 + 1}`,
+    symmetry: "Mirror the repeat about the marked center valley",
+    threadWeight: "3 strands cotton floss or No. 8 pearl cotton",
+    colorSuggestions: colorwayNames,
+    embroideryStitches: [],
+    ...plate,
+  })),
+  ...generatedPlates,
+];
+
 export function getPlate(slug: string): PlateMeta | undefined {
   return plates.find((p) => p.slug === slug);
 }
@@ -519,10 +541,12 @@ export function getPlate(slug: string): PlateMeta | undefined {
 export function filterPlates(opts: {
   difficulty?: string;
   q?: string;
+  category?: string;
 }): PlateMeta[] {
   const q = opts.q?.toLowerCase().trim();
   return plates.filter((p) => {
     if (opts.difficulty && p.difficulty !== opts.difficulty) return false;
+    if (opts.category && (p.category ?? "Curated Classics") !== opts.category) return false;
     if (q) {
       const hay = `${p.title} ${p.subtitle} ${p.description} ${p.garments.join(" ")} ${p.stitchesUsed.join(" ")}`.toLowerCase();
       if (!hay.includes(q)) return false;

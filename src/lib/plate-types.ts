@@ -10,6 +10,8 @@ export type PlateCell =
   | { kind: "honeycomb"; color?: string }
   | { kind: "trellis"; color?: string }
   | { kind: "van-dyke"; color?: string }
+  | { kind: "surface"; color?: string }
+  | { kind: "knot"; color?: string }
   | { kind: "empty" };
 
 export type PlateStitchRef =
@@ -41,6 +43,23 @@ export interface PlateMeta {
   pleats: number;
   /** Pleats in one full horizontal repeat */
   repeatPleats: number;
+  /** Collection shelf used for browsing and print indexes. */
+  category?: string;
+  /** Width of the blocked, stitched sample. */
+  finishedWidth?: string;
+  /** Cut width before running the fabric through the Read pleater. */
+  fabricWidth?: string;
+  /** Human-readable center reference (one pleat or the valley between two pleats). */
+  centerLine?: string;
+  symmetry?: string;
+  threadWeight?: string;
+  colorSuggestions?: string[];
+  /** Surface embroidery used after the holding rows are removed. */
+  embroideryStitches?: string[];
+  /** Shape guide drawn over the geometric foundation. Values are normalized 0–100. */
+  motifPath?: string;
+  /** Short mark used for tiny index previews. */
+  motifMark?: string;
   threads: PlateThread[];
   stitchesUsed: PlateStitchRef[];
   description: string;
