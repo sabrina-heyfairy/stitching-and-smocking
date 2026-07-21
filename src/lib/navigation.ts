@@ -20,7 +20,7 @@ export const sections: ContentSection[] = [
     description:
       "Every English smocking stitch with needle paths, tension studies, mistakes, and garment examples.",
     href: "/stitches/",
-    status: "in-progress",
+    status: "complete",
   },
   {
     slug: "pleater",

@@ -156,7 +156,7 @@ export function TrellisStitchChapter() {
   return (
     <StitchChapterLayout
       toc={toc}
-      prev={{ href: "/stitches/wave-stitch/", label: "Wave Stitch" }}
+      prev={{ href: "/stitches/stem-stitch-smocking/", label: "Stem Stitch" }}
       next={{ href: "/stitches/van-dyke/", label: "Van Dyke" }}
       sources="Trellis mechanics here follow standard English smocking teaching: matched wave rows are mirrored so shared vertices close into diamonds. Exact wave counts and row spacing vary by manual, fabric, and pleater setup; this chapter uses a wave-of-4 base because it directly extends the Wave Stitch chapter."
       callout={

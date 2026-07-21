@@ -2,8 +2,7 @@ import type { StitchMeta } from "./types";
 
 /**
  * Registry of all stitch chapters.
- * Cable Stitch is the gold-standard complete chapter.
- * Others are listed as planned templates that follow the same structure.
+ * All listed stitches are complete to publication standard.
  */
 export const stitches: StitchMeta[] = [
   {
@@ -69,8 +68,9 @@ export const stitches: StitchMeta[] = [
     subtitle: "Smooth single-row control stitch",
     difficulty: "beginner",
     categories: ["outline", "structural"],
-    uses: ["yokes", "collars", "bonnets", "heirloom sewing"],
-    status: "planned",
+    uses: ["yokes", "collars", "bonnets", "heirloom sewing", "bishop dresses"],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
       "A continuous stitch along one gathering row that holds pleats firmly with a smooth cord-like appearance.",
   },
@@ -80,8 +80,9 @@ export const stitches: StitchMeta[] = [
     subtitle: "Diamond lattice from paired waves",
     difficulty: "intermediate",
     categories: ["trellis", "wave", "decorative"],
-    uses: ["bishop dresses", "christening gowns", "yokes"],
-    status: "planned",
+    uses: ["bishop dresses", "christening gowns", "yokes", "heirloom sewing"],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
       "Two mirror-image wave rows that meet to form diamonds. One of the most recognizable English smocking motifs.",
   },
@@ -91,8 +92,9 @@ export const stitches: StitchMeta[] = [
     subtitle: "Twisted cable cousin",
     difficulty: "beginner",
     categories: ["cable", "structural"],
-    uses: ["children's clothing", "bonnets", "sleeves"],
-    status: "planned",
+    uses: ["children's clothing", "bonnets", "sleeves", "yokes"],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
       "Worked like cable but with the needle always above (or always below) the thread, producing a twisted rope effect.",
   },
@@ -102,8 +104,9 @@ export const stitches: StitchMeta[] = [
     subtitle: "Chevron with a catch stitch",
     difficulty: "advanced",
     categories: ["decorative", "wave"],
-    uses: ["heirloom sewing", "christening gowns", "bishop dresses"],
-    status: "planned",
+    uses: ["heirloom sewing", "christening gowns", "bishop dresses", "yokes"],
+    threadCount: "2–3 strands floche or #8 perle",
+    status: "complete",
     description:
       "A dramatic chevron formed by catching two pleats together at each peak and valley.",
   },
@@ -113,8 +116,9 @@ export const stitches: StitchMeta[] = [
     subtitle: "Honeycomb without deep gathers",
     difficulty: "intermediate",
     categories: ["honeycomb", "decorative"],
-    uses: ["yokes", "home decor", "aprons"],
-    status: "planned",
+    uses: ["yokes", "home decor", "aprons", "children's clothing"],
+    threadCount: "2–3 strands floche or #8–12 perle",
+    status: "complete",
     description:
       "A flatter honeycomb variation that sits on the surface of the pleats rather than pulling them into deep cells.",
   },

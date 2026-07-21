@@ -138,7 +138,7 @@ export default function HomePage() {
               Full stitch index →
             </Link>
           </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {complete.map((s) => (
               <Link
                 key={s.slug}
@@ -150,20 +150,17 @@ export default function HomePage() {
                   <StatusBadge status={s.status} />
                 </div>
                 <h3 className="mt-3 font-serif text-2xl text-ink">{s.title}</h3>
-                <p className="mt-2 text-ink-muted">{s.description}</p>
+                <p className="mt-2 text-sm text-ink-muted">{s.description}</p>
               </Link>
             ))}
           </div>
           <div className="mt-4 rounded border border-dashed border-border bg-cream/40 p-6">
-            <p className="label-caps mb-2">Build strategy</p>
+            <p className="label-caps mb-2">Stitch encyclopedia</p>
             <p className="text-sm leading-relaxed text-ink-muted">
-              Chapters are completed one at a time to publication quality. Cable, Wave, and
-              Honeycomb set the template — trellis, outline, and the rest follow the same structure.
+              All eight core English smocking stitches are complete to publication standard —
+              illustrations, animations, tension studies, mistakes, and troubleshooting included.
             </p>
-            <p className="mt-3 text-sm text-ink-faint">
-              {stitches.filter((s) => s.status === "planned").length} stitches planned ·{" "}
-              {complete.length} complete
-            </p>
+            <p className="mt-3 text-sm text-ink-faint">{complete.length} stitch chapters complete</p>
           </div>
         </div>
       </section>

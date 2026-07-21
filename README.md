@@ -34,9 +34,13 @@ npm run lint
 | **Cable Stitch** chapter | Complete |
 | **Wave Stitch** chapter | Complete |
 | **Honeycomb Stitch** chapter | Complete |
+| **Outline Stitch** chapter | Complete |
+| **Trellis** chapter | Complete |
+| **Stem Stitch (Smocking)** chapter | Complete |
+| **Van Dyke Stitch** chapter | Complete |
+| **Surface Honeycomb** chapter | Complete |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, embroidery, garments, design | Foundation chapters |
-| Remaining stitches (trellis, outline, stem, …) | Planned — follow Cable/Wave/Honeycomb template |
 
 ## Project structure
 

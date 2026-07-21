@@ -157,7 +157,7 @@ export function VanDykeStitchChapter() {
     <StitchChapterLayout
       toc={toc}
       prev={{ href: "/stitches/trellis/", label: "Trellis" }}
-      next={{ href: "/stitches/outline-stitch/", label: "Outline" }}
+      next={{ href: "/stitches/surface-honeycomb/", label: "Surface Honeycomb" }}
       sources="Van Dyke mechanics here follow standard English smocking usage: the stitch travels diagonally like wave, but each peak and valley is secured by binding two adjacent pleats together. Manuals vary in exact repeat width and starting direction; the essential invariant is pair-binding at every turn."
       callout={
         <div className="callout">

@@ -1,11 +1,28 @@
 import Link from "next/link";
+import type { ComponentType } from "react";
 import { notFound } from "next/navigation";
 import { DifficultyBadge, StatusBadge } from "@/components/Badge";
 import { getStitch, stitches } from "@/lib/stitches";
 import { CableStitchChapter } from "@/components/chapters/CableStitchChapter";
 import { WaveStitchChapter } from "@/components/chapters/WaveStitchChapter";
 import { HoneycombStitchChapter } from "@/components/chapters/HoneycombStitchChapter";
+import { OutlineStitchChapter } from "@/components/chapters/OutlineStitchChapter";
+import { TrellisStitchChapter } from "@/components/chapters/TrellisStitchChapter";
+import { StemStitchChapter } from "@/components/chapters/StemStitchChapter";
+import { VanDykeStitchChapter } from "@/components/chapters/VanDykeStitchChapter";
+import { SurfaceHoneycombChapter } from "@/components/chapters/SurfaceHoneycombChapter";
 import { PlannedStitchChapter } from "@/components/chapters/PlannedStitchChapter";
+
+const chapters: Record<string, ComponentType> = {
+  "cable-stitch": CableStitchChapter,
+  "wave-stitch": WaveStitchChapter,
+  honeycomb: HoneycombStitchChapter,
+  "outline-stitch": OutlineStitchChapter,
+  trellis: TrellisStitchChapter,
+  "stem-stitch-smocking": StemStitchChapter,
+  "van-dyke": VanDykeStitchChapter,
+  "surface-honeycomb": SurfaceHoneycombChapter,
+};
 
 export function generateStaticParams() {
   return stitches.map((s) => ({ slug: s.slug }));
@@ -26,6 +43,8 @@ export default async function StitchPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   const stitch = getStitch(slug);
   if (!stitch) notFound();
+
+  const Chapter = chapters[stitch.slug];
 
   return (
     <article className="pb-20">
@@ -63,15 +82,7 @@ export default async function StitchPage({ params }: { params: Promise<{ slug: s
         </div>
       </header>
 
-      {stitch.slug === "cable-stitch" ? (
-        <CableStitchChapter />
-      ) : stitch.slug === "wave-stitch" ? (
-        <WaveStitchChapter />
-      ) : stitch.slug === "honeycomb" ? (
-        <HoneycombStitchChapter />
-      ) : (
-        <PlannedStitchChapter stitch={stitch} />
-      )}
+      {Chapter ? <Chapter /> : <PlannedStitchChapter stitch={stitch} />}
     </article>
   );
 }

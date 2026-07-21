@@ -27,8 +27,8 @@ export function OutlineStitchChapter() {
   return (
     <StitchChapterLayout
       toc={[...STANDARD_TOC]}
-      prev={{ href: "/stitches/honeycomb-stitch/", label: "Honeycomb Stitch" }}
-      next={{ href: "/stitches/stem-stitch/", label: "Stem Stitch" }}
+      prev={{ href: "/stitches/honeycomb/", label: "Honeycomb Stitch" }}
+      next={{ href: "/stitches/stem-stitch-smocking/", label: "Stem Stitch" }}
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">

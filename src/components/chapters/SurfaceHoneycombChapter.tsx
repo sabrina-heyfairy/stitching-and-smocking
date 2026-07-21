@@ -85,8 +85,8 @@ export function SurfaceHoneycombChapter() {
   return (
     <StitchChapterLayout
       toc={toc}
-      prev={{ href: "/stitches/honeycomb/", label: "Classic Honeycomb" }}
-      next={{ href: "/stitches/outline-stitch/", label: "Outline Stitch (planned)" }}
+      prev={{ href: "/stitches/van-dyke/", label: "Van Dyke" }}
+      next={{ href: "/stitches/", label: "Stitch index" }}
       sources="Surface honeycomb is presented as a flatter companion to standard English smocking honeycomb: staggered pair-binds on two gathering rows with less row depth and less pull into the cells. Manuals vary in naming and exact travel visibility, so this chapter marks the invariant mechanics - stagger, shallow bind, close row spacing, and reduced elasticity - rather than inventing a single universal standard."
       callout={
         <div className="callout">

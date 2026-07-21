@@ -29,7 +29,7 @@ export function StemStitchChapter() {
     <StitchChapterLayout
       toc={[...STANDARD_TOC]}
       prev={{ href: "/stitches/outline-stitch/", label: "Outline Stitch" }}
-      next={{ href: "/stitches/wave-stitch/", label: "Wave Stitch" }}
+      next={{ href: "/stitches/trellis/", label: "Trellis" }}
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
