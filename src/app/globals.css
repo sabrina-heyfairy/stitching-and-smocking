@@ -1,0 +1,265 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  /* Cream & warm neutrals */
+  --cream: #f7f3eb;
+  --cream-deep: #ebe4d6;
+  --cream-deeper: #ddd4c2;
+  --paper: #fbf8f2;
+  --ink: #3d3832;
+  --ink-muted: #6a635a;
+  --ink-faint: #9a9288;
+
+  /* Accents — muted vintage */
+  --dusty-blue: #6b8a9e;
+  --dusty-blue-deep: #4f6d80;
+  --muted-teal: #5a7a78;
+  --sage: #7a8f6e;
+  --burgundy: #7a3f45;
+  --burgundy-soft: #a66b70;
+  --gold: #c4a35a;
+  --gold-soft: #d4bc7a;
+
+  /* Illustration palette */
+  --fabric: #e8dfd0;
+  --fabric-shadow: #cfc3ae;
+  --pleat-mountain: #f3ebe0;
+  --pleat-valley: #c8bba8;
+  --thread: #7a3f45;
+  --thread-alt: #6b8a9e;
+  --needle: #8a9199;
+  --needle-shine: #c5cad0;
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --surface: var(--paper);
+  --border: var(--cream-deeper);
+  --accent: var(--dusty-blue);
+  --accent-strong: var(--burgundy);
+
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --content-max: 72rem;
+  --prose-max: 42rem;
+}
+
+.dark {
+  --background: #1c1a17;
+  --foreground: #e8e2d6;
+  --surface: #26231f;
+  --border: #3a3530;
+  --cream: #1c1a17;
+  --cream-deep: #26231f;
+  --cream-deeper: #3a3530;
+  --paper: #26231f;
+  --ink: #e8e2d6;
+  --ink-muted: #b0a89c;
+  --ink-faint: #7a7368;
+  --accent: #8aabbf;
+  --accent-strong: #c48a8f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
+  --color-cream-deeper: var(--cream-deeper);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-dusty-blue: var(--dusty-blue);
+  --color-dusty-blue-deep: var(--dusty-blue-deep);
+  --color-muted-teal: var(--muted-teal);
+  --color-sage: var(--sage);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-soft: var(--burgundy-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-body);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), "Segoe UI", sans-serif;
+    /* Subtle paper grain */
+    background-image:
+      radial-gradient(ellipse 120% 80% at 10% -10%, rgba(107, 138, 158, 0.07), transparent 50%),
+      radial-gradient(ellipse 80% 60% at 100% 0%, rgba(122, 63, 69, 0.04), transparent 45%),
+      linear-gradient(180deg, var(--paper) 0%, var(--cream) 40%, var(--cream-deep) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--dusty-blue) 35%, transparent);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  a {
+    color: var(--dusty-blue-deep);
+    text-underline-offset: 0.15em;
+  }
+
+  a:hover {
+    color: var(--burgundy);
+  }
+}
+
+@layer components {
+  .site-container {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-container {
+      padding-inline: 2rem;
+    }
+  }
+
+  .prose-guide {
+    max-width: var(--prose-max);
+  }
+
+  .prose-guide p {
+    color: var(--ink-muted);
+    line-height: 1.75;
+    margin-bottom: 1.1rem;
+  }
+
+  .prose-guide h2 {
+    font-size: 1.65rem;
+    margin-top: 2.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .prose-guide h3 {
+    font-size: 1.2rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .prose-guide ul,
+  .prose-guide ol {
+    color: var(--ink-muted);
+    padding-left: 1.25rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .prose-guide li {
+    margin-bottom: 0.4rem;
+    line-height: 1.65;
+  }
+
+  .prose-guide ol {
+    list-style: decimal;
+  }
+
+  .prose-guide ul {
+    list-style: disc;
+  }
+
+  .label-caps {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .illustration-frame {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .illustration-frame {
+      padding: 1.5rem;
+    }
+  }
+
+  .callout {
+    border-left: 3px solid var(--dusty-blue);
+    background: color-mix(in srgb, var(--dusty-blue) 8%, var(--paper));
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .callout-warn {
+    border-left-color: var(--burgundy);
+    background: color-mix(in srgb, var(--burgundy) 8%, var(--paper));
+  }
+
+  .callout-tip {
+    border-left-color: var(--sage);
+    background: color-mix(in srgb, var(--sage) 10%, var(--paper));
+  }
+}
+
+/* Print-friendly */
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: black;
+  }
+
+  .no-print,
+  header nav,
+  footer,
+  .theme-toggle,
+  .stitch-controls {
+    display: none !important;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .illustration-frame {
+    break-inside: avoid;
+    border-color: #ccc;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
