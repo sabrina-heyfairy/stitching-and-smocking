@@ -22,6 +22,22 @@ function pointPosition(point: CoursePoint, startPleat: number) {
   };
 }
 
+function bindDisplacement(courses: PlateCourse[], point: CoursePoint): number {
+  let displacement = 0;
+  for (const course of courses) {
+    if (course.stitch !== "honeycomb" && course.stitch !== "surface-honeycomb") continue;
+    const strength = course.stitch === "honeycomb" ? 9 : 6;
+    for (const segment of course.segments) {
+      if (!segment.bind) continue;
+      const distance = Math.abs(point.row - segment.to.row);
+      const influence = Math.max(0, 1 - distance / 1.25);
+      if (point.pleat === segment.bind[0]) displacement += strength * influence;
+      if (point.pleat === segment.bind[1]) displacement -= strength * influence;
+    }
+  }
+  return displacement;
+}
+
 function CoursePaths({
   plate,
   courses,
@@ -29,6 +45,7 @@ function CoursePaths({
   endPleat,
   showHidden,
   showOrder,
+  deformBinds = false,
 }: {
   plate: PlateMeta;
   courses: PlateCourse[];
@@ -36,6 +53,7 @@ function CoursePaths({
   endPleat: number;
   showHidden: boolean;
   showOrder: boolean;
+  deformBinds?: boolean;
 }) {
   return courses.map((course, courseIndex) => {
     const color = threadColor(plate, course.threadId);
@@ -51,6 +69,10 @@ function CoursePaths({
         {segments.map((segment, index) => {
           const from = pointPosition(segment.from, startPleat);
           const to = pointPosition(segment.to, startPleat);
+          if (deformBinds) {
+            from.x += bindDisplacement(courses, segment.from);
+            to.x += bindDisplacement(courses, segment.to);
+          }
           return (
             <g key={`${course.id}-${index}`}>
               <path
@@ -67,7 +89,7 @@ function CoursePaths({
               )}
               {segment.bind && (
                 <path
-                  d={`M ${to.x - 7} ${to.y - 6} Q ${to.x} ${to.y + 7} ${to.x + 7} ${to.y - 6}`}
+                  d={`M ${(from.x + to.x) / 2 - Math.max(5, Math.abs(to.x - from.x) / 2)} ${to.y - 6} Q ${(from.x + to.x) / 2} ${to.y + 7} ${(from.x + to.x) / 2 + Math.max(5, Math.abs(to.x - from.x) / 2)} ${to.y - 6}`}
                   fill="none"
                   stroke={color}
                   strokeWidth="2"
@@ -193,6 +215,9 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
 export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
+  const hasHoneycomb = courses.some(
+    (course) => course.stitch === "honeycomb" || course.stitch === "surface-honeycomb",
+  );
   const width = LEFT * 2 + plate.pleats * PLEAT_WIDTH;
   const height = TOP + plate.rows * ROW_HEIGHT + 24;
 
@@ -207,10 +232,29 @@ export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta 
           </linearGradient>
         </defs>
         <rect width={width} height={height} rx="8" fill={ILLUSTRATION.fabric} />
-        {Array.from({ length: plate.pleats }, (_, index) => (
-          <rect key={index} x={LEFT + index * PLEAT_WIDTH} y={TOP} width={PLEAT_WIDTH} height={plate.rows * ROW_HEIGHT} fill={`url(#pleat-${plate.slug})`} opacity={index % 2 ? ".55" : ".9"} />
-        ))}
-        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} />
+        {Array.from({ length: plate.pleats }, (_, index) => {
+          if (!hasHoneycomb) {
+            return <rect key={index} x={LEFT + index * PLEAT_WIDTH} y={TOP} width={PLEAT_WIDTH} height={plate.rows * ROW_HEIGHT} fill={`url(#pleat-${plate.slug})`} opacity={index % 2 ? ".55" : ".9"} />;
+          }
+          const pleat = index + 1;
+          const points = Array.from({ length: plate.rows * 4 + 1 }, (_, sample) => {
+            const row = 0.5 + sample / 4;
+            const position = pointPosition({ pleat, row }, 1);
+            return {
+              x: position.x + bindDisplacement(courses, { pleat, row }),
+              y: position.y,
+            };
+          });
+          const path = points.map((point, pointIndex) => `${pointIndex === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+          return (
+            <g key={index}>
+              <path d={path} fill="none" stroke={ILLUSTRATION.fabricShadow} strokeWidth={PLEAT_WIDTH - 1} strokeLinejoin="round" opacity=".5" />
+              <path d={path} fill="none" stroke={index % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} strokeWidth={PLEAT_WIDTH - 4} strokeLinejoin="round" opacity={index % 2 ? ".78" : ".96"} />
+              <path d={path} fill="none" stroke={ILLUSTRATION.fabricShadow} strokeWidth=".7" />
+            </g>
+          );
+        })}
+        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} deformBinds />
       </svg>
     </IllustrationFrame>
   );
