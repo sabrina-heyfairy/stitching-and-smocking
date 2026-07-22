@@ -27,7 +27,9 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
   ).join("");
   const coursePaths = courses.map((course, courseIndex) => {
     const thread = plate.threads.find((item) => item.id === course.threadId);
+    const threadIndex = Math.max(0, plate.threads.findIndex((item) => item.id === course.threadId));
     const color = monochrome ? ink : (thread?.hex ?? ink);
+    const monochromePatterns = ["", "1 2", "5 2", "2 2", "7 2 1 2"];
     const segments = course.segments.map((segment) => {
       const from = { x: x(segment.from.pleat), y: y(segment.from.row) };
       const to = { x: x(segment.to.pleat), y: y(segment.to.row) };
@@ -41,7 +43,8 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
         : segment.role === "travel"
           ? `M ${from.x} ${from.y} C ${from.x + (from.x <= to.x ? 5 : -5)} ${from.y}, ${to.x + (from.x <= to.x ? 5 : -5)} ${to.y}, ${to.x} ${to.y}`
           : `M ${from.x} ${from.y} C ${from.x + third} ${from.y}, ${to.x - third} ${to.y}, ${to.x} ${to.y}`;
-      const path = `<path d="${d}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : isPicture ? 2.2 : 3}" ${segment.hidden ? 'stroke-dasharray="5 4"' : ""} stroke-linecap="round"/>`;
+      const dash = segment.hidden ? "5 4" : monochrome && isPicture ? monochromePatterns[threadIndex % monochromePatterns.length] : "";
+      const path = `<path d="${d}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : isPicture ? 2.2 : 3}" ${dash ? `stroke-dasharray="${dash}"` : ""} stroke-linecap="round"/>`;
       const secondPass = (segment.passes ?? 1) > 1
         ? `<path d="${d}" transform="translate(0 2.4)" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>`
         : "";
