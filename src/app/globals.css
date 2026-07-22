@@ -472,8 +472,20 @@
   }
 
   .daisy-sequence { display: grid; gap: 1rem; }
+  .daisy-phase-nav { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .daisy-phase-nav button {
+    min-height: 2.5rem;
+    padding: .5rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink-muted);
+    font-size: .75rem;
+  }
+  .daisy-phase-nav button[aria-pressed="true"] { border-color: var(--daisy-pink-deep); background: #fff0f4; color: var(--daisy-pink-deep); font-weight: 700; }
   .daisy-step-copy { padding: 1rem; border: 1px solid var(--border); border-radius: .65rem; background: var(--daisy-ivory); }
   .daisy-step-copy h3 { margin-top: .25rem; font-size: 1.35rem; }
+  .daisy-step-count { margin-top: .25rem; color: var(--ink-faint); font-size: .75rem; font-weight: 700; }
   .daisy-step-copy > p:not(.label-caps) { margin-top: .5rem; color: var(--ink-muted); line-height: 1.6; }
   .daisy-step-copy dl { display: grid; gap: .4rem; margin-top: .8rem; font-size: .8rem; }
   .daisy-step-copy dl div { display: flex; justify-content: space-between; gap: 1rem; padding-top: .4rem; border-top: 1px solid var(--border); }
@@ -554,6 +566,7 @@
     .daisy-mistakes { grid-template-columns: repeat(2, 1fr); }
     .daisy-garments { grid-template-columns: repeat(4, 1fr); }
     .daisy-sequence { grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); align-items: start; }
+    .daisy-sequence .daisy-phase-nav { grid-column: 1 / -1; }
     .daisy-sequence .daisy-button-row { grid-column: 1 / -1; }
     .daisy-control-panel { grid-template-columns: 2fr 2fr 1.5fr auto auto auto; align-items: end; }
   }

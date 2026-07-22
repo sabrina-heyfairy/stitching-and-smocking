@@ -49,7 +49,7 @@ export default function PlatesIndexPage() {
           <h2 className="mt-2 font-serif text-3xl text-ink">Daisy Smocking Plate</h2>
           <p className="mt-3 max-w-xl leading-relaxed text-ink-muted">
             Decode the original plate with a pleated-fabric grid, layered SVG needle paths,
-            an eight-step sequence, repeat guidance, troubleshooting, and a printable reference.
+            a 40-frame sequence across rows 1–8, repeat guidance, troubleshooting, and a printable reference.
           </p>
           <span className="mt-5 inline-block text-sm font-semibold text-burgundy">Open the interactive chapter →</span>
         </div>
