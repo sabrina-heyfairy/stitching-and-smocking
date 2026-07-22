@@ -41,6 +41,13 @@ export default function PlatesIndexPage() {
       </p>
 
       <Link
+        href="/analyze/"
+        className="mt-6 inline-flex min-h-11 items-center rounded bg-burgundy px-5 py-2.5 text-sm font-semibold text-white no-underline transition hover:bg-burgundy-soft"
+      >
+        Have a plate picture? Get a step-by-step plan →
+      </Link>
+
+      <Link
         href="/plates/daisy/"
         className="mt-8 grid overflow-hidden rounded-xl border border-burgundy/25 bg-paper no-underline shadow-sm transition hover:border-burgundy/50 md:grid-cols-[1.15fr_.85fr]"
       >

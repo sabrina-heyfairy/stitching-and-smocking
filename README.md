@@ -44,6 +44,7 @@ npm run lint
 | **Garment construction** (visual assembly guides) | Complete |
 | **Fabric calculator** (Read 16 yardage: finished width → length to pleat) | Complete |
 | **Practice Path** curriculum + materials visuals | Complete |
+| Smocking plate photo analyzer | Requires Worker deployment |
 | Stitch index + filters + search | Complete |
 | Theory, fabrics, threads, needles, garments, design | Foundation chapters |
 
@@ -66,6 +67,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Quality over speed: finish one chapter
 ## Deploy
 
 Push to `main` runs `.github/workflows/deploy.yml` (GitHub Pages static export). Enable Pages in repo settings → Source: GitHub Actions.
+
+The optional photo analyzer uses the secure Cloudflare Worker in [`worker/`](./worker/README.md). The OpenAI API key belongs in a Worker secret and must never be exposed as a `NEXT_PUBLIC_` variable.
 
 ## License
 

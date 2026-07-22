@@ -29,6 +29,8 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_PUBLIC_PLATE_ANALYZER_URL: ${{ vars.PLATE_ANALYZER_URL }}
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
