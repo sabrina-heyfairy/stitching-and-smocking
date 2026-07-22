@@ -15,7 +15,7 @@ interface PictureSeed {
   sourceHref: string;
 }
 
-const tile = (motif: string[]) => motif.map((row) => row.repeat(4));
+const tile = (motif: string[]) => motif.map((row) => row.repeat(32 / [...row].length));
 
 const colors = {
   green: "#51745b",
@@ -133,7 +133,20 @@ const seeds: PictureSeed[] = [
     category: "Picture Smocking · Boys",
     difficulty: "advanced",
     garments: ["boy’s yoke", "farm romper", "sampler"],
-    motif: ["..y.....", ".yyy....", ".gggg...", "gggggg..", "ggrggg..", ".kkkk.k.", "kkkkkkkk", "..b.b...", ".bbbbbb.", "........"],
+    motif: [
+      "......yy........",
+      ".....yyyy.......",
+      ".....y..y.......",
+      "..gggggggg......",
+      ".ggggggggggg....",
+      ".ggrgggggggg....",
+      "gggggggggggggg..",
+      ".kkkk...kkkkk...",
+      "kkkkkk.kkkkkkk..",
+      ".kkkk...kkkkk...",
+      "bbbbbbbbbbbbbbbb",
+      ".b.b.b.b.b.b.b.b",
+    ],
     legend: { y: "yellow", g: "green", r: "red", k: "charcoal", b: "brown" },
     threads: [thread("yellow", "Sun yellow", colors.yellow), thread("green", "Tractor green", colors.green), thread("red", "Engine red", colors.red), thread("charcoal", "Tire", colors.charcoal), thread("brown", "Field", colors.brown), thread("back", "Back-smocking neutral", colors.neutral)],
     sourceLabel: "Boys’ picture-smocking roundup (theme reference)",
@@ -144,7 +157,9 @@ const seeds: PictureSeed[] = [
 const paletteNames = Object.keys(PLATE_COLORWAYS);
 
 export const picturePlates: PlateMeta[] = seeds.map((seed) => {
-  const grid = tile(seed.motif);
+  const motifWidth = [...seed.motif[0]].length;
+  const repeatCount = 32 / motifWidth;
+  const grid = tile([".".repeat(motifWidth), ...seed.motif, ".".repeat(motifWidth)]);
   const chart: PictureSmockingChart = {
     grid,
     legend: seed.legend,
@@ -162,11 +177,11 @@ export const picturePlates: PlateMeta[] = seeds.map((seed) => {
     garments: seed.garments,
     rows: grid.length,
     pleats: 33,
-    repeatPleats: 8,
+    repeatPleats: motifWidth,
     finishedWidth: "About 5.5 in at 6 pleats/in; confirm with a tension sample",
     fabricWidth: "Start with about 16.5 in at 3:1 compression; test this fabric first",
     centerLine: "center pleat 17",
-    symmetry: "Center one eight-pleat picture repeat on pleat 17",
+    symmetry: `Center the join between the two middle ${motifWidth}-pleat repeats on pleat 17`,
     threadWeight: "3 strands cotton floss; use 2 strands for tiny details",
     colorSuggestions: paletteNames,
     threads: seed.threads,
@@ -183,7 +198,7 @@ export const picturePlates: PlateMeta[] = seeds.map((seed) => {
     ],
     tips: [
       "Use separate short lengths for isolated color areas instead of carrying dark thread behind pale fabric.",
-      "The four repeats are identical; verify the first repeat before continuing.",
+      `The ${repeatCount} repeats are identical; verify the first repeat before continuing.`,
     ],
     cells: {},
   };
