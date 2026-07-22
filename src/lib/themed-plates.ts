@@ -219,6 +219,9 @@ const seeds: ThemeSeed[] = [
         line("straight", "accent", [[.50,.32],[.45,.38]]), line("straight", "accent", [[.50,.32],[.55,.38]]),
         line("straight", "accent", [[.66,.41],[.58,.41]]), line("straight", "accent", [[.66,.41],[.62,.48]]),
         line("straight", "accent", [[.66,.59],[.58,.59]]), line("straight", "accent", [[.66,.59],[.62,.52]]),
+        line("straight", "accent", [[.50,.68],[.45,.62]]), line("straight", "accent", [[.50,.68],[.55,.62]]),
+        line("straight", "accent", [[.34,.59],[.42,.59]]), line("straight", "accent", [[.34,.59],[.38,.52]]),
+        line("straight", "accent", [[.34,.41],[.42,.41]]), line("straight", "accent", [[.34,.41],[.38,.48]]),
       ],
     },
   },
@@ -248,7 +251,7 @@ const seeds: ThemeSeed[] = [
 const paletteNames = Object.keys(PLATE_COLORWAYS);
 const colors = {
   frame: "#6b8a9e", field: "#7a3f45", foliage: "#53745a", flower: "#b85d73",
-  accent: "#c4a35a", berry: "#a12f3d", candle: "#efe0b0", flame: "#d88a35",
+  accent: "#c4a35a", berry: "#a12f3d", candle: "#b79045", flame: "#d88a35",
   snow: "#769db7", trunk: "#79563d", star: "#c4a35a",
 };
 
