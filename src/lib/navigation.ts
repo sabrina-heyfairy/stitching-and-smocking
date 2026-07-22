@@ -4,6 +4,7 @@ export const mainNav = [
   { href: "/learn/", label: "Practice Path" },
   { href: "/stitches/", label: "Stitches" },
   { href: "/plates/", label: "Plates" },
+  { href: "/analyze/", label: "Analyze a Plate" },
   { href: "/pleater/", label: "Read 16" },
   { href: "/calculator/", label: "Calculator" },
   { href: "/garments/", label: "Garments" },
@@ -30,6 +31,7 @@ export const navGroups: NavEntry[] = [
   { kind: "link", href: "/learn/", label: "Practice Path" },
   { kind: "link", href: "/stitches/", label: "Stitches" },
   { kind: "link", href: "/plates/", label: "Plates" },
+  { kind: "link", href: "/analyze/", label: "Analyzer" },
   { kind: "link", href: "/pleater/", label: "Read 16" },
   { kind: "link", href: "/calculator/", label: "Calculator" },
   {
