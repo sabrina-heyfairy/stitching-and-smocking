@@ -134,9 +134,22 @@ function StitchDiagram({ layers, activeRow, showRepeat, zoom, currentStep }: { l
         {Array.from({ length: 8 }, (_, row) => <g key={row} opacity={activeRow && activeRow !== row + 1 ? .22 : 1}><line x1="82" y1={y(row + 1)} x2="650" y2={y(row + 1)} stroke={COLORS.grid} /><text x="67" y={y(row + 1) + 5} textAnchor="end" fontSize="13">R{row + 1}</text></g>)}
         {Array.from({ length: 10 }, (_, pleat) => <g key={pleat}><circle cx={x(pleat + 1)} cy={y(1)} r="3.5" fill={COLORS.ink} /><text x={x(pleat + 1)} y="22" textAnchor="middle" fontSize="11">P{pleat + 1}</text>{Array.from({ length: 7 }, (_, row) => <circle key={row} cx={x(pleat + 1)} cy={y(row + 2)} r="3.5" fill={COLORS.ink} />)}</g>)}
         {showRepeat && <rect x={x(1) - 22} y="25" width={x(9) - x(1) + 44} height="330" rx="10" fill="none" stroke={COLORS.gold} strokeWidth="3" strokeDasharray="8 6" />}
-        {layers.border && <g opacity={activeRow && activeRow > 2 ? .18 : 1} fill="none" stroke={COLORS.pink} strokeWidth="3" markerEnd={`url(#${markerId}-pink)`}><path d={`M${x(1)} ${y(1)} ${Array.from({ length: 8 }, (_, i) => `Q${x(i + 1) + 29} ${y(1) - (i % 2 ? -7 : 7)} ${x(i + 2)} ${y(1)}`).join(" ")}`} /><path d={`M${x(1)} ${y(2)} ${Array.from({ length: 8 }, (_, i) => `Q${x(i + 1) + 29} ${y(2) + (i % 2 ? -7 : 7)} ${x(i + 2)} ${y(2)}`).join(" ")}`} /></g>}
-        {layers.daisy && <g fill="none" stroke={COLORS.deepPink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">{steps.slice(0, maxStep + 1).map((step) => <g key={step.id} opacity={activeRow && activeRow !== step.from[1] && activeRow !== step.to[1] ? .18 : 1}><path d={`M${x(step.from[0])} ${y(step.from[1])} L${x(step.to[0])} ${y(step.to[1])}`} markerEnd={`url(#${markerId}-pink)`} /><circle cx={x(step.to[0])} cy={y(step.to[1])} r="10" fill="#fff" stroke={COLORS.deepPink} /><text x={x(step.to[0])} y={y(step.to[1]) + 4} textAnchor="middle" fontSize="10" fill={COLORS.deepPink} stroke="none" fontWeight="700">{step.id}</text></g>)}</g>}
-        {layers.trellis && <g opacity={activeRow && activeRow < 5 ? .18 : 1} fill="none" stroke={COLORS.green} strokeWidth="3" markerEnd={`url(#${markerId}-green)`}><path d={`M${x(1)} ${y(5)} L${x(2)} ${y(8)} L${x(3)} ${y(5)} L${x(4)} ${y(8)} L${x(5)} ${y(5)} L${x(6)} ${y(8)} L${x(7)} ${y(5)} L${x(8)} ${y(8)} L${x(9)} ${y(5)}`} /><path d={`M${x(1)} ${y(5.45)} L${x(2)} ${y(7.55)} L${x(3)} ${y(5.45)} L${x(4)} ${y(7.55)} L${x(5)} ${y(5.45)} L${x(6)} ${y(7.55)} L${x(7)} ${y(5.45)} L${x(8)} ${y(7.55)} L${x(9)} ${y(5.45)}`} opacity=".65" /></g>}
+        {currentStep === undefined && layers.border && <g opacity={activeRow && activeRow > 2 ? .18 : 1} fill="none" stroke={COLORS.pink} strokeWidth="3" markerEnd={`url(#${markerId}-pink)`}><path d={`M${x(1)} ${y(1)} ${Array.from({ length: 8 }, (_, i) => `Q${x(i + 1) + 29} ${y(1) - (i % 2 ? -7 : 7)} ${x(i + 2)} ${y(1)}`).join(" ")}`} /><path d={`M${x(1)} ${y(2)} ${Array.from({ length: 8 }, (_, i) => `Q${x(i + 1) + 29} ${y(2) + (i % 2 ? -7 : 7)} ${x(i + 2)} ${y(2)}`).join(" ")}`} /></g>}
+        {currentStep === undefined && layers.daisy && <g fill="none" stroke={COLORS.deepPink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">{steps.filter((step) => step.layer === "daisy" && step.phase === "Upper Daisy framework").map((step) => <g key={step.id} opacity={activeRow && activeRow !== step.from[1] && activeRow !== step.to[1] ? .18 : 1}><path d={`M${x(step.from[0])} ${y(step.from[1])} L${x(step.to[0])} ${y(step.to[1])}`} markerEnd={`url(#${markerId}-pink)`} /><circle cx={x(step.to[0])} cy={y(step.to[1])} r="10" fill="#fff" stroke={COLORS.deepPink} /><text x={x(step.to[0])} y={y(step.to[1]) + 4} textAnchor="middle" fontSize="10" fill={COLORS.deepPink} stroke="none" fontWeight="700">{step.id - 16}</text></g>)}</g>}
+        {currentStep === undefined && layers.trellis && <g opacity={activeRow && activeRow < 5 ? .18 : 1} fill="none" stroke={COLORS.green} strokeWidth="3" markerEnd={`url(#${markerId}-green)`}><path d={`M${x(1)} ${y(5)} L${x(2)} ${y(8)} L${x(3)} ${y(5)} L${x(4)} ${y(8)} L${x(5)} ${y(5)} L${x(6)} ${y(8)} L${x(7)} ${y(5)} L${x(8)} ${y(8)} L${x(9)} ${y(5)}`} /><path d={`M${x(1)} ${y(5.45)} L${x(2)} ${y(7.55)} L${x(3)} ${y(5.45)} L${x(4)} ${y(7.55)} L${x(5)} ${y(5.45)} L${x(6)} ${y(7.55)} L${x(7)} ${y(5.45)} L${x(8)} ${y(7.55)} L${x(9)} ${y(5.45)}`} opacity=".65" /></g>}
+        {currentStep !== undefined && (
+          <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+            {steps.slice(0, maxStep + 1).map((step, index) => {
+              const isCurrent = index === maxStep;
+              const color = step.layer === "trellis" ? COLORS.green : step.layer === "border" ? COLORS.pink : COLORS.deepPink;
+              const arrow = step.layer === "trellis" ? `${markerId}-green` : `${markerId}-pink`;
+              return <path key={step.id} d={`M${x(step.from[0])} ${y(step.from[1])} L${x(step.to[0])} ${y(step.to[1])}`} stroke={color} strokeWidth={isCurrent ? 5 : 3} opacity={isCurrent ? 1 : .42} markerEnd={isCurrent ? `url(#${arrow})` : undefined} />;
+            })}
+            <circle cx={x(steps[maxStep].from[0])} cy={y(steps[maxStep].from[1])} r="5" fill={COLORS.ink} />
+            <circle cx={x(steps[maxStep].to[0])} cy={y(steps[maxStep].to[1])} r="12" fill="#fff" stroke={steps[maxStep].layer === "trellis" ? COLORS.green : COLORS.deepPink} strokeWidth="3" />
+            <circle cx={x(steps[maxStep].to[0])} cy={y(steps[maxStep].to[1])} r="3" fill={steps[maxStep].layer === "trellis" ? COLORS.green : COLORS.deepPink} />
+          </g>
+        )}
       </svg>
     </div>
   );
@@ -162,12 +175,20 @@ function RepeatBand() {
 function SequenceGuide() {
   const [step, setStep] = useState(0);
   const current = daisyPlate.stitchSequence[step];
-  const layers = { border: false, daisy: true, trellis: false };
+  const layers = { border: true, daisy: true, trellis: true };
+  const phaseStarts = daisyPlate.stitchSequence.reduce<{ label: string; index: number }[]>((phases, item, index) => {
+    if (!phases.some((phase) => phase.label === item.phase)) phases.push({ label: item.phase, index });
+    return phases;
+  }, []);
   return (
     <div className="daisy-sequence" aria-live="polite">
+      <nav className="daisy-phase-nav no-print" aria-label="Stitch sequence phases">
+        {phaseStarts.map((phase) => <button key={phase.label} type="button" aria-pressed={current.phase === phase.label} onClick={() => setStep(phase.index)}>{phase.label}</button>)}
+      </nav>
       <StitchDiagram layers={layers} activeRow={current.row} showRepeat={true} zoom={1} currentStep={step} />
       <div className="daisy-step-copy">
-        <p className="label-caps">Step {current.id} of {daisyPlate.stitchSequence.length}</p>
+        <p className="label-caps">{current.phase}</p>
+        <p className="daisy-step-count">Step {current.id} of {daisyPlate.stitchSequence.length}</p>
         <h3>{current.stitch} · Row {current.row}, pleat {current.pleat}</h3>
         <p>{current.instruction}</p>
         <dl><div><dt>Current needle</dt><dd>R{current.row} / P{current.pleat}</dd></div><div><dt>Movement</dt><dd>{current.direction}</dd></div><div><dt>Next insertion</dt><dd>R{current.to[1]} / P{current.to[0]}</dd></div></dl>
@@ -230,7 +251,7 @@ export function DaisyPlateChapter() {
 
         <Section number={5} title="How the pattern repeats across the full width" id="full-width"><RepeatBand /><ol className="daisy-instruction-list">{daisyPlate.repeatInstructions.map((item) => <li key={item}>{item}</li>)}</ol></Section>
 
-        <Section number={6} title="Frame-by-frame stitch sequence" id="sequence"><SequenceGuide /><p className="daisy-note"><strong>Scope:</strong> these eight frames explain the visible framework rhythm. They do not override the source’s fractional-row wording; sample and compare before using precious fabric.</p></Section>
+        <Section number={6} title="Frame-by-frame stitch sequence" id="sequence"><SequenceGuide /><p className="daisy-note"><strong>Scope:</strong> these 40 frames cover both cable rows, the upper and mirrored Daisy framework, and the trellis transition through row 8. Interpreted frames do not override the source’s fractional-row wording; sample and compare before using precious fabric.</p></Section>
 
         <Section number={7} title="Common mistakes and fixes" id="mistakes"><div className="daisy-mistakes">{daisyPlate.commonMistakes.map((mistake) => <article key={mistake.id}><MistakeSketch type={mistake.id} /><div><h3>{mistake.title}</h3><p><strong>Looks like:</strong> {mistake.appearance}</p><p><strong>Why:</strong> {mistake.cause}</p><p><strong>Correct:</strong> {mistake.correction}</p><p><strong>Unpick?</strong> {mistake.unpick}</p></div></article>)}</div></Section>
 
