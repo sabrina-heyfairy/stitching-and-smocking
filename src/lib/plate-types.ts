@@ -46,6 +46,26 @@ export interface PlateMotif {
   instructions: string[];
 }
 
+export interface PictureSmockingChart {
+  /** One character per stitch between adjacent pleats; "." means no front stitch. */
+  grid: string[];
+  /** Character-to-thread mapping used by the grid. */
+  legend: Record<string, string>;
+  /** Wrong-side stabilizing rows, shown dashed on the working graph only. */
+  backSmocking?: {
+    row: number;
+    threadId: string;
+    fromPleat?: number;
+    toPleat?: number;
+  }[];
+}
+
+export interface PlateSource {
+  label: string;
+  href: string;
+  note?: string;
+}
+
 export interface PlateMeta {
   slug: string;
   title: string;
@@ -72,6 +92,10 @@ export interface PlateMeta {
   embroideryStitches?: string[];
   /** Surface embroidery charted over one horizontal repeat. */
   motif?: PlateMotif;
+  /** Dense structural cable-stitch chart used for picture smocking. */
+  pictureChart?: PictureSmockingChart;
+  /** Attribution, inspiration, or further-reading links for this plate. */
+  sources?: PlateSource[];
   threads: PlateThread[];
   stitchesUsed: PlateStitchRef[];
   description: string;

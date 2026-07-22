@@ -33,6 +33,20 @@ const FINISHED_GEOMETRY: RenderGeometry = {
   top: 34,
 };
 
+const PICTURE_GRAPH_GEOMETRY: RenderGeometry = {
+  pleatWidth: 14,
+  rowHeight: 22,
+  left: 44,
+  top: 38,
+};
+
+const PICTURE_FINISHED_GEOMETRY: RenderGeometry = {
+  pleatWidth: 14,
+  rowHeight: 18,
+  left: 32,
+  top: 28,
+};
+
 function threadColor(plate: PlateMeta, threadId: string): string {
   return plate.threads.find((thread) => thread.id === threadId)?.hex ?? ILLUSTRATION.thread;
 }
@@ -73,13 +87,14 @@ function stitchPath(
   from: { x: number; y: number },
   to: { x: number; y: number },
   segment: PlateCourse["segments"][number],
+  scale = 1,
 ): string {
   const side = segment.threadSide === "above" ? -1 : 1;
   if (segment.straight) {
     return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
   }
   if (segment.role === "level" || segment.role === "closure" || segment.role === "lock") {
-    const bow = segment.role === "lock" ? 4 : 5;
+    const bow = (segment.role === "lock" ? 4 : 5) * scale;
     const third = (to.x - from.x) / 3;
     return `M ${from.x} ${from.y} C ${from.x + third} ${from.y + side * bow}, ${to.x - third} ${to.y + side * bow}, ${to.x} ${to.y}`;
   }
@@ -118,6 +133,7 @@ function CoursePaths({
   geometry?: RenderGeometry;
   finishedFilterId?: string;
 }) {
+  const pathScale = geometry.pleatWidth / PLEAT_WIDTH;
   return courses.map((course, courseIndex) => {
     const color = threadColor(plate, course.threadId);
     const segments = course.segments.filter(
@@ -141,7 +157,7 @@ function CoursePaths({
             <g key={`${course.id}-${index}`}>
               {finished && (
                 <path
-                  d={stitchPath(from, to, segment)}
+                  d={stitchPath(from, to, segment, pathScale)}
                   fill="none"
                   stroke="#3b302b"
                   strokeWidth="5.2"
@@ -151,17 +167,17 @@ function CoursePaths({
                 />
               )}
               <path
-                d={stitchPath(from, to, segment)}
+                d={stitchPath(from, to, segment, pathScale)}
                 fill="none"
                 stroke={segment.hidden ? ILLUSTRATION.inkFaint : color}
-                strokeWidth={segment.hidden ? 1.4 : finished ? 3.2 : 3}
+                strokeWidth={segment.hidden ? 1.4 : finished ? 3.2 : plate.pictureChart ? 2.2 : 3}
                 strokeDasharray={segment.hidden ? "5 4" : undefined}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               {(segment.passes ?? 1) > 1 && (
                 <path
-                  d={stitchPath({ x: from.x, y: from.y + 2.4 }, { x: to.x, y: to.y + 2.4 }, segment)}
+                  d={stitchPath({ x: from.x, y: from.y + 2.4 }, { x: to.x, y: to.y + 2.4 }, segment, pathScale)}
                   fill="none"
                   stroke={color}
                   strokeWidth={finished ? 3 : 2.4}
@@ -169,7 +185,7 @@ function CoursePaths({
                 />
               )}
               {!segment.hidden && !finished && (
-                <circle cx={to.x} cy={to.y} r="2.8" fill={color} stroke={ILLUSTRATION.fabric} strokeWidth=".8" />
+                <circle cx={to.x} cy={to.y} r={plate.pictureChart ? 1.6 : 2.8} fill={color} stroke={ILLUSTRATION.fabric} strokeWidth=".8" />
               )}
               {segment.bind && !finished && (
                 <path
@@ -206,16 +222,18 @@ function CoursePaths({
 export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = useMemo(() => getPlateCourses(plate), [plate]);
-  const [fullWidth, setFullWidth] = useState(false);
+  const isPicture = Boolean(plate.pictureChart);
+  const geometry = isPicture ? PICTURE_GRAPH_GEOMETRY : GRAPH_GEOMETRY;
+  const [fullWidth, setFullWidth] = useState(isPicture);
   const repeatEnd = plate.repeatPleats > 1
     ? Math.min(plate.pleats, plate.repeatPleats <= 4 ? plate.repeatPleats * 2 + 1 : plate.repeatPleats + 1)
     : Math.min(plate.pleats, 12);
   const endPleat = fullWidth ? plate.pleats : repeatEnd;
   const shownPleats = endPleat;
-  const width = LEFT + shownPleats * PLEAT_WIDTH + 24;
-  const height = TOP + plate.rows * ROW_HEIGHT + 54;
-  const centerX = LEFT + (plate.pleats / 2) * PLEAT_WIDTH;
-  const repeatStartX = LEFT + PLEAT_WIDTH / 2;
+  const width = geometry.left + shownPleats * geometry.pleatWidth + 24;
+  const height = geometry.top + plate.rows * geometry.rowHeight + 54;
+  const centerX = geometry.left + (plate.pleats / 2) * geometry.pleatWidth;
+  const repeatStartX = geometry.left + geometry.pleatWidth / 2;
   const centerLabel = (plate.centerLine ?? "center reference").toUpperCase();
 
   return (
@@ -255,37 +273,37 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
       >
         <rect width={width} height={height} rx="8" fill={ILLUSTRATION.fabric} />
         {Array.from({ length: plate.rows }, (_, rowIndex) => {
-          const y = TOP + rowIndex * ROW_HEIGHT + ROW_HEIGHT / 2;
+          const y = geometry.top + rowIndex * geometry.rowHeight + geometry.rowHeight / 2;
           return (
             <g key={`row-${rowIndex + 1}`}>
-              <line x1={LEFT} y1={y} x2={LEFT + shownPleats * PLEAT_WIDTH} y2={y} stroke={ILLUSTRATION.fabricShadow} strokeDasharray="3 4" />
-              <text x={LEFT - 10} y={y + 4} textAnchor="end" fontSize="12" fill={ILLUSTRATION.inkMuted}>R{rowIndex + 1}</text>
+              <line x1={geometry.left} y1={y} x2={geometry.left + shownPleats * geometry.pleatWidth} y2={y} stroke={ILLUSTRATION.fabricShadow} strokeDasharray="3 4" />
+              <text x={geometry.left - 8} y={y + 4} textAnchor="end" fontSize={isPicture ? 9 : 12} fill={ILLUSTRATION.inkMuted}>R{rowIndex + 1}</text>
             </g>
           );
         })}
         {Array.from({ length: shownPleats }, (_, index) => {
-          const x = LEFT + index * PLEAT_WIDTH + PLEAT_WIDTH / 2;
+          const x = geometry.left + index * geometry.pleatWidth + geometry.pleatWidth / 2;
           return (
             <g key={`pleat-${index + 1}`}>
               <path
-                d={`M ${x - PLEAT_WIDTH / 2} ${TOP - 4} Q ${x} ${TOP + 5} ${x + PLEAT_WIDTH / 2} ${TOP - 4} V ${TOP + plate.rows * ROW_HEIGHT} Q ${x} ${TOP + plate.rows * ROW_HEIGHT - 9} ${x - PLEAT_WIDTH / 2} ${TOP + plate.rows * ROW_HEIGHT} Z`}
+                d={`M ${x - geometry.pleatWidth / 2} ${geometry.top - 4} Q ${x} ${geometry.top + 5} ${x + geometry.pleatWidth / 2} ${geometry.top - 4} V ${geometry.top + plate.rows * geometry.rowHeight} Q ${x} ${geometry.top + plate.rows * geometry.rowHeight - 9} ${x - geometry.pleatWidth / 2} ${geometry.top + plate.rows * geometry.rowHeight} Z`}
                 fill={index % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain}
                 opacity=".56"
               />
-              <line x1={x} y1={TOP - 4} x2={x} y2={TOP + plate.rows * ROW_HEIGHT} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".6" />
-              <text x={x} y={TOP - 14} textAnchor="middle" fontSize="11" fill={ILLUSTRATION.inkMuted}>{index + 1}</text>
+              <line x1={x} y1={geometry.top - 4} x2={x} y2={geometry.top + plate.rows * geometry.rowHeight} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".6" />
+              <text x={x} y={geometry.top - 12} textAnchor="middle" fontSize={isPicture ? 8 : 11} fill={ILLUSTRATION.inkMuted}>{index + 1}</text>
             </g>
           );
         })}
-        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={endPleat} showHidden showOrder />
+        <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={endPleat} showHidden showOrder={!isPicture} geometry={geometry} />
         {plate.motif && (
           <g
             dangerouslySetInnerHTML={{
               __html: plateMotifSvg(plate, {
-                originX: LEFT + PLEAT_WIDTH / 2,
-                originY: TOP + ROW_HEIGHT / 2,
-                pleatWidth: PLEAT_WIDTH,
-                rowSpan: (plate.rows - 1) * ROW_HEIGHT,
+                originX: geometry.left + geometry.pleatWidth / 2,
+                originY: geometry.top + geometry.rowHeight / 2,
+                pleatWidth: geometry.pleatWidth,
+                rowSpan: (plate.rows - 1) * geometry.rowHeight,
                 endPleat,
               }),
             }}
@@ -293,35 +311,44 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
         )}
         {plate.repeatPleats > 1 && !fullWidth && (
           <g>
-            {[repeatStartX, repeatStartX + plate.repeatPleats * PLEAT_WIDTH].map((x) => (
-              <line key={x} x1={x} y1={TOP - 8} x2={x} y2={TOP + plate.rows * ROW_HEIGHT + 8} stroke={ILLUSTRATION.gold} strokeWidth="1.5" strokeDasharray="5 3" />
+            {[repeatStartX, repeatStartX + plate.repeatPleats * geometry.pleatWidth].map((x) => (
+              <line key={x} x1={x} y1={geometry.top - 8} x2={x} y2={geometry.top + plate.rows * geometry.rowHeight + 8} stroke={ILLUSTRATION.gold} strokeWidth="1.5" strokeDasharray="5 3" />
             ))}
-            <text x={repeatStartX + plate.repeatPleats * PLEAT_WIDTH / 2} y={height - 15} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.gold}>ONE REPEAT</text>
+            <text x={repeatStartX + plate.repeatPleats * geometry.pleatWidth / 2} y={height - 15} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.gold}>ONE REPEAT</text>
           </g>
         )}
         {fullWidth && (
           <g>
-            <line x1={centerX} y1={TOP - 18} x2={centerX} y2={TOP + plate.rows * ROW_HEIGHT + 10} stroke={ILLUSTRATION.burgundy} strokeWidth="2" strokeDasharray="6 4" />
+            <line x1={centerX} y1={geometry.top - 18} x2={centerX} y2={geometry.top + plate.rows * geometry.rowHeight + 10} stroke={ILLUSTRATION.burgundy} strokeWidth="2" strokeDasharray="6 4" />
             <text x={centerX} y={height - 14} textAnchor="middle" fontSize="11" fontWeight="700" fill={ILLUSTRATION.burgundy}>{centerLabel}</text>
           </g>
         )}
       </svg>
       <div className="mt-4 grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
-        {courses.map((course, index) => (
+        {!isPicture && courses.map((course, index) => (
           <div key={course.id} className="flex items-start gap-2">
             <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: threadColor(plate, course.threadId) }}>{index + 1}</span>
             <span><strong className="font-medium text-ink">{course.label}</strong><br />Work {course.direction.replaceAll("-", " ")}.</span>
           </div>
         ))}
+        {isPicture && plate.threads.filter((thread) => thread.id !== "back").map((thread) => (
+          <div key={thread.id} className="flex items-center gap-2">
+            <span className="h-4 w-4 rounded-full border border-border" style={{ backgroundColor: thread.hex }} />
+            <span><strong className="font-medium text-ink">{thread.name}</strong> · stacked cable stitches</span>
+          </div>
+        ))}
+        {isPicture && (
+          <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = wrong-side back-smocking.</div>
+        )}
         {plate.motif && (
           <div className="flex items-start gap-2">
             <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-burgundy text-xs font-bold text-white">E</span>
             <span><strong className="font-medium text-ink">Surface embroidery · work last</strong><br />{plate.motif.instructions.join(" ")}</span>
           </div>
         )}
-        <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = hidden travel inside the pleat.</div>
-        <div className="flex items-center gap-2"><span className="text-lg">⌒</span>Arc = catch the marked pleat pair together.</div>
-        <div className="flex items-center gap-2"><span className="inline-block h-3 w-8 rounded-full border-t-2 border-ink" />Level stitch at a peak or trough = turn closure.</div>
+        {!isPicture && <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = hidden travel inside the pleat.</div>}
+        {!isPicture && <div className="flex items-center gap-2"><span className="text-lg">⌒</span>Arc = catch the marked pleat pair together.</div>}
+        {!isPicture && <div className="flex items-center gap-2"><span className="inline-block h-3 w-8 rounded-full border-t-2 border-ink" />Level stitch at a peak or trough = turn closure.</div>}
       </div>
     </IllustrationFrame>
   );
@@ -330,8 +357,8 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
 export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
-  const geometry = FINISHED_GEOMETRY;
-  const hasDeformation = courses.some((course) =>
+  const geometry = plate.pictureChart ? PICTURE_FINISHED_GEOMETRY : FINISHED_GEOMETRY;
+  const hasDeformation = Boolean(plate.pictureChart) || courses.some((course) =>
     course.segments.some((segment) => segment.bind || segment.role === "closure"),
   );
   const fabricWidth = plate.pleats * geometry.pleatWidth;
@@ -459,9 +486,10 @@ export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta 
 export function PlateProgression({ plate: sourcePlate }: { plate: PlateMeta }) {
   const plate = useColorwayPlate(sourcePlate);
   const courses = getPlateCourses(plate);
+  const geometry = plate.pictureChart ? PICTURE_GRAPH_GEOMETRY : GRAPH_GEOMETRY;
   const shown = plate.repeatPleats > 1 ? Math.min(plate.repeatPleats + 1, plate.pleats) : Math.min(12, plate.pleats);
-  const width = LEFT + shown * PLEAT_WIDTH + 20;
-  const height = TOP + plate.rows * ROW_HEIGHT + 16;
+  const width = geometry.left + shown * geometry.pleatWidth + 20;
+  const height = geometry.top + plate.rows * geometry.rowHeight + 16;
   return (
     <div className="mt-5 grid gap-3 lg:grid-cols-3">
       {[0, Math.max(1, Math.ceil(courses.length / 2)), courses.length].map((count, index) => (
@@ -469,18 +497,18 @@ export function PlateProgression({ plate: sourcePlate }: { plate: PlateMeta }) {
           <svg viewBox={`0 0 ${width} ${height}`} width={width} style={{ minWidth: width }} className="h-auto max-w-none" role="img" aria-label={["Blank pleats", "Foundation in progress", "Finished repeat"][index]}>
             <rect width={width} height={height} fill={ILLUSTRATION.fabric} />
             {Array.from({ length: shown }, (_, pleat) => {
-              const x = LEFT + pleat * PLEAT_WIDTH + PLEAT_WIDTH / 2;
-              return <path key={pleat} d={`M${x - 14} ${TOP} Q${x} ${TOP + 10} ${x + 14} ${TOP} V${height - 10} Q${x} ${height - 20} ${x - 14} ${height - 10}Z`} fill={pleat % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".5" />;
+              const x = geometry.left + pleat * geometry.pleatWidth + geometry.pleatWidth / 2;
+              return <path key={pleat} d={`M${x - geometry.pleatWidth / 2} ${geometry.top} Q${x} ${geometry.top + 8} ${x + geometry.pleatWidth / 2} ${geometry.top} V${height - 10} Q${x} ${height - 18} ${x - geometry.pleatWidth / 2} ${height - 10}Z`} fill={pleat % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".5" />;
             })}
-            <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1} finished={index === 2} deformBinds={index === 2} />
+            <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1 && !plate.pictureChart} finished={index === 2} deformBinds={index === 2} geometry={geometry} />
             {index === 2 && plate.motif && (
               <g
                 dangerouslySetInnerHTML={{
                   __html: plateMotifSvg(plate, {
-                    originX: LEFT + PLEAT_WIDTH / 2,
-                    originY: TOP + ROW_HEIGHT / 2,
-                    pleatWidth: PLEAT_WIDTH,
-                    rowSpan: (plate.rows - 1) * ROW_HEIGHT,
+                    originX: geometry.left + geometry.pleatWidth / 2,
+                    originY: geometry.top + geometry.rowHeight / 2,
+                    pleatWidth: geometry.pleatWidth,
+                    rowSpan: (plate.rows - 1) * geometry.rowHeight,
                     endPleat: shown,
                     finished: true,
                   }),
