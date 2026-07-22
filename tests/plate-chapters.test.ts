@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
+import { deriveGeometricChapterContent, isAutoGeometricPlate, plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
+import type { PlateMeta } from "../src/lib/plate-types.ts";
 
 const migrated = ["cable-borders", "classic-trellis", "bullion-rose-arbor", "christmas-ornament-row"];
 
@@ -20,4 +21,24 @@ test("every rich chapter documents confidence, interpretation, and print tension
     assert.ok(chapter.interpretationNotes.length > 0);
     assert.ok(chapter.tensionReminder.length > 20);
   }
+});
+
+const geometricFixture = {
+  slug: "test-geometric", title: "Test Geometric", subtitle: "Test", difficulty: "beginner",
+  garments: ["sampler"], rows: 5, pleats: 24, repeatPleats: 8,
+  threads: [{ id: "a", name: "Thread", hex: "#000000" }], stitchesUsed: ["trellis"],
+  description: "A test geometric plate.", instructions: ["Work the plate."], tips: ["Relax the thread."], cells: {},
+} as PlateMeta;
+
+test("structural plates opt into derived rich chapters without capturing motif or picture plates", () => {
+  assert.equal(isAutoGeometricPlate(geometricFixture), true);
+  assert.equal(isAutoGeometricPlate({ ...geometricFixture, motif: { repeatPleats: 8, elements: [], instructions: [] } }), false);
+  assert.equal(isAutoGeometricPlate({ ...geometricFixture, pictureChart: { grid: ["........"], legend: {} } }), false);
+});
+
+test("derived geometric content satisfies the reusable chapter contract", () => {
+  const content = deriveGeometricChapterContent(geometricFixture);
+  assert.deepEqual(validatePlateChapterContent(content), []);
+  assert.match(content.motifExplanation, /trellis/i);
+  assert.match(content.repeatGuidance.join(" "), /8 pleats/i);
 });
