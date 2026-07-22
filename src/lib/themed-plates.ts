@@ -300,7 +300,7 @@ const seeds: ThemeSeed[] = [
 ];
 
 const paletteNames = Object.keys(PLATE_COLORWAYS);
-const colors = {
+const colors: Record<string, string> = {
   frame: "#6b8a9e", field: "#7a3f45", foliage: "#53745a", flower: "#b85d73",
   accent: "#c4a35a", berry: "#a12f3d", candle: "#b79045", flame: "#d88a35",
   snow: "#769db7", trunk: "#79563d", star: "#c4a35a", ribbon: "#c76f8a",
@@ -309,6 +309,11 @@ const colors = {
 
 export const themedPlates: PlateMeta[] = seeds.map((seed) => {
   const { foundation, ...meta } = seed;
+  const threadIds = new Set([
+    "frame",
+    "field",
+    ...(seed.motif?.elements.map((element) => element.threadId) ?? []),
+  ]);
   const centerLine = seed.pleats % 2
     ? `center pleat ${Math.ceil(seed.pleats / 2)}`
     : `valley between pleats ${seed.pleats / 2} and ${seed.pleats / 2 + 1}`;
@@ -321,7 +326,7 @@ export const themedPlates: PlateMeta[] = seeds.map((seed) => {
     symmetry: "Center one complete repeat on the marked center reference",
     threadWeight: "3 strands cotton floss; use 1–2 strands for fine motif details",
     colorSuggestions: paletteNames,
-    threads: Object.entries(colors).map(([id, hex]) => ({ id, name: id[0].toUpperCase() + id.slice(1), hex })),
+    threads: [...threadIds].map((id) => ({ id, name: id[0].toUpperCase() + id.slice(1), hex: colors[id] })),
     instructions: [
       `Pleat ${seed.rows} gathering rows across ${seed.pleats} pleat mountains and mark the center.`,
       foundation,
