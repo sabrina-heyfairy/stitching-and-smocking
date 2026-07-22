@@ -25,13 +25,18 @@ export default function PlatesIndexPage() {
       <p className="label-caps mb-3 text-dusty-blue">Design library</p>
       <h1 className="font-serif text-4xl text-ink md:text-5xl">Smocking Plate Library</h1>
       <p className="mt-4 max-w-2xl text-ink-muted">
-        Tested teaching plates with connected thread paths, hidden travel, working order, repeat
-        markers, full-width placement, and printable references for a Read 16-needle pleater.
+        Tested geometric and picture-smocking teaching plates with connected thread paths, dense
+        cable grids, back-smocking, repeat markers, full-width placement, and printable references
+        for a Read 16-needle pleater.
       </p>
       <p className="mt-2 text-sm text-ink-faint">
-        {plates.length} plates · See also{" "}
+        {plates.length} original plates · See also{" "}
         <Link href="/design/" className="text-dusty-blue-deep">
           Design Planning
+        </Link>
+        {" · "}
+        <Link href="/plates/free-resources/" className="text-dusty-blue-deep">
+          Free external picture-smocking resources
         </Link>
       </p>
 
