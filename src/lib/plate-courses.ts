@@ -1,4 +1,5 @@
 import type { PlateMeta, PlateStitchRef } from "./plate-types";
+import { compilePictureCourses, validatePictureChart } from "./picture-smocking";
 
 export interface CoursePoint {
   pleat: number;
@@ -205,6 +206,7 @@ function cable(row: number, plate: PlateMeta, threadId = plate.threads[0].id, id
 }
 
 export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
+  if (plate.pictureChart) return compilePictureCourses(plate);
   const first = plate.threads[0]?.id ?? "a";
   const second = plate.threads[1]?.id ?? first;
   switch (plate.slug) {
@@ -433,7 +435,7 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
 }
 
 export function validatePlateCourses(plate: PlateMeta): string[] {
-  const errors: string[] = [];
+  const errors: string[] = validatePictureChart(plate);
   const threadIds = new Set(plate.threads.map((thread) => thread.id));
   const courses = getPlateCourses(plate);
   if (courses.length === 0) errors.push("has no stitch courses");

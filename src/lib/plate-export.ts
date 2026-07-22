@@ -6,8 +6,9 @@ const escape = (value: string) =>
   value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char);
 
 export function plateSvg(plate: PlateMeta, monochrome = false): string {
-  const cell = 24;
-  const rowHeight = 36;
+  const isPicture = Boolean(plate.pictureChart);
+  const cell = isPicture ? 14 : 24;
+  const rowHeight = isPicture ? 22 : 36;
   const left = 58;
   const top = 58;
   const width = left + plate.pleats * cell + 28;
@@ -26,20 +27,24 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
   ).join("");
   const coursePaths = courses.map((course, courseIndex) => {
     const thread = plate.threads.find((item) => item.id === course.threadId);
+    const threadIndex = Math.max(0, plate.threads.findIndex((item) => item.id === course.threadId));
     const color = monochrome ? ink : (thread?.hex ?? ink);
+    const monochromePatterns = ["", "1 2", "5 2", "2 2", "7 2 1 2"];
     const segments = course.segments.map((segment) => {
       const from = { x: x(segment.from.pleat), y: y(segment.from.row) };
       const to = { x: x(segment.to.pleat), y: y(segment.to.row) };
       const side = segment.threadSide === "above" ? -1 : 1;
+      const bow = 5 * (cell / 24);
       const third = (to.x - from.x) / 3;
       const d = segment.straight
         ? `M ${from.x} ${from.y} L ${to.x} ${to.y}`
         : segment.role === "level" || segment.role === "closure" || segment.role === "lock"
-        ? `M ${from.x} ${from.y} C ${from.x + third} ${from.y + side * 5}, ${to.x - third} ${to.y + side * 5}, ${to.x} ${to.y}`
+        ? `M ${from.x} ${from.y} C ${from.x + third} ${from.y + side * bow}, ${to.x - third} ${to.y + side * bow}, ${to.x} ${to.y}`
         : segment.role === "travel"
           ? `M ${from.x} ${from.y} C ${from.x + (from.x <= to.x ? 5 : -5)} ${from.y}, ${to.x + (from.x <= to.x ? 5 : -5)} ${to.y}, ${to.x} ${to.y}`
           : `M ${from.x} ${from.y} C ${from.x + third} ${from.y}, ${to.x - third} ${to.y}, ${to.x} ${to.y}`;
-      const path = `<path d="${d}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : 3}" ${segment.hidden ? 'stroke-dasharray="5 4"' : ""} stroke-linecap="round"/>`;
+      const dash = segment.hidden ? "5 4" : monochrome && isPicture ? monochromePatterns[threadIndex % monochromePatterns.length] : "";
+      const path = `<path d="${d}" fill="none" stroke="${segment.hidden ? "#777" : color}" stroke-width="${segment.hidden ? 1.3 : isPicture ? 2.2 : 3}" ${dash ? `stroke-dasharray="${dash}"` : ""} stroke-linecap="round"/>`;
       const secondPass = (segment.passes ?? 1) > 1
         ? `<path d="${d}" transform="translate(0 2.4)" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>`
         : "";
@@ -49,7 +54,7 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
       return path + secondPass + bind;
     }).join("");
     const first = course.segments[0]?.from;
-    const order = first
+    const order = first && !isPicture
       ? `<circle cx="${x(first.pleat) - 9}" cy="${y(first.row) - 10}" r="9" fill="${color}"/><text x="${x(first.pleat) - 9}" y="${y(first.row) - 7}" text-anchor="middle" class="order">${courseIndex + 1}</text>`
       : "";
     return `<g>${segments}${order}</g>`;
@@ -70,7 +75,7 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
   <style>text{font-family:Arial,sans-serif;fill:${ink}}.title{font:700 16px Georgia,serif}.label{font-size:9px}.order{font-size:9px;font-weight:700;fill:#fff}</style>
   <rect width="100%" height="100%" fill="${fabric}"/>
   <text x="${left}" y="24" class="title">${escape(plate.title)}</text>
-  <text x="${left}" y="41" class="label">${plate.rows} gathering rows · ${plate.pleats} pleats · solid = front stitch · dashed = hidden travel</text>
+  <text x="${left}" y="41" class="label">${plate.rows} ${isPicture ? "picture rows" : "gathering rows"} · ${plate.pleats} pleats · solid = front stitch · dashed = ${isPicture ? "back-smocking" : "hidden travel"}</text>
   ${rowGuides}${pleatGuides}${coursePaths}${motifPaths}
   <line x1="${repeatStartX}" y1="${top - 7}" x2="${repeatStartX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
   <line x1="${repeatX}" y1="${top - 7}" x2="${repeatX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
@@ -82,15 +87,19 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
 
 export function plateHtml(plate: PlateMeta): string {
   const courses = getPlateCourses(plate);
+  const workingOrder = plate.pictureChart
+    ? "<li>Back-smock the dashed stabilizing rows.</li><li>Work from the bottom picture row upward, completing one color block at a time.</li>"
+    : courses.map((course) => `<li><strong>${escape(course.label)}</strong> — ${course.direction.replaceAll("-", " ")}</li>`).join("");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${escape(plate.title)}</title>
 <style>body{max-width:1100px;margin:32px auto;padding:0 24px;color:#403b36;font:15px/1.5 Georgia,serif}h1{margin-bottom:4px}dl{display:grid;grid-template-columns:12rem 1fr;gap:6px}svg{max-width:none;height:auto}.scroll{overflow-x:auto}.page{break-after:page}.key{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media print{button{display:none}body{margin:0}.scroll{overflow:visible}svg{max-width:100%;width:100%;height:auto}}</style></head>
 <body><button onclick="print()">Print / save PDF</button><h1>${escape(plate.title)}</h1><p>${escape(plate.description)}</p>
 <dl><dt>Difficulty</dt><dd>${plate.difficulty}</dd><dt>Finished width</dt><dd>${plate.finishedWidth ?? "Calibrate with a sample"}</dd><dt>Fabric before pleating</dt><dd>${plate.fabricWidth ?? "Test fabric compression before cutting"}</dd><dt>Pleats / rows</dt><dd>${plate.pleats} / ${plate.rows}</dd><dt>Center line</dt><dd>${escape(plate.centerLine ?? "Center valley")}</dd><dt>Repeat</dt><dd>${plate.repeatPleats} pleats</dd><dt>Thread</dt><dd>${escape(plate.threadWeight ?? "3 strands cotton floss")}</dd></dl>
 <h2>Working graph</h2><div class="scroll page">${plateSvg(plate)}</div>
-<h2>Working order</h2><ol>${courses.map((course) => `<li><strong>${escape(course.label)}</strong> — ${course.direction.replaceAll("-", " ")}</li>`).join("")}</ol>
+<h2>Working order</h2><ol>${workingOrder}</ol>
 ${plate.motif ? `<h2>Surface embroidery — work last</h2><ol>${plate.motif.instructions.map((step) => `<li>${escape(step)}</li>`).join("")}</ol>` : ""}
 <ol>${plate.instructions.map((step) => `<li>${escape(step)}</li>`).join("")}</ol>
 <h2>Thread key</h2><div class="key">${plate.threads.map((thread) => `<div><strong>${escape(thread.name)}</strong> · ${thread.hex}${thread.note ? `<br>${escape(thread.note)}` : ""}</div>`).join("")}</div>
+${plate.sources ? `<h2>Sources and attribution</h2><ul>${plate.sources.map((source) => `<li><a href="${escape(source.href)}">${escape(source.label)}</a>${source.note ? ` — ${escape(source.note)}` : ""}</li>`).join("")}</ul>` : ""}
 <h2>Black-and-white reference</h2><div class="scroll">${plateSvg(plate, true)}</div></body></html>`;
 }
 

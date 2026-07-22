@@ -80,10 +80,9 @@ export default async function PlateDetailPage({
         <section id="graph" className="mt-12 scroll-mt-24">
           <h2 className="font-serif text-3xl text-ink">Graph</h2>
           <p className="mt-2 text-sm text-ink-muted">
-            Follow the numbered courses in order. Solid lines are thread visible on the front;
-            dashed lines are travel inside a pleat. Arcs bind two adjacent pleats; level stitches
-            close wave and trellis turns. R1 is the top gathering row. Use “Working repeat” to
-            stitch and “Full placement” to center the band.
+            {plate.pictureChart
+              ? "Each colored mark is one cable stitch across adjacent pleats. Work from the bottom chart row upward, one color block at a time. Dashed lines are wrong-side back-smocking. Pleat numbers run left to right; R1 is the top chart row."
+              : "Follow the numbered courses in order. Solid lines are thread visible on the front; dashed lines are travel inside a pleat. Arcs bind two adjacent pleats; level stitches close wave and trellis turns. R1 is the top gathering row. Use “Working repeat” to stitch and “Full placement” to center the band."}
           </p>
           <PlateGraph plate={plate} />
         </section>
@@ -149,6 +148,22 @@ export default async function PlateDetailPage({
           <h2 className="font-serif text-3xl text-ink">Suggested garments</h2>
           <p className="mt-3 text-ink-muted">{plate.garments.join(" · ")}</p>
         </section>
+
+        {plate.sources && plate.sources.length > 0 && (
+          <section id="sources" className="mt-12 scroll-mt-24">
+            <h2 className="font-serif text-3xl text-ink">Sources and attribution</h2>
+            <ul className="mt-4 space-y-3">
+              {plate.sources.map((source) => (
+                <li key={source.href} className="rounded border border-border bg-paper/60 p-4">
+                  <a href={source.href} target="_blank" rel="noreferrer" className="text-dusty-blue-deep">
+                    {source.label} ↗
+                  </a>
+                  {source.note && <p className="mt-1 text-sm text-ink-muted">{source.note}</p>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <div className="mt-16 flex flex-wrap gap-3">
           {prev && (
