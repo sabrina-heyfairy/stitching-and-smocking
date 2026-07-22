@@ -6,7 +6,7 @@ import { PlateFinishedPreview, PlateGraph, PlateProgression } from "@/components
 import { PlateBlackWhiteGraph, PlateColorways, PlateDownloads, PlateThreadKey } from "@/components/plates/PlateDownloads";
 import { PlateColorwayProvider } from "@/components/plates/PlateColorwayContext";
 import { SmockingPlateChapter } from "@/components/plates/chapter/SmockingPlateChapter";
-import { deriveGeometricChapterContent, deriveMotifChapterContent, isAutoGeometricPlate, isAutoMotifPlate, plateChapterContent } from "@/lib/plate-chapter-content";
+import { deriveGeometricChapterContent, deriveMotifChapterContent, derivePictureChapterContent, isAutoGeometricPlate, isAutoMotifPlate, isAutoPicturePlate, plateChapterContent } from "@/lib/plate-chapter-content";
 
 export function generateStaticParams() {
   return plates.map((p) => ({ slug: p.slug }));
@@ -42,7 +42,8 @@ export default async function PlateDetailPage({
 
   const richContent = plateChapterContent[slug]
     ?? (isAutoGeometricPlate(plate) ? deriveGeometricChapterContent(plate) : undefined)
-    ?? (isAutoMotifPlate(plate) ? deriveMotifChapterContent(plate) : undefined);
+    ?? (isAutoMotifPlate(plate) ? deriveMotifChapterContent(plate) : undefined)
+    ?? (isAutoPicturePlate(plate) ? derivePictureChapterContent(plate) : undefined);
   if (richContent) return <SmockingPlateChapter plate={plate} content={richContent} />;
 
   const idx = plates.findIndex((p) => p.slug === slug);

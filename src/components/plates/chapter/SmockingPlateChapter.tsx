@@ -118,6 +118,46 @@ function MotifSequenceGuide({ plate }: { plate: PlateMeta }) {
   </div>;
 }
 
+function PictureChartGuide({ plate }: { plate: PlateMeta }) {
+  const chart = plate.pictureChart;
+  const [selectedThread, setSelectedThread] = useState("all");
+  const [showBack, setShowBack] = useState(true);
+  const [completedRows, setCompletedRows] = useState(1);
+  const [zoom, setZoom] = useState(100);
+  if (!chart) return null;
+  const threadIds = [...new Set(Object.values(chart.legend))];
+  const columns = Math.max(...chart.grid.map((row) => row.length));
+  const width = 72 + columns * 22;
+  const height = 48 + chart.grid.length * 28;
+  const firstVisibleRow = chart.grid.length - completedRows;
+  const visibleCount = chart.grid.slice(firstVisibleRow).reduce((count, row) => count + [...row].filter((mark) => {
+    const threadId = chart.legend[mark];
+    return threadId && (selectedThread === "all" || threadId === selectedThread);
+  }).length, 0);
+  const thread = (id: string) => plate.threads.find((item) => item.id === id);
+  return <div className="rich-picture-guide">
+    <header><p className="label-caps">Picture chart · work bottom upward</p><h3>Build the picture row by row</h3></header>
+    <div className="rich-picture-controls no-print">
+      <fieldset><legend>Visible thread colors</legend><div><button type="button" aria-pressed={selectedThread === "all"} onClick={() => setSelectedThread("all")}>All colors</button>{threadIds.map((id) => <button key={id} type="button" aria-pressed={selectedThread === id} onClick={() => setSelectedThread(id)}><span style={{ background: thread(id)?.hex }} />{thread(id)?.name ?? id}</button>)}</div></fieldset>
+      <button type="button" aria-pressed={showBack} onClick={() => setShowBack((value) => !value)}>{showBack ? "Hide" : "Show"} back-smocking</button>
+      <label>Rows completed <input type="range" min="1" max={chart.grid.length} value={completedRows} onChange={(event) => setCompletedRows(Number(event.target.value))}/><output>{completedRows} of {chart.grid.length}</output></label>
+      <label>Chart zoom <input type="range" min="100" max="180" step="10" value={zoom} onChange={(event) => setZoom(Number(event.target.value))}/><output>{zoom}%</output></label>
+    </div>
+    <div className="rich-diagram-scroll"><svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${plate.title} picture chart showing ${completedRows} of ${chart.grid.length} rows`} style={{ minWidth: `${zoom}%` }}>
+      <rect width={width} height={height} rx="12" fill="#fffaf4"/>
+      {Array.from({ length: columns + 1 }, (_, index) => <line key={`p-${index}`} x1={58 + index * 22} y1="18" x2={58 + index * 22} y2={height - 18} stroke="#d9c8ba" strokeWidth="4" opacity=".48"/>)}
+      {chart.grid.map((row, rowIndex) => <g key={rowIndex} opacity={rowIndex < firstVisibleRow ? .08 : 1}><text x="48" y={34 + rowIndex * 28} textAnchor="end" fontSize="11" fill="#665e57">R{rowIndex + 1}</text>{[...row].map((mark, column) => {
+        const threadId = chart.legend[mark];
+        if (!threadId) return null;
+        const muted = selectedThread !== "all" && selectedThread !== threadId;
+        return <path key={column} d={`M${58 + column * 22} ${30 + rowIndex * 28} Q${69 + column * 22} ${22 + rowIndex * 28} ${80 + column * 22} ${30 + rowIndex * 28}`} fill="none" stroke={thread(threadId)?.hex ?? "#7a3f45"} strokeWidth="5" strokeLinecap="round" opacity={muted ? .12 : 1}/>;
+      })}</g>)}
+      {showBack && chart.backSmocking?.map((item, index) => <line key={`b-${index}`} x1={58 + (item.fromPleat ?? 1) * 22} x2={58 + (item.toPleat ?? columns) * 22} y1={30 + (item.row - 1) * 28} y2={30 + (item.row - 1) * 28} stroke={thread(item.threadId)?.hex ?? "#6b625a"} strokeWidth="3" strokeDasharray="7 5" opacity={selectedThread === "all" || selectedThread === item.threadId ? .8 : .1}/>) }
+    </svg></div>
+    <p className="rich-note" aria-live="polite"><strong>{visibleCount} visible cable stitches</strong> in the selected color view and completed rows. The faint rows above are still waiting to be worked.</p>
+  </div>;
+}
+
 function FiveRepeatDiagram({ plate }: { plate: PlateMeta }) {
   return <figure><div className="rich-repeat-strip" role="img" aria-label={`Five adjacent ${plate.title} repeats with shared boundaries`}>
     {Array.from({ length: 5 }, (_, index) => <div key={index}><span>Repeat {index + 1}</span><b aria-hidden="true">{index % 2 ? "◇" : "◆"}</b></div>)}
@@ -142,7 +182,7 @@ export function SmockingPlateChapter({ plate, content }: { plate: PlateMeta; con
     <div className="site-container rich-plate-grid">
       <ChapterSection number={1} title="Finished stitched sample" id="finished-sample"><PlateFinishedPreview plate={plate}/><p className="rich-note">This is an instructional rendering generated from the plate data, not a photograph.</p></ChapterSection>
       <ChapterSection number={2} title="Pleated fabric and grid" id="pleated-grid"><PleatedFabricGrid plate={plate}/></ChapterSection>
-      <ChapterSection number={3} title="Where the motif appears" id="motif"><PlateProgression plate={plate}/><p>{content.motifExplanation}</p>{plate.motif && <ul className="rich-instructions">{plate.motif.instructions.map((item) => <li key={item}>{item}</li>)}</ul>}</ChapterSection>
+      <ChapterSection number={3} title="Where the motif appears" id="motif"><PlateProgression plate={plate}/><p>{content.motifExplanation}</p>{plate.pictureChart && <PictureChartGuide plate={plate}/>} {plate.motif && <ul className="rich-instructions">{plate.motif.instructions.map((item) => <li key={item}>{item}</li>)}</ul>}</ChapterSection>
       <ChapterSection number={4} title="Needle path for one complete repeat" id="needle-path"><PlateGraph plate={plate}/><PlateThreadKey plate={plate}/></ChapterSection>
       <ChapterSection number={5} title="How the pattern repeats across the full width" id="repeat"><FiveRepeatDiagram plate={plate}/><ol className="rich-instructions">{content.repeatGuidance.map((item) => <li key={item}>{item}</li>)}</ol></ChapterSection>
       <ChapterSection number={6} title="Frame-by-frame stitch sequence" id="sequence"><CourseSequenceGuide plate={plate} content={content}/>{plate.motif && <MotifSequenceGuide plate={plate}/>}</ChapterSection>

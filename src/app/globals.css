@@ -589,6 +589,16 @@
   .rich-motif-sequence > aside { padding: .85rem; border: 1px solid var(--border); border-radius: .55rem; background: #fffaf4; }
   .rich-motif-sequence > aside h4 { margin-top: .25rem; font-family: var(--font-display), Georgia, serif; font-size: 1.2rem; text-transform: capitalize; }
   .rich-motif-sequence > aside p:not(.rich-step-count) { margin-top: .35rem; color: var(--ink-muted); font-size: .78rem; line-height: 1.5; }
+  .rich-picture-guide { display: grid; gap: .85rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+  .rich-picture-guide > header h3 { margin-top: .2rem; font-size: 1.45rem; }
+  .rich-picture-controls { display: grid; gap: .75rem; padding: .85rem; border: 1px solid var(--border); border-radius: .6rem; background: #fffaf4; }
+  .rich-picture-controls legend, .rich-picture-controls label { color: var(--ink-muted); font-size: .76rem; font-weight: 700; }
+  .rich-picture-controls fieldset > div { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .4rem; }
+  .rich-picture-controls button { min-height: 2.5rem; padding: .5rem .7rem; border: 1px solid var(--border); border-radius: .45rem; background: var(--paper); color: var(--ink); font-size: .75rem; }
+  .rich-picture-controls button[aria-pressed="true"] { border-color: var(--burgundy); background: color-mix(in srgb, var(--burgundy) 10%, white); }
+  .rich-picture-controls button span { display: inline-block; width: .65rem; height: .65rem; margin-right: .35rem; border-radius: 50%; }
+  .rich-picture-controls label { display: grid; grid-template-columns: auto minmax(7rem, 1fr) auto; align-items: center; gap: .6rem; }
+  .rich-picture-controls output { color: var(--ink-faint); font-weight: 400; }
   .rich-mistake-grid, .rich-garment-grid { display: grid; gap: .7rem; }
   .rich-mistake-grid article, .rich-garment-grid article { padding: .85rem; border: 1px solid var(--border); border-radius: .55rem; background: #fffaf4; }
   .rich-mistake-mark { float: right; color: #b4233d; font-size: 1.5rem; font-weight: 700; }

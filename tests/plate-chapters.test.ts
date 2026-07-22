@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { deriveGeometricChapterContent, deriveMotifChapterContent, isAutoGeometricPlate, isAutoMotifPlate, plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
+import { deriveGeometricChapterContent, deriveMotifChapterContent, derivePictureChapterContent, isAutoGeometricPlate, isAutoMotifPlate, isAutoPicturePlate, plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
 import type { PlateMeta } from "../src/lib/plate-types.ts";
 
 const migrated = ["cable-borders", "classic-trellis", "bullion-rose-arbor", "christmas-ornament-row"];
@@ -69,4 +69,29 @@ test("derived motif content separates structural and surface-embroidery work", (
   assert.deepEqual(validatePlateChapterContent(content), []);
   assert.match(content.overview, /surface|embroidery/i);
   assert.match(content.sequenceNote, /separate embroidery sequence/i);
+});
+
+const pictureFixture = {
+  ...geometricFixture,
+  slug: "test-picture",
+  pictureChart: {
+    grid: ["...r....", "..rrr...", ".rrrrr.."],
+    legend: { r: "a" },
+    backSmocking: [{ row: 1, threadId: "a" }],
+  },
+} as PlateMeta;
+
+test("picture charts opt into the picture chapter only", () => {
+  assert.equal(isAutoPicturePlate(pictureFixture), true);
+  assert.equal(isAutoPicturePlate(geometricFixture), false);
+  assert.equal(isAutoGeometricPlate(pictureFixture), false);
+  assert.equal(isAutoMotifPlate(pictureFixture), false);
+});
+
+test("derived picture content documents bottom-up work and back-smocking", () => {
+  const content = derivePictureChapterContent(pictureFixture);
+  assert.deepEqual(validatePlateChapterContent(content), []);
+  assert.match(content.motifExplanation, /picture|chart/i);
+  assert.match(content.repeatGuidance.join(" "), /bottom chart row/i);
+  assert.match(content.sequenceNote, /back-smocking/i);
 });
