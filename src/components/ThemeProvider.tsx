@@ -15,7 +15,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem("smocking-theme") as Theme | null;
+    let stored: Theme | null = null;
+    try {
+      stored = localStorage.getItem("smocking-theme") as Theme | null;
+    } catch {
+      // Safari can deny storage in private or restricted browsing contexts.
+    }
     if (stored === "light" || stored === "dark") {
       setTheme(stored);
       document.documentElement.classList.toggle("dark", stored === "dark");
@@ -25,7 +30,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggle = () => {
     const next: Theme = theme === "light" ? "dark" : "light";
     setTheme(next);
-    localStorage.setItem("smocking-theme", next);
+    try {
+      localStorage.setItem("smocking-theme", next);
+    } catch {
+      // The theme still works for this page when persistence is unavailable.
+    }
     document.documentElement.classList.toggle("dark", next === "dark");
   };
 
