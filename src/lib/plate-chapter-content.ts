@@ -89,5 +89,49 @@ export function validatePlateChapterContent(content: PlateChapterContent): strin
   return errors;
 }
 
+export function isAutoGeometricPlate(plate: PlateMeta): boolean {
+  return !plate.pictureChart && !plate.motif;
+}
+
+function stitchLabel(stitch: string): string {
+  return stitch.replaceAll("-", " ");
+}
+
+export function deriveGeometricChapterContent(plate: PlateMeta): PlateChapterContent {
+  const stitches = plate.stitchesUsed.map(stitchLabel);
+  const distinctiveMistake: PlateChapterMistake = plate.stitchesUsed.includes("trellis")
+    ? { title: "Trellis turns do not meet", appearance: "Mirrored courses cross or leave an open vertex.", correction: "Match the turn pleat and measured step depth before continuing the mirrored course.", unpick: "Return to the last shared vertex." }
+    : plate.stitchesUsed.includes("honeycomb") || plate.stitchesUsed.includes("surface-honeycomb")
+      ? { title: "Honeycomb cells collapse", appearance: "The cells remain pinched instead of opening into an even lattice.", correction: "Relax each bind and verify that overlapping pairs share exactly one pleat.", unpick: "Unpick any bind that joins the wrong pair." }
+      : plate.stitchesUsed.includes("van-dyke")
+        ? { title: "Turn locks are incomplete", appearance: "The Van Dyke point looks like a plain wave instead of a defined paired turn.", correction: "Check both passes through the locked pleat pair before beginning the next interval.", unpick: "Return to the incomplete lock." }
+        : { title: "Cable direction changes", appearance: "A smooth course develops an isolated reversed twist.", correction: "Keep the thread on the declared side of the needle for the current stitch.", unpick: "Return to the last correctly oriented stitch." };
+  const garmentNotes = Object.fromEntries(plate.garments.map((garment) => [
+    garment,
+    `Center a complete ${plate.repeatPleats}-pleat repeat on the most visible ${garment} line and balance any unused pleats at both edges.`,
+  ]));
+  return {
+    slug: plate.slug,
+    confidence: "confirmed",
+    overview: `${plate.description} This chapter expands the plate into a beginner-readable grid, continuous course sequence, repeat map, troubleshooting guide, garment placement, and print reference.`,
+    motifExplanation: `The visible structure is built from ${stitches.join(", ")}. Complete each course across the full width in the listed order so shared turns and control rows remain aligned.`,
+    repeatGuidance: [
+      `Mark the first pleat and every ${plate.repeatPleats} pleats before stitching.`,
+      "Complete each course across the full pleated width without cutting the thread at every repeat.",
+      "If the final space is incomplete, stop at the last balanced structural turn and secure the thread on the wrong side.",
+    ],
+    sequenceNote: `The sequence is generated from the plate’s ${plate.rows}-row course geometry and shows one ${plate.repeatPleats}-pleat repeat plus its shared ending boundary.`,
+    mistakes: [...sharedMistakes, distinctiveMistake],
+    garmentNotes,
+    interpretationNotes: [
+      `Rows, pleat positions, thread assignments, and movement order are generated directly from the existing ${plate.title} course definition.`,
+      "Fractional row coordinates indicate evenly measured stitch depth between gathering rows; they are not additional gathering threads.",
+      "The finished rendering is instructional and should be compared with a tension sample before working the garment.",
+    ],
+    tensionReminder: plate.tips[0] ?? "Keep the working thread even while allowing the pleat crowns and open spaces to retain their shape.",
+  };
+}
+
 const chapterErrors = Object.values(plateChapterContent).flatMap(validatePlateChapterContent);
 if (chapterErrors.length > 0) throw new Error(`Invalid rich plate chapters:\n${chapterErrors.join("\n")}`);
+import type { PlateMeta } from "./plate-types";
