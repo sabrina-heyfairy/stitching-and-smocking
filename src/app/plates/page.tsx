@@ -40,6 +40,25 @@ export default function PlatesIndexPage() {
         </Link>
       </p>
 
+      <Link
+        href="/plates/daisy/"
+        className="mt-8 grid overflow-hidden rounded-xl border border-burgundy/25 bg-paper no-underline shadow-sm transition hover:border-burgundy/50 md:grid-cols-[1.15fr_.85fr]"
+      >
+        <div className="p-6 md:p-8">
+          <p className="label-caps text-burgundy">Featured encyclopedia chapter</p>
+          <h2 className="mt-2 font-serif text-3xl text-ink">Daisy Smocking Plate</h2>
+          <p className="mt-3 max-w-xl leading-relaxed text-ink-muted">
+            Decode the original plate with a pleated-fabric grid, layered SVG needle paths,
+            an eight-step sequence, repeat guidance, troubleshooting, and a printable reference.
+          </p>
+          <span className="mt-5 inline-block text-sm font-semibold text-burgundy">Open the interactive chapter →</span>
+        </div>
+        <svg viewBox="0 0 360 210" role="img" aria-label="Stylized Daisy smocking motif preview" className="h-full min-h-48 w-full bg-[#f5e3d8]">
+          <path d="M0 150L45 105L90 150L135 105L180 150L225 105L270 150L315 105L360 150M0 170L45 125L90 170L135 125L180 170L225 125L270 170L315 125L360 170" fill="none" stroke="#57724a" strokeWidth="5" />
+          {[72, 180, 288].map((x) => <g key={x} transform={`translate(${x} 72)`}>{Array.from({ length: 8 }, (_, index) => <ellipse key={index} rx="6" ry="25" transform={`rotate(${index * 45}) translate(0 -19)`} fill="#fff8f0" stroke="#cf4774" strokeWidth="3" />)}<circle r="9" fill="#d5a62e" /></g>)}
+        </svg>
+      </Link>
+
       <div className="stitch-controls mt-8 flex flex-col gap-3 rounded border border-border bg-paper/80 p-4 sm:flex-row sm:flex-wrap sm:items-center">
         <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs text-ink-faint">
           Search
