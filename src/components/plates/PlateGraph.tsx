@@ -5,6 +5,7 @@ import type { PlateMeta } from "@/lib/plate-types";
 import { getPlateCourses, type PlateCourse, type CoursePoint } from "@/lib/plate-courses";
 import { ILLUSTRATION, IllustrationFrame } from "@/components/illustrations/IllustrationFrame";
 import { useColorwayPlate } from "@/components/plates/PlateColorwayContext";
+import { plateMotifSvg } from "@/lib/plate-motif";
 
 const PLEAT_WIDTH = 28;
 const ROW_HEIGHT = 42;
@@ -240,6 +241,19 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
           );
         })}
         <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={endPleat} showHidden showOrder />
+        {plate.motif && (
+          <g
+            dangerouslySetInnerHTML={{
+              __html: plateMotifSvg(plate, {
+                originX: LEFT + PLEAT_WIDTH / 2,
+                originY: TOP + ROW_HEIGHT / 2,
+                pleatWidth: PLEAT_WIDTH,
+                rowSpan: (plate.rows - 1) * ROW_HEIGHT,
+                endPleat,
+              }),
+            }}
+          />
+        )}
         {plate.repeatPleats > 1 && !fullWidth && (
           <g>
             {[repeatStartX, repeatStartX + plate.repeatPleats * PLEAT_WIDTH].map((x) => (
@@ -262,6 +276,12 @@ export function PlateGraph({ plate: sourcePlate }: { plate: PlateMeta }) {
             <span><strong className="font-medium text-ink">{course.label}</strong><br />Work {course.direction.replaceAll("-", " ")}.</span>
           </div>
         ))}
+        {plate.motif && (
+          <div className="flex items-start gap-2">
+            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-burgundy text-xs font-bold text-white">E</span>
+            <span><strong className="font-medium text-ink">Surface embroidery · work last</strong><br />{plate.motif.instructions.join(" ")}</span>
+          </div>
+        )}
         <div className="flex items-center gap-2"><span className="w-8 border-t-2 border-dashed border-ink-faint" />Dashed line = hidden travel inside the pleat.</div>
         <div className="flex items-center gap-2"><span className="text-lg">⌒</span>Arc = catch the marked pleat pair together.</div>
         <div className="flex items-center gap-2"><span className="inline-block h-3 w-8 rounded-full border-t-2 border-ink" />Level stitch at a peak or trough = turn closure.</div>
@@ -313,6 +333,19 @@ export function PlateFinishedPreview({ plate: sourcePlate }: { plate: PlateMeta 
           );
         })}
         <CoursePaths plate={plate} courses={courses} startPleat={1} endPleat={plate.pleats} showHidden={false} showOrder={false} deformBinds finished />
+        {plate.motif && (
+          <g
+            dangerouslySetInnerHTML={{
+              __html: plateMotifSvg(plate, {
+                originX: LEFT + PLEAT_WIDTH / 2,
+                originY: TOP + ROW_HEIGHT / 2,
+                pleatWidth: PLEAT_WIDTH,
+                rowSpan: (plate.rows - 1) * ROW_HEIGHT,
+                finished: true,
+              }),
+            }}
+          />
+        )}
       </svg>
     </IllustrationFrame>
   );
@@ -335,6 +368,20 @@ export function PlateProgression({ plate: sourcePlate }: { plate: PlateMeta }) {
               return <path key={pleat} d={`M${x - 14} ${TOP} Q${x} ${TOP + 10} ${x + 14} ${TOP} V${height - 10} Q${x} ${height - 20} ${x - 14} ${height - 10}Z`} fill={pleat % 2 ? ILLUSTRATION.fabric : ILLUSTRATION.mountain} stroke={ILLUSTRATION.fabricShadow} strokeWidth=".5" />;
             })}
             <CoursePaths plate={plate} courses={courses.slice(0, count)} startPleat={1} endPleat={shown} showHidden={index === 1} showOrder={index === 1} finished={index === 2} deformBinds={index === 2} />
+            {index === 2 && plate.motif && (
+              <g
+                dangerouslySetInnerHTML={{
+                  __html: plateMotifSvg(plate, {
+                    originX: LEFT + PLEAT_WIDTH / 2,
+                    originY: TOP + ROW_HEIGHT / 2,
+                    pleatWidth: PLEAT_WIDTH,
+                    rowSpan: (plate.rows - 1) * ROW_HEIGHT,
+                    endPleat: shown,
+                    finished: true,
+                  }),
+                }}
+              />
+            )}
           </svg>
           <figcaption className="px-1 py-2 text-sm text-ink-muted">{index + 1} · {["Blank pleats", "Foundation in progress", "Finished repeat"][index]}</figcaption>
         </figure>

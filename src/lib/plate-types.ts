@@ -32,6 +32,20 @@ export interface PlateThread {
   note?: string;
 }
 
+export type MotifPoint = readonly [x: number, y: number];
+export type MotifElement =
+  | { kind: "line"; stitch: "stem" | "back" | "chain" | "straight"; threadId: string; points: MotifPoint[]; closed?: boolean }
+  | { kind: "loop"; stitch: "detached-chain"; threadId: string; from: MotifPoint; to: MotifPoint; width: number }
+  | { kind: "knot"; stitch: "french-knot"; threadId: string; at: MotifPoint; wraps: 1 | 2 | 3 }
+  | { kind: "bullion"; stitch: "bullion"; threadId: string; from: MotifPoint; to: MotifPoint; wraps: number }
+  | { kind: "fill"; stitch: "satin"; threadId: string; points: MotifPoint[] };
+
+export interface PlateMotif {
+  repeatPleats: number;
+  elements: MotifElement[];
+  instructions: string[];
+}
+
 export interface PlateMeta {
   slug: string;
   title: string;
@@ -56,10 +70,8 @@ export interface PlateMeta {
   colorSuggestions?: string[];
   /** Surface embroidery used after the holding rows are removed. */
   embroideryStitches?: string[];
-  /** Shape guide drawn over the geometric foundation. Values are normalized 0–100. */
-  motifPath?: string;
-  /** Short mark used for tiny index previews. */
-  motifMark?: string;
+  /** Surface embroidery charted over one horizontal repeat. */
+  motif?: PlateMotif;
   threads: PlateThread[];
   stitchesUsed: PlateStitchRef[];
   description: string;

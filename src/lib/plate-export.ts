@@ -1,5 +1,6 @@
 import type { PlateMeta } from "./plate-types";
 import { getPlateCourses } from "./plate-courses";
+import { plateMotifSvg } from "./plate-motif";
 
 const escape = (value: string) =>
   value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char);
@@ -57,13 +58,20 @@ export function plateSvg(plate: PlateMeta, monochrome = false): string {
   const repeatX = repeatStartX + plate.repeatPleats * cell;
   const centerX = left + (plate.pleats / 2) * cell;
   const centerLabel = escape((plate.centerLine ?? "center reference").toUpperCase());
+  const motifPaths = plateMotifSvg(plate, {
+    originX: left + cell / 2,
+    originY: top + rowHeight / 2,
+    pleatWidth: cell,
+    rowSpan: (plate.rows - 1) * rowHeight,
+    monochrome,
+  });
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${escape(plate.title)} connected stitch graph">
   <style>text{font-family:Arial,sans-serif;fill:${ink}}.title{font:700 16px Georgia,serif}.label{font-size:9px}.order{font-size:9px;font-weight:700;fill:#fff}</style>
   <rect width="100%" height="100%" fill="${fabric}"/>
   <text x="${left}" y="24" class="title">${escape(plate.title)}</text>
   <text x="${left}" y="41" class="label">${plate.rows} gathering rows · ${plate.pleats} pleats · solid = front stitch · dashed = hidden travel</text>
-  ${rowGuides}${pleatGuides}${coursePaths}
+  ${rowGuides}${pleatGuides}${coursePaths}${motifPaths}
   <line x1="${repeatStartX}" y1="${top - 7}" x2="${repeatStartX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
   <line x1="${repeatX}" y1="${top - 7}" x2="${repeatX}" y2="${top + plate.rows * rowHeight + 8}" stroke="#9b835f" stroke-dasharray="5 3"/>
   <text x="${repeatStartX + plate.repeatPleats * cell / 2}" y="${height - 28}" text-anchor="middle" class="label">ONE REPEAT</text>
@@ -80,6 +88,7 @@ export function plateHtml(plate: PlateMeta): string {
 <dl><dt>Difficulty</dt><dd>${plate.difficulty}</dd><dt>Finished width</dt><dd>${plate.finishedWidth ?? "Calibrate with a sample"}</dd><dt>Fabric before pleating</dt><dd>${plate.fabricWidth ?? "Test fabric compression before cutting"}</dd><dt>Pleats / rows</dt><dd>${plate.pleats} / ${plate.rows}</dd><dt>Center line</dt><dd>${escape(plate.centerLine ?? "Center valley")}</dd><dt>Repeat</dt><dd>${plate.repeatPleats} pleats</dd><dt>Thread</dt><dd>${escape(plate.threadWeight ?? "3 strands cotton floss")}</dd></dl>
 <h2>Working graph</h2><div class="scroll page">${plateSvg(plate)}</div>
 <h2>Working order</h2><ol>${courses.map((course) => `<li><strong>${escape(course.label)}</strong> — ${course.direction.replaceAll("-", " ")}</li>`).join("")}</ol>
+${plate.motif ? `<h2>Surface embroidery — work last</h2><ol>${plate.motif.instructions.map((step) => `<li>${escape(step)}</li>`).join("")}</ol>` : ""}
 <ol>${plate.instructions.map((step) => `<li>${escape(step)}</li>`).join("")}</ol>
 <h2>Thread key</h2><div class="key">${plate.threads.map((thread) => `<div><strong>${escape(thread.name)}</strong> · ${thread.hex}${thread.note ? `<br>${escape(thread.note)}` : ""}</div>`).join("")}</div>
 <h2>Black-and-white reference</h2><div class="scroll">${plateSvg(plate, true)}</div></body></html>`;
