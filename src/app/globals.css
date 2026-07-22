@@ -546,6 +546,80 @@
   .daisy-source-note ul { margin-top: .65rem; padding-left: 1.1rem; list-style: disc; }
   .daisy-source-note li + li { margin-top: .35rem; }
 
+  .rich-plate-hero { padding-block: 3rem; border-bottom: 1px solid var(--border); background: radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--dusty-blue) 10%, transparent), transparent 28rem), var(--paper); }
+  .rich-plate-hero nav { display: flex; gap: .55rem; margin-bottom: 2rem; color: var(--ink-faint); font-size: .8rem; }
+  .rich-plate-hero h1 { margin-top: .35rem; max-width: 60rem; font-size: clamp(2.6rem, 7vw, 5rem); line-height: 1; }
+  .rich-subtitle { margin-top: .65rem; color: var(--burgundy); font-family: var(--font-display), Georgia, serif; font-size: 1.35rem; }
+  .rich-overview { max-width: 52rem; margin-top: 1.25rem; color: var(--ink-muted); font-size: 1.05rem; line-height: 1.7; }
+  .rich-plate-hero dl { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 50rem; margin-top: 1.5rem; gap: .5rem; }
+  .rich-plate-hero dl div { padding: .75rem; border: 1px solid var(--border); border-radius: .55rem; background: color-mix(in srgb, var(--paper) 88%, transparent); }
+  .rich-plate-hero dt { color: var(--ink-faint); font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .rich-plate-hero dd { margin-top: .15rem; font-size: .85rem; text-transform: capitalize; }
+  .rich-plate-grid { display: grid; gap: 1rem; padding-block: 1.25rem 4rem; }
+  .rich-plate-section { overflow: hidden; padding: 1rem; border: 1px solid var(--border); border-radius: .8rem; background: color-mix(in srgb, var(--paper) 94%, transparent); }
+  .rich-plate-section > header { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; }
+  .rich-plate-section > header span { display: grid; flex: 0 0 2rem; height: 2rem; place-items: center; border-radius: 50%; background: var(--burgundy-soft); color: white; font-family: var(--font-display), Georgia, serif; font-size: 1.2rem; font-weight: 700; }
+  .rich-plate-section > header h2 { font-size: clamp(1.35rem, 4vw, 2rem); line-height: 1.1; }
+  .rich-plate-section > p { margin-top: 1rem; color: var(--ink-muted); line-height: 1.7; }
+  .rich-diagram-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: .6rem; background: #fffaf4; overscroll-behavior-inline: contain; }
+  .rich-diagram-scroll svg { display: block; width: 100%; height: auto; }
+  .rich-plate-section figcaption { margin-top: .55rem; color: var(--ink-faint); font-size: .78rem; line-height: 1.5; }
+  .rich-note { padding: .85rem 1rem; border-left: 3px solid var(--sage); border-radius: 0 .4rem .4rem 0; background: color-mix(in srgb, var(--sage) 9%, var(--paper)); color: var(--ink-muted); font-size: .84rem; line-height: 1.6; }
+  .rich-instructions { display: grid; gap: .45rem; margin-top: 1rem; padding-left: 1.2rem; color: var(--ink-muted); font-size: .9rem; line-height: 1.55; list-style: decimal; }
+  .rich-repeat-strip { display: grid; grid-template-columns: repeat(5, minmax(7rem, 1fr)); min-width: 44rem; overflow: hidden; border: 1px solid var(--border); border-radius: .6rem; background: #f4e6dc; }
+  .rich-repeat-strip > div { position: relative; min-height: 8rem; padding: .75rem; border-right: 1px dashed var(--burgundy-soft); text-align: center; }
+  .rich-repeat-strip > div:last-child { border-right: 0; }
+  .rich-repeat-strip span { color: var(--burgundy); font-size: .72rem; font-weight: 700; }
+  .rich-repeat-strip b { display: block; margin-top: .8rem; color: var(--dusty-blue-deep); font-size: 3rem; font-weight: 400; }
+  .rich-sequence { display: grid; gap: 1rem; }
+  .rich-phase-nav { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .rich-phase-nav button, .rich-sequence-buttons button, .rich-digital-links a, .rich-digital-links button, .rich-print-button { min-height: 2.7rem; padding: .55rem .8rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--paper); color: var(--ink); font-size: .76rem; text-decoration: none; }
+  .rich-phase-nav button[aria-pressed="true"] { border-color: var(--burgundy); background: color-mix(in srgb, var(--burgundy) 10%, white); color: var(--burgundy); font-weight: 700; }
+  .rich-sequence > aside { padding: 1rem; border: 1px solid var(--border); border-radius: .6rem; background: #fffaf4; }
+  .rich-step-count { margin-top: .2rem; color: var(--ink-faint); font-size: .75rem; }
+  .rich-sequence > aside h3 { margin-top: .5rem; font-size: 1.35rem; text-transform: capitalize; }
+  .rich-sequence > aside > p:not(.label-caps, .rich-step-count) { margin-top: .45rem; color: var(--ink-muted); font-size: .86rem; line-height: 1.55; }
+  .rich-sequence dl { display: grid; gap: .35rem; margin-top: .8rem; font-size: .76rem; }
+  .rich-sequence dl div { display: flex; justify-content: space-between; gap: 1rem; padding-top: .35rem; border-top: 1px solid var(--border); }
+  .rich-sequence dt { color: var(--ink-faint); }
+  .rich-sequence-buttons { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .rich-sequence-buttons button:disabled { opacity: .4; }
+  .rich-mistake-grid, .rich-garment-grid { display: grid; gap: .7rem; }
+  .rich-mistake-grid article, .rich-garment-grid article { padding: .85rem; border: 1px solid var(--border); border-radius: .55rem; background: #fffaf4; }
+  .rich-mistake-mark { float: right; color: #b4233d; font-size: 1.5rem; font-weight: 700; }
+  .rich-mistake-grid h3, .rich-garment-grid h3 { font-size: 1.05rem; }
+  .rich-mistake-grid p, .rich-garment-grid p { margin-top: .3rem; color: var(--ink-muted); font-size: .76rem; line-height: 1.45; }
+  .rich-garment-grid svg { display: block; width: 100%; max-height: 10rem; }
+  .rich-garment-grid h3, .rich-garment-grid p { text-align: center; }
+  .plate-print-reference { padding: 1rem; border: 1px solid var(--border); border-radius: .6rem; background: white; }
+  .plate-print-reference > header { padding-bottom: .65rem; border-bottom: 2px solid var(--burgundy-soft); text-align: center; }
+  .plate-print-reference > header p { color: var(--ink-faint); font-size: .68rem; }
+  .plate-print-reference > header h3 { font-size: 1.8rem; }
+  .plate-print-columns { display: grid; gap: 1rem; margin-top: 1rem; }
+  .plate-print-columns h4 { margin-block: .5rem; font-family: var(--font-display), Georgia, serif; font-size: 1.2rem; }
+  .plate-print-columns li, .plate-print-reference > p { color: var(--ink-muted); font-size: .75rem; line-height: 1.45; }
+  .plate-print-columns ol, .plate-print-columns ul { padding-left: 1rem; }
+  .rich-print-button { margin-top: 1rem; border-color: var(--burgundy); background: var(--burgundy); color: white; font-weight: 700; }
+  .rich-digital-links { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .rich-source-note { padding: 1.2rem; border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); border-radius: .8rem; background: color-mix(in srgb, var(--gold-soft) 13%, var(--paper)); }
+  .rich-source-note h2 { font-size: 1.4rem; }
+  .rich-source-note ul { margin-top: .65rem; padding-left: 1.1rem; color: var(--ink-muted); font-size: .82rem; line-height: 1.55; list-style: disc; }
+  .rich-source-note p { margin-top: .65rem; color: var(--ink-faint); font-size: .75rem; }
+
+  @media (min-width: 640px) {
+    .rich-plate-hero dl { grid-template-columns: repeat(4, 1fr); }
+    .rich-plate-section { padding: 1.35rem; }
+    .rich-mistake-grid, .rich-garment-grid { grid-template-columns: repeat(2, 1fr); }
+    .plate-print-columns { grid-template-columns: 1.2fr .8fr; }
+  }
+
+  @media (min-width: 900px) {
+    .rich-sequence { grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); align-items: start; }
+    .rich-sequence .rich-phase-nav, .rich-sequence .rich-sequence-buttons, .rich-sequence .rich-note { grid-column: 1 / -1; }
+    .rich-mistake-grid { grid-template-columns: repeat(2, 1fr); }
+    .rich-garment-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
   @media (min-width: 640px) {
     .daisy-meta { grid-template-columns: repeat(2, 1fr); }
     .daisy-section { padding: 1.35rem; }
@@ -610,6 +684,15 @@
     display: block;
     padding: 0;
   }
+
+  .rich-plate-chapter > .rich-plate-hero,
+  .rich-plate-chapter .rich-plate-section:not(.rich-print-section),
+  .rich-plate-chapter .rich-source-note { display: none !important; }
+  .rich-plate-chapter .rich-plate-grid { display: block; padding: 0; }
+  .rich-plate-chapter .rich-print-section { display: block !important; border: 0; padding: 0; box-shadow: none; }
+  .rich-plate-chapter .rich-print-section > header { display: none; }
+  .plate-print-reference { border: 0; padding: 0; }
+  .plate-print-columns { grid-template-columns: 1.2fr .8fr; }
 
   .daisy-chapter .daisy-print-only-reference {
     display: block !important;
