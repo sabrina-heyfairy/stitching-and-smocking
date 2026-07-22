@@ -2,6 +2,7 @@ import type { PlateMeta } from "./plate-types";
 import { cellKey } from "./plate-types";
 import { validatePlateCourses } from "./plate-courses";
 import { expandedPlates } from "./expanded-plates";
+import { themedPlates } from "./themed-plates";
 
 const dusty = "#6b8a9e";
 const burgundy = "#7a3f45";
@@ -534,6 +535,7 @@ export const plates: PlateMeta[] = [
     ...plate,
   })),
   ...expandedPlates,
+  ...themedPlates,
 ];
 
 const courseErrors = plates.flatMap((plate) =>

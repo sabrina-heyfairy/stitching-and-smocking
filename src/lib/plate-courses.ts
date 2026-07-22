@@ -359,6 +359,60 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
         vanDyke("lower-van-dyke", "Opposed lower Van Dyke chevron", second, 6, 7, plate.pleats, "upper"),
         cable(9, plate, first, "cable-9"),
       ];
+    case "opposed-chevron-rails":
+      return [
+        cable(1, plate),
+        steppedWave("upper-chevron", "Upper three-step chevron", second, 2, 4, plate.pleats, 3),
+        cable(5, plate, first, "cable-5"),
+        steppedWave("lower-chevron", "Opposed lower chevron", second, 6, 8, plate.pleats, 3, "upper"),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "nested-diamond-trellis":
+      return [
+        cable(1, plate),
+        ...trellisPair("outer-trellis", "Outer three-step diamonds", second, 2, 5, 8, plate.pleats, 3),
+        ...trellisPair("inner-trellis", "Inner two-step diamonds", second, 3.5, 5, 6.5, plate.pleats, 2),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "crossed-wave-lattice":
+      return [
+        cable(1, plate),
+        steppedWave("lattice-up", "Ascending lattice course", second, 3, 5, plate.pleats, 3),
+        steppedWave("lattice-down", "Opposed lattice course", second, 3, 5, plate.pleats, 3, "upper"),
+        cable(7, plate, first, "cable-7"),
+      ];
+    case "surface-honeycomb-grid":
+      return [
+        cable(1, plate),
+        honeycomb("upper-surface", "Upper visible-carry honeycomb", second, 2, 3, plate.pleats, true),
+        cable(4, plate, first, "cable-4"),
+        honeycomb("lower-surface", "Lower visible-carry honeycomb", second, 6, 7, plate.pleats, true),
+        cable(8, plate, first, "cable-8"),
+      ];
+    case "bullion-rose-arbor":
+    case "holly-cable-garland":
+      return [cable(1, plate), steppedWave("lower-wave", "Lower three-step wave", second, 5, 6, plate.pleats, 3), cable(7, plate, first, "cable-7")];
+    case "bluebells-in-diamonds":
+    case "candlelight-diamonds":
+    case "snowflake-trellis-medallions":
+      return [cable(1, plate), ...trellisPair("motif-trellis", "Open motif diamonds", second, 2, 4, 6, plate.pleats, 3), cable(7, plate, first, "cable-7")];
+    case "twin-daisy-garland":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        steppedWave("lower-baby-wave", "Lower baby wave", second, 4, 5, plate.pleats, 2),
+        cord("outline-6", "Lower outline frame", "outline-stitch", first, 6, plate.pleats),
+      ];
+    case "pomegranate-sprig":
+      return [
+        cable(1, plate),
+        cord("stem-7", "Lower stem-smocking cord", "stem-stitch-smocking", first, 7, plate.pleats),
+      ];
+    case "fir-trees-and-stars":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        steppedWave("lower-baby-wave", "Lower baby wave", second, 5, 6, plate.pleats, 2),
+        cord("outline-7", "Lower outline frame", "outline-stitch", first, 7, plate.pleats),
+      ];
     default:
       return [];
   }
@@ -387,6 +441,22 @@ export function validatePlateCourses(plate: PlateMeta): string[] {
     }
     if (course.stitch === "surface-honeycomb" && course.segments.some((segment) => segment.role === "travel" && segment.hidden)) {
       errors.push(`${course.id} hides surface honeycomb travel`);
+    }
+  }
+  if (plate.motif) {
+    if (plate.motif.repeatPleats !== plate.repeatPleats) {
+      errors.push(`motif repeat ${plate.motif.repeatPleats} does not match plate repeat ${plate.repeatPleats}`);
+    }
+    for (const [index, element] of plate.motif.elements.entries()) {
+      if (!threadIds.has(element.threadId)) errors.push(`motif element ${index} references missing thread ${element.threadId}`);
+      const points = element.kind === "line" || element.kind === "fill"
+        ? element.points
+        : element.kind === "knot"
+          ? [element.at]
+          : [element.from, element.to];
+      for (const [x, y] of points) {
+        if (x < 0 || x > 1 || y < 0 || y > 1) errors.push(`motif element ${index} has coordinate outside 0–1`);
+      }
     }
   }
   return errors;
