@@ -33,5 +33,13 @@ test("Worker keeps the API key server-side and requests structured output", () =
   assert.match(worker, /detail: "high"/);
   assert.match(worker, /turnstile\/v0\/siteverify/);
   assert.match(worker, /env\.TURNSTILE_SECRET_KEY/);
+  assert.match(worker, /env\.ALLOWED_ORIGINS/);
+  assert.match(worker, /parseAllowedOrigins/);
   assert.doesNotMatch(worker, /sk-[A-Za-z0-9]/);
+});
+
+test("Worker configuration preserves GitHub Pages and allows Sewist Studio", () => {
+  const config = readFileSync(new URL("../worker/wrangler.toml", import.meta.url), "utf8");
+  assert.match(config, /https:\/\/sabrina-heyfairy\.github\.io/);
+  assert.match(config, /https:\/\/sewist\.studio/);
 });

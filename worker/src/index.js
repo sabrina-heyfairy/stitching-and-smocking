@@ -28,9 +28,17 @@ Success means:
 
 Treat solid, dashed, colored, and written instructions as separate evidence. Do not infer a garment's total required pleats unless the image or user notes include enough sizing information. When numbers, symbols, paths, or text are unreadable, use null where allowed and say exactly what must be checked. If this is not a smocking plate, set isSmockingPlate false. Use plain beginner-friendly language. Do not claim this replaces the original designer's instructions.`;
 
-function corsHeaders(origin, allowedOrigin) {
-  const permitted = origin && (origin === allowedOrigin || allowedOrigin === "*");
-  return { "Access-Control-Allow-Origin": permitted ? origin : allowedOrigin, "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", Vary: "Origin" };
+function parseAllowedOrigins(value) {
+  return new Set(value.split(",").map((origin) => origin.trim()).filter(Boolean));
+}
+
+function isOriginAllowed(origin, allowedOrigins) {
+  return Boolean(origin) && (allowedOrigins.has(origin) || allowedOrigins.has("*"));
+}
+
+function corsHeaders(origin, allowedOrigins) {
+  const permitted = isOriginAllowed(origin, allowedOrigins);
+  return { ...(permitted ? { "Access-Control-Allow-Origin": origin } : {}), "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type", "Access-Control-Max-Age": "86400", Vary: "Origin" };
 }
 
 function json(data, status, headers) {
@@ -52,11 +60,11 @@ async function verifyTurnstile(token, request, secret) {
 const worker = {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
-    const allowedOrigin = env.ALLOWED_ORIGIN || "https://sabrina-heyfairy.github.io";
-    const headers = corsHeaders(origin, allowedOrigin);
+    const allowedOrigins = parseAllowedOrigins(env.ALLOWED_ORIGINS || env.ALLOWED_ORIGIN || "https://sabrina-heyfairy.github.io");
+    const headers = corsHeaders(origin, allowedOrigins);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     if (request.method !== "POST") return json({ error: "Use POST to analyze a plate." }, 405, headers);
-    if (origin !== allowedOrigin && allowedOrigin !== "*") return json({ error: "This site is not allowed to use the analyzer." }, 403, headers);
+    if (!isOriginAllowed(origin, allowedOrigins)) return json({ error: "This site is not allowed to use the analyzer." }, 403, headers);
     if (!env.OPENAI_API_KEY) return json({ error: "The analyzer has not been configured yet." }, 503, headers);
     if (Number(request.headers.get("Content-Length") || 0) > MAX_BODY_BYTES) return json({ error: "The uploaded image is too large." }, 413, headers);
 

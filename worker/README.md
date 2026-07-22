@@ -22,4 +22,4 @@ Copy the resulting `https://smocking-plate-analyzer.<account>.workers.dev` URL. 
 
 Re-run the Pages workflow or push a commit.
 
-For local testing, change `ALLOWED_ORIGIN` temporarily or create a separate Wrangler development environment. Never deploy production with `ALLOWED_ORIGIN = "*"`.
+For local testing, change `ALLOWED_ORIGINS` temporarily or create a separate Wrangler development environment. Production accepts a comma-separated list of exact origins; keep both the GitHub Pages and Sewist Studio origins, and never deploy with `ALLOWED_ORIGINS = "*"`.
