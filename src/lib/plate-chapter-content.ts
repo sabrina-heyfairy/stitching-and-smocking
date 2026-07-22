@@ -97,6 +97,10 @@ export function isAutoMotifPlate(plate: PlateMeta): boolean {
   return Boolean(plate.motif) && !plate.pictureChart;
 }
 
+export function isAutoPicturePlate(plate: PlateMeta): boolean {
+  return Boolean(plate.pictureChart);
+}
+
 function stitchLabel(stitch: string): string {
   return stitch.replaceAll("-", " ");
 }
@@ -162,6 +166,37 @@ export function deriveMotifChapterContent(plate: PlateMeta): PlateChapterContent
       `The declared motif repeat of ${motif.repeatPleats} pleats matches the structural repeat of ${plate.repeatPleats} pleats.`,
     ],
     tensionReminder: "Keep structural smocking elastic; lay surface stitches smoothly over the blocked pleats without using them to pull the fabric into shape.",
+  };
+}
+
+export function derivePictureChapterContent(plate: PlateMeta): PlateChapterContent {
+  const chart = plate.pictureChart;
+  if (!chart) throw new Error(`${plate.slug}: cannot derive picture chapter without a picture chart`);
+  const colors = new Set(Object.values(chart.legend)).size;
+  const backRows = chart.backSmocking?.length ?? 0;
+  return {
+    slug: plate.slug,
+    confidence: "confirmed",
+    overview: `${plate.description} This picture-smocking chapter turns the dense color chart into a bottom-up row progression with color isolation, back-smocking visibility, stitch counting, and a complete needle sequence.`,
+    motifExplanation: `The picture is built from ${chart.grid.length} chart rows and ${colors} thread color${colors === 1 ? "" : "s"}. Each colored mark represents one cable stitch between adjacent pleats; the silhouette becomes readable as the rows accumulate from the bottom upward.`,
+    repeatGuidance: [
+      `Mark every ${plate.repeatPleats} pleats and verify the first complete picture before continuing across the width.`,
+      "Work from the bottom chart row upward, finishing one isolated color block before moving to the next block.",
+      "End and restart thread across open areas instead of carrying a dark float behind pale fabric.",
+    ],
+    sequenceNote: `The generated sequence includes every charted cable movement and ${backRows} wrong-side back-smocking course${backRows === 1 ? "" : "s"}; use the picture chart controls to rehearse the same construction row by row.`,
+    mistakes: [...sharedMistakes,
+      { title: "Chart worked from the top down", appearance: "The picture is difficult to support and row alignment drifts as the motif grows.", correction: "Rotate your reading order: begin with the bottom visible chart row and move upward one row at a time.", unpick: "Return to the last complete bottom-up row if alignment has shifted." },
+      { title: "Color carried across open fabric", appearance: "Long floats shadow through the fabric or catch on the wrong side.", correction: "Finish the color securely and restart at the next isolated block.", unpick: "Yes when the float is visible or restricts the pleats." },
+      { title: "Back-smocking omitted", appearance: "Dense colored blocks buckle or spread unevenly when the panel is handled.", correction: "Add the declared wrong-side stabilizing rows without pulling away the panel's elasticity.", unpick: "Usually no; add the missing support before continuing upward." },
+    ],
+    garmentNotes: Object.fromEntries(plate.garments.map((garment) => [garment, `Center one complete ${plate.repeatPleats}-pleat picture on the principal ${garment} line and confirm that the dense stitched area remains flexible.`])),
+    interpretationNotes: [
+      "Every visible stitch is generated directly from the existing character grid and its thread legend.",
+      "Chart row 1 is displayed at the top, but the working progression reveals the lowest row first to match picture-smocking construction.",
+      "Dashed back-smocking is worked on the wrong side and can be hidden in the interactive chart without removing it from the needle sequence.",
+    ],
+    tensionReminder: "Keep each cable stitch neat but elastic; check that the picture block can still spread gently after every completed chart row.",
   };
 }
 
