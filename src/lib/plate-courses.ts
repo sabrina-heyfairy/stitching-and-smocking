@@ -429,6 +429,39 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
         honeycomb("lower-butterfly-border", "Lower classic honeycomb border", second, 6, 7, plate.pleats),
         cable(8, plate, first, "cable-8"),
       ];
+    case "vintage-step-chevron":
+      return [cable(1, plate), steppedWave("vintage-wave", "Vintage three-step wave", second, 3, 4, plate.pleats, 3), cable(6, plate, first, "cable-6")];
+    case "heirloom-lattice-1940s":
+      return [cable(1, plate), ...trellisPair("heirloom-lattice", "Compact heirloom lattice", second, 2, 4, 6, plate.pleats, 2), cable(7, plate, first, "cable-7")];
+    case "narrow-trellis-ribbon":
+      return [
+        cord("outline-1", "Upper outline frame", "outline-stitch", first, 1, plate.pleats),
+        ...trellisPair("narrow-trellis", "Narrow two-step trellis", second, 2, 3, 4, plate.pleats, 2),
+        cord("outline-5", "Lower outline frame", "outline-stitch", first, 5, plate.pleats),
+      ];
+    case "princely-chevron-band":
+      return [
+        cable(1, plate),
+        vanDyke("upper-princely", "Upper locked chevron", second, 3, 4, plate.pleats),
+        cable(5, plate, first, "cable-5"),
+        vanDyke("lower-princely", "Opposed lower locked chevron", second, 6, 7, plate.pleats, "upper"),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "snowflake-diamond-band":
+      return [
+        cable(1, plate),
+        ...trellisPair("upper-snowflake", "Upper snowflake diamonds", second, 2, 3, 4, plate.pleats, 2),
+        cable(5, plate, first, "cable-5"),
+        ...trellisPair("lower-snowflake", "Lower snowflake diamonds", second, 6, 7, 8, plate.pleats, 2),
+        cable(9, plate, first, "cable-9"),
+      ];
+    case "wee-care-heart-trellis":
+      return [
+        cable(1, plate),
+        steppedWave("upper-heart-wave", "Upper heart-forming baby wave", second, 3, 4, plate.pleats, 2),
+        steppedWave("lower-heart-wave", "Opposed heart-forming baby wave", second, 3, 4, plate.pleats, 2, "upper"),
+        cable(6, plate, first, "cable-6"),
+      ];
     default:
       return [];
   }
@@ -477,4 +510,3 @@ export function validatePlateCourses(plate: PlateMeta): string[] {
   }
   return errors;
 }
-

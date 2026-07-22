@@ -50,6 +50,11 @@ const phases: { name: string; goal: string; steps: Step[] }[] = [
     goal: "Cable and outline until tension is automatic.",
     steps: [
       {
+        title: "Read a smocking plate from zero",
+        body: "Rows, pleats, repeats, centering, tracking, thread changes, corrections, and a printable bench checklist.",
+        links: [{ href: "/learn/read-smocking-plates/", label: "Absolute beginner plate-reading guide" }],
+      },
+      {
         title: "Cable Stitch",
         body: "The gold-standard first chapter — braid, tension, mistakes.",
         links: [{ href: "/stitches/cable-stitch/", label: "Cable Stitch" }],

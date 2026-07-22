@@ -16,7 +16,14 @@ interface ExpandedPlateSeed {
   description: string;
   fieldInstruction: string;
   tip: string;
+  sources?: PlateMeta["sources"];
 }
+
+const geometricRoundupSource = [{
+  label: "Free geometric smocking-plate roundup (theme reference)",
+  href: "https://www.pinkhollybushdesigns.com/post/free-geometric-smocking-plates",
+  note: "Historical and theme reference only; this teaching plate uses newly generated course geometry.",
+}];
 
 const seeds: ExpandedPlateSeed[] = [
   {
@@ -181,6 +188,60 @@ const seeds: ExpandedPlateSeed[] = [
     fieldInstruction: "Work Van Dyke across rows 3–4 and an opposed course across rows 6–7; cable rows 1, 5, and 9.",
     tip: "Mark every peak and valley pair before beginning the second field.",
   },
+  {
+    slug: "vintage-step-chevron", title: "Vintage Step Chevron",
+    subtitle: "A restrained 1930s-style stepped band", category: "Roundup-Inspired Geometrics",
+    difficulty: "beginner", rows: 6, pleats: 25, repeatPleats: 8,
+    garments: ["vintage yoke", "baby dress", "practice strip"], stitchesUsed: ["cable-stitch", "wave-stitch"],
+    description: "A newly charted teaching interpretation of the economical stepped bands seen in early geometric smocking.",
+    fieldInstruction: "Cable rows 1 and 6, then work a balanced three-step wave across rows 3–4 with a level closure at every turn.",
+    tip: "Pencil a dot over every eighth pleat before beginning the first diagonal.", sources: geometricRoundupSource,
+  },
+  {
+    slug: "heirloom-lattice-1940s", title: "Heirloom Lattice 1940s",
+    subtitle: "Small diamonds within a crisp cable frame", category: "Roundup-Inspired Geometrics",
+    difficulty: "intermediate", rows: 7, pleats: 25, repeatPleats: 6,
+    garments: ["heirloom bishop", "christening yoke", "sampler"], stitchesUsed: ["cable-stitch", "trellis"],
+    description: "A compact original lattice that echoes the tidy, repeated diamonds of mid-century smocking references.",
+    fieldInstruction: "Cable rows 1 and 7; work mirrored two-step trellis courses around row 4 so both courses share each turn pleat.",
+    tip: "Complete one diamond in both directions before extending either course across the width.", sources: geometricRoundupSource,
+  },
+  {
+    slug: "narrow-trellis-ribbon", title: "Narrow Trellis Ribbon",
+    subtitle: "A tiny diamond chain for bonnets and cuffs", category: "Roundup-Inspired Geometrics",
+    difficulty: "beginner", rows: 5, pleats: 25, repeatPleats: 6,
+    garments: ["bonnet front", "sleeve cuff", "collar"], stitchesUsed: ["outline-stitch", "trellis"],
+    description: "A slim original trellis ribbon designed to make repeat counting visible on a shallow pleated band.",
+    fieldInstruction: "Outline rows 1 and 5, then work two-step mirrored trellis around row 3 with closures every six pleats.",
+    tip: "Use a removable marker at every closure pleat; the markers should disappear inside the diamond points.", sources: geometricRoundupSource,
+  },
+  {
+    slug: "princely-chevron-band", title: "Princely Chevron Band",
+    subtitle: "Formal locked points divided by a center cable", category: "Roundup-Inspired Geometrics",
+    difficulty: "advanced", rows: 9, pleats: 25, repeatPleats: 8,
+    garments: ["formal shortall", "tailored yoke", "heirloom panel"], stitchesUsed: ["cable-stitch", "van-dyke"],
+    description: "A formal original chevron arrangement inspired by tailored children’s smocking, with a strong center reference line.",
+    fieldInstruction: "Cable rows 1, 5, and 9; work opposed Van Dyke courses across rows 3–4 and 6–7, locking each peak pair.",
+    tip: "Count and mark every peak pair before threading the needle; never search for the next turn while stitching.", sources: geometricRoundupSource,
+  },
+  {
+    slug: "snowflake-diamond-band", title: "Snowflake Diamond Band",
+    subtitle: "Open diamonds stacked around a winter-blue cable", category: "Roundup-Inspired Geometrics",
+    difficulty: "intermediate", rows: 9, pleats: 25, repeatPleats: 6,
+    garments: ["winter bishop", "holiday yoke", "bonnet"], stitchesUsed: ["cable-stitch", "trellis"],
+    description: "Two airy trellis fields create a geometric snowflake rhythm without relying on a copied motif chart.",
+    fieldInstruction: "Cable rows 1, 5, and 9; build two-step trellis diamonds around rows 3 and 7 from the same marked starting pleat.",
+    tip: "Use the center cable as a ruler: upper and lower diamond points should line up vertically.", sources: geometricRoundupSource,
+  },
+  {
+    slug: "wee-care-heart-trellis", title: "Wee Care Heart Trellis",
+    subtitle: "A gentle baby-scale double wave with heart-like openings", category: "Roundup-Inspired Geometrics",
+    difficulty: "beginner", rows: 6, pleats: 25, repeatPleats: 6,
+    garments: ["preemie gown", "baby bonnet", "tiny yoke"], stitchesUsed: ["cable-stitch", "wave-stitch"],
+    description: "A soft original baby-scale band whose opposed two-step waves leave small heart-like negative spaces.",
+    fieldInstruction: "Cable rows 1 and 6; work opposed baby waves across rows 3–4, sharing the start and turn pleats every six-pleat repeat.",
+    tip: "Use fine thread and lighter tension so the narrow panel remains soft against delicate skin.", sources: geometricRoundupSource,
+  },
 ];
 
 const paletteNames = Object.keys(PLATE_COLORWAYS);
@@ -217,4 +278,3 @@ export const expandedPlates: PlateMeta[] = seeds.map((seed, index) => {
     cells: {},
   };
 });
-

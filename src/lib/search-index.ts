@@ -50,6 +50,15 @@ export const searchIndex: SearchItem[] = [
     tags: ["learn", "practice", "curriculum", "sampler", "beginner", "checklist"],
   },
   {
+    id: "read-smocking-plates",
+    title: "How to Read a Smocking Plate — Absolute Beginner Guide",
+    description: "Rows, pleats, repeats, centering, progress tracking, thread changes, corrections, and a printable bench checklist.",
+    href: "/learn/read-smocking-plates/",
+    type: "theory",
+    tags: ["beginner", "plate", "graph", "repeat", "count pleats", "change thread", "track progress", "how to"],
+    difficulty: "beginner",
+  },
+  {
     id: "fabric-calculator",
     title: "Fabric Calculator — Read 16",
     description:
