@@ -584,6 +584,11 @@
   .rich-sequence dt { color: var(--ink-faint); }
   .rich-sequence-buttons { display: flex; flex-wrap: wrap; gap: .4rem; }
   .rich-sequence-buttons button:disabled { opacity: .4; }
+  .rich-motif-sequence { display: grid; gap: .8rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+  .rich-motif-sequence > header h3 { margin-top: .2rem; font-size: 1.45rem; }
+  .rich-motif-sequence > aside { padding: .85rem; border: 1px solid var(--border); border-radius: .55rem; background: #fffaf4; }
+  .rich-motif-sequence > aside h4 { margin-top: .25rem; font-family: var(--font-display), Georgia, serif; font-size: 1.2rem; text-transform: capitalize; }
+  .rich-motif-sequence > aside p:not(.rich-step-count) { margin-top: .35rem; color: var(--ink-muted); font-size: .78rem; line-height: 1.5; }
   .rich-mistake-grid, .rich-garment-grid { display: grid; gap: .7rem; }
   .rich-mistake-grid article, .rich-garment-grid article { padding: .85rem; border: 1px solid var(--border); border-radius: .55rem; background: #fffaf4; }
   .rich-mistake-mark { float: right; color: #b4233d; font-size: 1.5rem; font-weight: 700; }
@@ -616,6 +621,8 @@
   @media (min-width: 900px) {
     .rich-sequence { grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); align-items: start; }
     .rich-sequence .rich-phase-nav, .rich-sequence .rich-sequence-buttons, .rich-sequence .rich-note { grid-column: 1 / -1; }
+    .rich-motif-sequence { grid-column: 1 / -1; grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr); align-items: start; }
+    .rich-motif-sequence > header, .rich-motif-sequence > .rich-sequence-buttons { grid-column: 1 / -1; }
     .rich-mistake-grid { grid-template-columns: repeat(2, 1fr); }
     .rich-garment-grid { grid-template-columns: repeat(3, 1fr); }
   }

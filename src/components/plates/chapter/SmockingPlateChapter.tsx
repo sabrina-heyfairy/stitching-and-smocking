@@ -83,6 +83,41 @@ function CourseSequenceGuide({ plate, content }: { plate: PlateMeta; content: Pl
   </div>;
 }
 
+function motifElementName(kind: string, stitch?: string): string {
+  return stitch ? `${stitch.replaceAll("-", " ")} ${kind}` : kind;
+}
+
+function MotifSequenceGuide({ plate }: { plate: PlateMeta }) {
+  const motif = plate.motif;
+  const [current, setCurrent] = useState(0);
+  if (!motif || motif.elements.length === 0) return null;
+  const element = motif.elements[current];
+  const color = (threadId: string) => plate.threads.find((thread) => thread.id === threadId)?.hex ?? "#7a3f45";
+  const px = ([x]: readonly [number, number]) => 34 + x * 412;
+  const py = ([, y]: readonly [number, number]) => 24 + y * 212;
+  const renderElement = (item: typeof element, index: number) => {
+    const active = index === current;
+    const common = { opacity: active ? 1 : .34, stroke: color(item.threadId), strokeWidth: active ? 6 : 3 };
+    if (item.kind === "line") return <polyline key={index} points={item.points.map((point) => `${px(point)},${py(point)}`).join(" ")} fill={item.closed ? color(item.threadId) : "none"} fillOpacity={item.closed ? .12 : 0} {...common} />;
+    if (item.kind === "fill") return <polygon key={index} points={item.points.map((point) => `${px(point)},${py(point)}`).join(" ")} fill={color(item.threadId)} opacity={active ? .88 : .25} stroke={color(item.threadId)} strokeWidth={active ? 4 : 2} />;
+    if (item.kind === "knot") return <g key={index} opacity={active ? 1 : .34}><circle cx={px(item.at)} cy={py(item.at)} r={5 + item.wraps * 2} fill={color(item.threadId)} /><circle cx={px(item.at)} cy={py(item.at)} r={9 + item.wraps * 2} fill="none" stroke={color(item.threadId)} strokeWidth={active ? 3 : 1} /></g>;
+    if (item.kind === "bullion") return <g key={index} opacity={active ? 1 : .34}><line x1={px(item.from)} y1={py(item.from)} x2={px(item.to)} y2={py(item.to)} stroke={color(item.threadId)} strokeWidth={active ? 12 : 8} strokeLinecap="round"/><text x={(px(item.from)+px(item.to))/2} y={(py(item.from)+py(item.to))/2 - 10} textAnchor="middle" fontSize="10" fill={color(item.threadId)}>{item.wraps} wraps</text></g>;
+    const dx = px(item.to) - px(item.from);
+    const dy = py(item.to) - py(item.from);
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const ox = (-dy / length) * item.width * 220;
+    const oy = (dx / length) * item.width * 220;
+    return <path key={index} d={`M${px(item.from)} ${py(item.from)} Q${px(item.to) + ox} ${py(item.to) + oy} ${px(item.to)} ${py(item.to)} Q${px(item.to) - ox} ${py(item.to) - oy} ${px(item.from)} ${py(item.from)}`} fill="none" {...common} />;
+  };
+  const stitch = element.stitch;
+  return <div className="rich-motif-sequence">
+    <header><p className="label-caps">Surface embroidery · after blocking</p><h3>Motif sequence</h3></header>
+    <div className="rich-diagram-scroll"><svg viewBox="0 0 480 260" role="img" aria-label={`Surface embroidery step ${current + 1} of ${motif.elements.length} for ${plate.title}`} style={{ minWidth: 560 }}><rect width="480" height="260" rx="12" fill="#f6e6dc" />{Array.from({ length: 17 }, (_, index) => <line key={index} x1={24 + index * 28} y1="14" x2={24 + index * 28} y2="246" stroke="#cdb6a6" strokeWidth="6" opacity=".38"/>)}{motif.elements.slice(0, current + 1).map(renderElement)}</svg></div>
+    <aside><p className="rich-step-count">Embroidery step {current + 1} of {motif.elements.length}</p><h4>{motifElementName(element.kind, stitch)}</h4><p>Thread: {plate.threads.find((thread) => thread.id === element.threadId)?.name ?? element.threadId}</p><p>{motif.instructions[Math.min(current, motif.instructions.length - 1)]}</p></aside>
+    <div className="rich-sequence-buttons no-print"><button type="button" disabled={current === 0} onClick={() => setCurrent((value) => Math.max(0, value - 1))}>Previous embroidery step</button><button type="button" disabled={current === motif.elements.length - 1} onClick={() => setCurrent((value) => Math.min(motif.elements.length - 1, value + 1))}>Next embroidery step</button><button type="button" onClick={() => setCurrent(0)}>Restart embroidery sequence</button></div>
+  </div>;
+}
+
 function FiveRepeatDiagram({ plate }: { plate: PlateMeta }) {
   return <figure><div className="rich-repeat-strip" role="img" aria-label={`Five adjacent ${plate.title} repeats with shared boundaries`}>
     {Array.from({ length: 5 }, (_, index) => <div key={index}><span>Repeat {index + 1}</span><b aria-hidden="true">{index % 2 ? "◇" : "◆"}</b></div>)}
@@ -110,7 +145,7 @@ export function SmockingPlateChapter({ plate, content }: { plate: PlateMeta; con
       <ChapterSection number={3} title="Where the motif appears" id="motif"><PlateProgression plate={plate}/><p>{content.motifExplanation}</p>{plate.motif && <ul className="rich-instructions">{plate.motif.instructions.map((item) => <li key={item}>{item}</li>)}</ul>}</ChapterSection>
       <ChapterSection number={4} title="Needle path for one complete repeat" id="needle-path"><PlateGraph plate={plate}/><PlateThreadKey plate={plate}/></ChapterSection>
       <ChapterSection number={5} title="How the pattern repeats across the full width" id="repeat"><FiveRepeatDiagram plate={plate}/><ol className="rich-instructions">{content.repeatGuidance.map((item) => <li key={item}>{item}</li>)}</ol></ChapterSection>
-      <ChapterSection number={6} title="Frame-by-frame stitch sequence" id="sequence"><CourseSequenceGuide plate={plate} content={content}/></ChapterSection>
+      <ChapterSection number={6} title="Frame-by-frame stitch sequence" id="sequence"><CourseSequenceGuide plate={plate} content={content}/>{plate.motif && <MotifSequenceGuide plate={plate}/>}</ChapterSection>
       <ChapterSection number={7} title="Common mistakes and fixes" id="mistakes"><MistakeGrid content={content}/></ChapterSection>
       <ChapterSection number={8} title="Finished garment applications" id="garments"><GarmentGrid plate={plate} content={content}/><p className="rich-note">These are placement diagrams, not photographs of completed garments.</p></ChapterSection>
       <ChapterSection number={9} title="Printable quick reference" id="print-reference" className="rich-print-section"><PrintReference plate={plate} content={content}/><button className="rich-print-button no-print" type="button" onClick={() => window.print()}>Print quick reference</button></ChapterSection>

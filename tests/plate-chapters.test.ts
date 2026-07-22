@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { deriveGeometricChapterContent, isAutoGeometricPlate, plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
+import { deriveGeometricChapterContent, deriveMotifChapterContent, isAutoGeometricPlate, isAutoMotifPlate, plateChapterContent, validatePlateChapterContent } from "../src/lib/plate-chapter-content.ts";
 import type { PlateMeta } from "../src/lib/plate-types.ts";
 
 const migrated = ["cable-borders", "classic-trellis", "bullion-rose-arbor", "christmas-ornament-row"];
@@ -41,4 +41,32 @@ test("derived geometric content satisfies the reusable chapter contract", () => 
   assert.deepEqual(validatePlateChapterContent(content), []);
   assert.match(content.motifExplanation, /trellis/i);
   assert.match(content.repeatGuidance.join(" "), /8 pleats/i);
+});
+
+const motifFixture = {
+  ...geometricFixture,
+  slug: "test-motif",
+  repeatPleats: 8,
+  embroideryStitches: ["French knot"],
+  motif: {
+    repeatPleats: 8,
+    instructions: ["Work the stem.", "Add the knot."],
+    elements: [
+      { kind: "line", stitch: "stem", threadId: "a", points: [[.1, .8], [.9, .2]] },
+      { kind: "knot", stitch: "french-knot", threadId: "a", at: [.5, .4], wraps: 2 },
+    ],
+  },
+} as PlateMeta;
+
+test("motif plates opt into the embroidery chapter but picture charts do not", () => {
+  assert.equal(isAutoMotifPlate(motifFixture), true);
+  assert.equal(isAutoMotifPlate({ ...motifFixture, pictureChart: { grid: ["........"], legend: {} } }), false);
+  assert.equal(isAutoGeometricPlate(motifFixture), false);
+});
+
+test("derived motif content separates structural and surface-embroidery work", () => {
+  const content = deriveMotifChapterContent(motifFixture);
+  assert.deepEqual(validatePlateChapterContent(content), []);
+  assert.match(content.overview, /surface|embroidery/i);
+  assert.match(content.sequenceNote, /separate embroidery sequence/i);
 });

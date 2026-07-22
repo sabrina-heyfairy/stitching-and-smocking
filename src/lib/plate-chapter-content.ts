@@ -93,6 +93,10 @@ export function isAutoGeometricPlate(plate: PlateMeta): boolean {
   return !plate.pictureChart && !plate.motif;
 }
 
+export function isAutoMotifPlate(plate: PlateMeta): boolean {
+  return Boolean(plate.motif) && !plate.pictureChart;
+}
+
 function stitchLabel(stitch: string): string {
   return stitch.replaceAll("-", " ");
 }
@@ -129,6 +133,35 @@ export function deriveGeometricChapterContent(plate: PlateMeta): PlateChapterCon
       "The finished rendering is instructional and should be compared with a tension sample before working the garment.",
     ],
     tensionReminder: plate.tips[0] ?? "Keep the working thread even while allowing the pleat crowns and open spaces to retain their shape.",
+  };
+}
+
+export function deriveMotifChapterContent(plate: PlateMeta): PlateChapterContent {
+  const motif = plate.motif;
+  if (!motif) throw new Error(`${plate.slug}: cannot derive motif chapter without a motif chart`);
+  const embroidery = plate.embroideryStitches?.join(", ") || "charted surface embroidery";
+  return {
+    slug: plate.slug,
+    confidence: "confirmed",
+    overview: `${plate.description} The chapter separates the structural smocking from the surface embroidery (${embroidery}) added after the pleats have been stitched and blocked.`,
+    motifExplanation: `First complete the structural courses shown on the pleated grid. After blocking, work the surface motif in this order: ${motif.instructions.join(" ")}`,
+    repeatGuidance: [
+      `Mark every ${plate.repeatPleats} pleats for the structural and embroidery repeat.`,
+      "Complete and block the structural smocking across the full width before beginning surface embroidery.",
+      "Carry a continuous stem only where the motif chart connects it; end isolated flowers, knots, and fills securely on the wrong side.",
+    ],
+    sequenceNote: `The first sequence covers the structural smocking. The separate embroidery sequence then reveals all ${motif.elements.length} normalized motif elements in their charted order.`,
+    mistakes: [...sharedMistakes,
+      { title: "Embroidery added before blocking", appearance: "Motifs distort or pull apart when the smocked panel is stretched to its finished width.", correction: "Remove the surface work, block the structural smocking, then transfer the motif centers again.", unpick: "Yes when the motif prevents even blocking." },
+      { title: "Motif center drifts", appearance: "Flowers or figures no longer sit inside their intended repeat windows.", correction: `Mark every ${motif.repeatPleats}-pleat motif center after blocking and verify the first complete repeat.`, unpick: "Unpick only the misplaced surface element." },
+    ],
+    garmentNotes: Object.fromEntries(plate.garments.map((garment) => [garment, `Center a complete embroidered motif on the principal ${garment} line and preserve clear space around raised stitches.`])),
+    interpretationNotes: [
+      "Structural needle paths are generated from the existing plate-course definition.",
+      "Surface-embroidery positions are normalized within one repeat and are intentionally shown as a separate flat overlay rather than pleat-entry coordinates.",
+      `The declared motif repeat of ${motif.repeatPleats} pleats matches the structural repeat of ${plate.repeatPleats} pleats.`,
+    ],
+    tensionReminder: "Keep structural smocking elastic; lay surface stitches smoothly over the blocked pleats without using them to pull the fabric into shape.",
   };
 }
 
