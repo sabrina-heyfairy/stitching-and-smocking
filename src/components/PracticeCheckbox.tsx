@@ -7,7 +7,11 @@ export function PracticeCheckbox({ id, label }: { id: string; label: string }) {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    setChecked(window.localStorage.getItem(storageKey) === "done");
+    try {
+      setChecked(window.localStorage.getItem(storageKey) === "done");
+    } catch {
+      // Keep the checklist usable when Safari blocks persistent storage.
+    }
   }, [storageKey]);
 
   return (
@@ -17,8 +21,12 @@ export function PracticeCheckbox({ id, label }: { id: string; label: string }) {
         checked={checked}
         onChange={(event) => {
           setChecked(event.target.checked);
-          if (event.target.checked) window.localStorage.setItem(storageKey, "done");
-          else window.localStorage.removeItem(storageKey);
+          try {
+            if (event.target.checked) window.localStorage.setItem(storageKey, "done");
+            else window.localStorage.removeItem(storageKey);
+          } catch {
+            // The checkbox still works for this page when persistence is unavailable.
+          }
         }}
         className="h-5 w-5 accent-[var(--burgundy)] print:accent-black"
         aria-label={`Mark complete: ${label}`}
