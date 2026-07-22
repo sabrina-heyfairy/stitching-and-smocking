@@ -413,6 +413,20 @@ export function getPlateCourses(plate: PlateMeta): PlateCourse[] {
         steppedWave("lower-baby-wave", "Lower baby wave", second, 5, 6, plate.pleats, 2),
         cord("outline-7", "Lower outline frame", "outline-stitch", first, 7, plate.pleats),
       ];
+    case "little-bows-vintage-redraft":
+      return [
+        cable(1, plate),
+        steppedWave("upper-bow-border", "Upper two-step wave border", second, 2, 3, plate.pleats, 2),
+        steppedWave("lower-bow-border", "Mirrored lower two-step wave border", second, 6, 7, plate.pleats, 2, "upper"),
+        cable(8, plate, first, "cable-8"),
+      ];
+    case "little-butterflies-vintage-redraft":
+      return [
+        cable(1, plate),
+        honeycomb("upper-butterfly-border", "Upper classic honeycomb border", second, 2, 3, plate.pleats),
+        honeycomb("lower-butterfly-border", "Lower classic honeycomb border", second, 6, 7, plate.pleats),
+        cable(8, plate, first, "cable-8"),
+      ];
     default:
       return [];
   }

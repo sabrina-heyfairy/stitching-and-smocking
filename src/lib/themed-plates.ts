@@ -6,7 +6,7 @@ interface ThemeSeed {
   slug: string;
   title: string;
   subtitle: string;
-  category: "Geometric Collection" | "Floral Collection" | "Christmas Collection";
+  category: "Geometric Collection" | "Floral Collection" | "Christmas Collection" | "Vintage-Inspired Collection";
   difficulty: Difficulty;
   rows: number;
   pleats: number;
@@ -246,13 +246,65 @@ const seeds: ThemeSeed[] = [
       ],
     },
   },
+  {
+    slug: "little-bows-vintage-redraft", title: "Little Bows — Vintage Redraft",
+    subtitle: "Outlined ribbon bows between mirrored wave borders", category: "Vintage-Inspired Collection",
+    difficulty: "intermediate", rows: 8, pleats: 33, repeatPleats: 8,
+    garments: ["little girl’s yoke", "bishop", "bonnet band"], stitchesUsed: ["cable-stitch", "wave-stitch"],
+    embroideryStitches: ["Back stitch", "Satin stitch"],
+    description: "A modern, stitchable redraft of the little-bow band in the supplied vintage reference, with each ribbon shape fully charted over an open smocked field.",
+    foundation: "Cable rows 1 and 8; work mirrored two-step wave borders across rows 2–3 and 6–7, leaving rows 4–5 open for the bows.",
+    motif: {
+      repeatPleats: 8,
+      instructions: [
+        "Back stitch each closed bow loop from the center outward.",
+        "Outline the two notched ribbon tails.",
+        "Fill the narrow center wrap with vertical satin stitches.",
+      ],
+      elements: [
+        line("back", "ribbon", [[.50,.48],[.38,.38],[.17,.36],[.10,.46],[.19,.57],[.39,.55]], true),
+        line("back", "ribbon", [[.50,.48],[.62,.38],[.83,.36],[.90,.46],[.81,.57],[.61,.55]], true),
+        line("back", "ribbon", [[.45,.52],[.37,.65],[.22,.70],[.28,.59],[.18,.57],[.40,.50]], true),
+        line("back", "ribbon", [[.55,.52],[.63,.65],[.78,.70],[.72,.59],[.82,.57],[.60,.50]], true),
+        fill("accent", [[.43,.42],[.57,.42],[.59,.55],[.50,.60],[.41,.55]]),
+      ],
+    },
+  },
+  {
+    slug: "little-butterflies-vintage-redraft", title: "Little Butterflies — Vintage Redraft",
+    subtitle: "Lazy-daisy butterflies in an open honeycomb band", category: "Vintage-Inspired Collection",
+    difficulty: "intermediate", rows: 8, pleats: 33, repeatPleats: 8,
+    garments: ["little girl’s yoke", "bishop", "sampler band"], stitchesUsed: ["cable-stitch", "honeycomb"],
+    embroideryStitches: ["Lazy daisy", "Satin stitch", "Stem stitch", "French knot"],
+    description: "A modern, stitchable redraft of the butterfly band in the supplied vintage reference, using detached-chain wings and a slim satin body between honeycomb borders.",
+    foundation: "Cable rows 1 and 8; work classic honeycomb across rows 2–3 and 6–7, leaving rows 4–5 open for the butterflies.",
+    motif: {
+      repeatPleats: 8,
+      instructions: [
+        "Work the four detached-chain wings from the body toward the marked wing tips.",
+        "Fill the body with close horizontal satin stitches and add the head knot.",
+        "Stem the two antennae last, keeping them light and even.",
+      ],
+      elements: [
+        loop("wing", [.47,.48], [.22,.30], .11),
+        loop("wing", [.53,.48], [.78,.30], .11),
+        loop("wing", [.47,.53], [.27,.68], .09),
+        loop("wing", [.53,.53], [.73,.68], .09),
+        fill("body", [[.46,.39],[.54,.39],[.56,.62],[.50,.70],[.44,.62]]),
+        knot("accent", [.50,.35], 2),
+        line("stem", "body", [[.48,.35],[.38,.20],[.31,.18]]),
+        line("stem", "body", [[.52,.35],[.62,.20],[.69,.18]]),
+      ],
+    },
+  },
 ];
 
 const paletteNames = Object.keys(PLATE_COLORWAYS);
 const colors = {
   frame: "#6b8a9e", field: "#7a3f45", foliage: "#53745a", flower: "#b85d73",
   accent: "#c4a35a", berry: "#a12f3d", candle: "#b79045", flame: "#d88a35",
-  snow: "#769db7", trunk: "#79563d", star: "#c4a35a",
+  snow: "#769db7", trunk: "#79563d", star: "#c4a35a", ribbon: "#c76f8a",
+  wing: "#6f9eb8", body: "#5e4a64",
 };
 
 export const themedPlates: PlateMeta[] = seeds.map((seed) => {
