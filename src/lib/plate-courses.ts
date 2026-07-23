@@ -169,36 +169,52 @@ function vanDyke(
   startAt: "upper" | "lower" = "lower",
 ): PlateCourse {
   const segments: CourseSegment[] = [];
-  let previousRight: CoursePoint | undefined;
-  let bindIndex = 0;
-  for (let leftPleat = 1; leftPleat < pleats; leftPleat += 4) {
-    const rightPleat = leftPleat + 1;
-    if (rightPleat > pleats) break;
-    const startsLower = startAt === "lower";
-    const row = (bindIndex % 2 === 0) === startsLower ? bottomRow : topRow;
-    const left = { pleat: leftPleat, row };
-    const right = { pleat: rightPleat, row };
-    if (previousRight) {
-      segments.push({
-        from: previousRight,
-        to: left,
-        role: "interval",
-        threadSide: row === topRow ? "below" : "above",
-        straight: true,
-      });
-    }
+  if (pleats < 2) return { id, label, stitch: "van-dyke", threadId, direction: "right-to-left", segments };
+
+  const verticalSteps = 4;
+  const rowStep = (bottomRow - topRow) / verticalSteps;
+  let row = startAt === "lower" ? bottomRow : topRow;
+  let movingUp = startAt === "lower";
+  let oldPleat = pleats - 1;
+
+  // Setup lock. For a right-handed worker this is the two-pleat pair at the
+  // right edge; subsequent work proceeds right-to-left.
+  segments.push({
+    from: { pleat: pleats, row },
+    to: { pleat: oldPleat, row },
+    role: "lock",
+    bind: [oldPleat, pleats],
+    threadSide: movingUp ? "below" : "above",
+  });
+
+  for (let newPleat = oldPleat - 1; newPleat >= 1; newPleat--) {
+    const nextRow = row + (movingUp ? -rowStep : rowStep);
+    const pair: [number, number] = [newPleat, oldPleat];
+
+    // Traveling stitch: retain the old pleat and introduce exactly one new
+    // adjacent pleat at the next height.
     segments.push({
-      from: left,
-      to: right,
-      role: "lock",
-      bind: [leftPleat, rightPleat],
-      threadSide: row === topRow ? "above" : "below",
-      passes: 2,
+      from: { pleat: oldPleat, row },
+      to: { pleat: newPleat, row: nextRow },
+      role: "travel",
+      bind: pair,
+      threadSide: movingUp ? "below" : "above",
+      straight: true,
     });
-    previousRight = right;
-    bindIndex += 1;
+    // Locking stitch: pass through the exact same old/new pair again.
+    segments.push({
+      from: { pleat: oldPleat, row: nextRow },
+      to: { pleat: newPleat, row: nextRow },
+      role: "lock",
+      bind: pair,
+      threadSide: movingUp ? "below" : "above",
+    });
+
+    oldPleat = newPleat;
+    row = nextRow;
+    if (row <= topRow || row >= bottomRow) movingUp = !movingUp;
   }
-  return { id, label, stitch: "van-dyke", threadId, direction: "left-to-right", segments };
+  return { id, label, stitch: "van-dyke", threadId, direction: "right-to-left", segments };
 }
 
 function cable(row: number, plate: PlateMeta, threadId = plate.threads[0].id, id = `cable-${row}`) {

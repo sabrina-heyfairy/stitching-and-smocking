@@ -265,13 +265,13 @@ const curatedPlates: PlateMeta[] = [
     ],
     stitchesUsed: ["cable-stitch", "van-dyke", "wave-stitch"],
     description:
-      "Cable frame with broad diagonal Van Dyke chevrons and two-pleat locks at every peak and valley.",
+      "Cable frame with a Van Dyke course worked right to left: travel through an old and new pleat, then lock the same pair.",
     instructions: [
       "Cable rows 1 and 6 in gold.",
       "Bind the first adjacent pair on row 4, keeping both catches in the top third of the mountains.",
       "Travel diagonally across the face to row 3, then bind the peak pair before descending.",
       "Continue with equal-width diagonals, locking two pleats together at every alternating peak and valley.",
-      "If the field reads as narrow loops or a plain wave, stop and compare the turn sequence with the Van Dyke chapter.",
+      "If locks do not meet continuously, stop: each travel must add exactly one new pleat and each lock must repeat through that same pair.",
     ],
     tips: [
       "Sample on scrap before a christening yoke.",

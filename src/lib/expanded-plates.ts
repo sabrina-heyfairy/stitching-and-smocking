@@ -175,8 +175,8 @@ const seeds: ExpandedPlateSeed[] = [
     subtitle: "Locked chevrons with smooth frame cords", category: "Traditional English",
     difficulty: "advanced", rows: 6, pleats: 25, repeatPleats: 8,
     garments: ["heirloom yoke", "collar insert", "sampler"], stitchesUsed: ["outline-stitch", "van-dyke"],
-    description: "Smooth outline cords frame broad Van Dyke diagonals with pair-locked peaks and valleys.",
-    fieldInstruction: "Outline rows 1 and 6; work Van Dyke across rows 3–4, locking an adjacent pair at every turn.",
+    description: "Smooth outline cords frame a secure Van Dyke course built from overlapping old-and-new pleat pairs.",
+    fieldInstruction: "Outline rows 1 and 6; work Van Dyke right to left across rows 3–4, following every traveling stitch with a lock through the same pair.",
     tip: "The frame should remain quiet; the locked chevrons are the focal line.",
   },
   {
@@ -185,7 +185,7 @@ const seeds: ExpandedPlateSeed[] = [
     difficulty: "advanced", rows: 9, pleats: 25, repeatPleats: 8,
     garments: ["exhibition sampler", "deep yoke", "heirloom panel"], stitchesUsed: ["cable-stitch", "van-dyke"],
     description: "Two opposed Van Dyke courses create a bold advanced field divided by a stabilizing center cable.",
-    fieldInstruction: "Work Van Dyke across rows 3–4 and an opposed course across rows 6–7; cable rows 1, 5, and 9.",
+    fieldInstruction: "Work each Van Dyke course as overlapping old-plus-new pairs, locking the same pair after every travel; cable rows 1, 5, and 9.",
     tip: "Mark every peak and valley pair before beginning the second field.",
   },
   {
@@ -221,7 +221,7 @@ const seeds: ExpandedPlateSeed[] = [
     difficulty: "advanced", rows: 9, pleats: 25, repeatPleats: 8,
     garments: ["formal shortall", "tailored yoke", "heirloom panel"], stitchesUsed: ["cable-stitch", "van-dyke"],
     description: "A formal original chevron arrangement inspired by tailored children’s smocking, with a strong center reference line.",
-    fieldInstruction: "Cable rows 1, 5, and 9; work opposed Van Dyke courses across rows 3–4 and 6–7, locking each peak pair.",
+    fieldInstruction: "Cable rows 1, 5, and 9; work opposed Van Dyke courses across rows 3–4 and 6–7, locking every traveling pair.",
     tip: "Count and mark every peak pair before threading the needle; never search for the next turn while stitching.", sources: geometricRoundupSource,
   },
   {
