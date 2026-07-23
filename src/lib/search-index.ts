@@ -80,10 +80,10 @@ export const searchIndex: SearchItem[] = [
   {
     id: "embroidery-motifs",
     title: "Decorative Motifs",
-    description: "Flower, bow, vine, monogram, and holiday motif recipes for smocked garments.",
+    description: "Step-by-step bullion rose, decorative stitch library, and motif recipes for smocked garments.",
     href: "/embroidery/motifs/",
     type: "embroidery",
-    tags: ["motifs", "flowers", "bows", "monogram", "borders", "embroidery"],
+    tags: ["motifs", "bullion rose", "decorative stitches", "flowers", "bows", "monogram", "borders", "embroidery"],
   },
   {
     id: "pleater-overview",
