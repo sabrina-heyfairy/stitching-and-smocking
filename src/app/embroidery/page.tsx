@@ -33,7 +33,7 @@ export default function EmbroideryIndexPage() {
       <p className="mt-2 text-sm text-ink-faint">
         {complete} of {embroideryStitches.length} companion stitches complete ·{" "}
         <Link href="/embroidery/motifs/" className="text-dusty-blue-deep">
-          Decorative motifs
+          Bullion roses & decorative stitches
         </Link>
       </p>
 
@@ -89,7 +89,7 @@ export default function EmbroideryIndexPage() {
       </ul>
 
       <section className="mt-16 max-w-3xl">
-        <h2 className="font-serif text-3xl text-ink">Decorative motifs</h2>
+        <h2 className="font-serif text-3xl text-ink">Bullion roses & decorative stitches</h2>
         <p className="mt-3 text-ink-muted">
           Combine these stitches into roses, sprays, bows, and borders that live on the flat fabric
           around your smocking.
@@ -98,7 +98,7 @@ export default function EmbroideryIndexPage() {
           href="/embroidery/motifs/"
           className="mt-4 inline-flex rounded border border-border bg-paper px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
         >
-          Open motif guide
+          Open decorative stitch guide
         </Link>
       </section>
     </div>
