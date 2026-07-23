@@ -134,7 +134,7 @@ const phases: { name: string; goal: string; steps: Step[] }[] = [
           { href: "/embroidery/lazy-daisy/", label: "Lazy Daisy" },
           { href: "/embroidery/french-knot/", label: "French Knot" },
           { href: "/embroidery/bullion/", label: "Bullion" },
-          { href: "/embroidery/motifs/", label: "Motif recipes" },
+          { href: "/stitches/decorative/", label: "Motif recipes" },
         ],
       },
       {

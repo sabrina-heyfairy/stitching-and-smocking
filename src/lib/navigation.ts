@@ -8,7 +8,7 @@ export const mainNav = [
   { href: "/pleater/", label: "Read 16" },
   { href: "/calculator/", label: "Calculator" },
   { href: "/garments/", label: "Garments" },
-  { href: "/embroidery/", label: "Embroidery" },
+  { href: "/embroidery/", label: "Decorative Stitches" },
   { href: "/fabrics/", label: "Fabrics" },
   { href: "/threads/", label: "Threads" },
   { href: "/needles/", label: "Needles" },
@@ -29,7 +29,15 @@ export type NavEntry =
 
 export const navGroups: NavEntry[] = [
   { kind: "link", href: "/learn/", label: "Practice Path" },
-  { kind: "link", href: "/stitches/", label: "Stitches" },
+  {
+    kind: "menu",
+    label: "Stitches",
+    items: [
+      { href: "/stitches/", label: "Smocking Stitches" },
+      { href: "/embroidery/", label: "Decorative Stitches" },
+      { href: "/stitches/decorative/", label: "Bullion Roses & Motifs" },
+    ],
+  },
   { kind: "link", href: "/plates/", label: "Plates" },
   { kind: "link", href: "/analyze/", label: "Analyzer" },
   { kind: "link", href: "/pleater/", label: "Read 16" },
@@ -47,7 +55,6 @@ export const navGroups: NavEntry[] = [
     kind: "menu",
     label: "Reference",
     items: [
-      { href: "/embroidery/", label: "Embroidery" },
       { href: "/garments/", label: "Garments" },
       { href: "/design/", label: "Design" },
       { href: "/theory/", label: "Theory" },
