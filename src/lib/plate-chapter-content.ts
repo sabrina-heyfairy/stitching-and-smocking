@@ -112,7 +112,7 @@ export function deriveGeometricChapterContent(plate: PlateMeta): PlateChapterCon
     : plate.stitchesUsed.includes("honeycomb") || plate.stitchesUsed.includes("surface-honeycomb")
       ? { title: "Honeycomb cells collapse", appearance: "The cells remain pinched instead of opening into an even lattice.", correction: "Relax each bind and verify that overlapping pairs share exactly one pleat.", unpick: "Unpick any bind that joins the wrong pair." }
       : plate.stitchesUsed.includes("van-dyke")
-        ? { title: "Turn locks are incomplete", appearance: "The Van Dyke point looks like a plain wave instead of a defined paired turn.", correction: "Check both passes through the locked pleat pair before beginning the next interval.", unpick: "Return to the incomplete lock." }
+        ? { title: "Travel/lock pair is incomplete", appearance: "The Van Dyke chain has a gap or one pleat is not secured.", correction: "Check that the traveling stitch used an old and new pleat, then repeat through those same two pleats for the lock.", unpick: "Return to the first incomplete pair." }
         : { title: "Cable direction changes", appearance: "A smooth course develops an isolated reversed twist.", correction: "Keep the thread on the declared side of the needle for the current stitch.", unpick: "Return to the last correctly oriented stitch." };
   const garmentNotes = Object.fromEntries(plate.garments.map((garment) => [
     garment,

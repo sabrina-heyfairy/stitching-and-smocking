@@ -11,6 +11,7 @@ type BindPoint = {
   x2: number;
   y: number;
   kind: "valley" | "peak";
+  motion: "up" | "down";
   label: string;
 };
 
@@ -26,7 +27,7 @@ function vanDykeBinds({
   pleatW = VAN_DYKE_PLEAT_W,
   upperY = VAN_DYKE_UPPER_Y,
   lowerY = VAN_DYKE_LOWER_Y,
-  bindCount = 5,
+  bindCount = 9,
 }: {
   startX?: number;
   pleatW?: number;
@@ -35,16 +36,25 @@ function vanDykeBinds({
   bindCount?: number;
 } = {}): BindPoint[] {
   return Array.from({ length: bindCount }, (_, i) => {
-    const pairStart = i * 4;
+    // A right-handed Van Dyke course works right-to-left. Each new pair
+    // overlaps the previous pair: old pleat + one new pleat.
+    const pairStart = VAN_DYKE_COUNT - 2 - i;
     const x1 = startX + pairStart * pleatW + pleatW / 2;
     const x2 = x1 + pleatW;
-    const kind: BindPoint["kind"] = i % 2 === 0 ? "valley" : "peak";
+    const phase = i % 8;
+    const motion: BindPoint["motion"] = phase < 4 ? "up" : "down";
+    const verticalStep = (lowerY - upperY) / 4;
+    const y = phase <= 4
+      ? lowerY - phase * verticalStep
+      : upperY + (phase - 4) * verticalStep;
+    const kind: BindPoint["kind"] = y === upperY ? "peak" : y === lowerY ? "valley" : motion === "up" ? "valley" : "peak";
     return {
       x1,
       x2,
-      y: kind === "peak" ? upperY : lowerY,
+      y,
       kind,
-      label: kind === "peak" ? "PEAK bind" : "VALLEY bind",
+      motion,
+      label: kind === "peak" ? "LOCK same pair" : "LOCK same pair",
     };
   });
 }
@@ -159,8 +169,8 @@ function TravelLine({
   opacity?: number;
   strokeWidth?: number;
 }) {
-  const controlY = from.kind === "valley" ? from.y - 40 : from.y + 40;
-  const d = `M ${from.x2} ${from.y} Q ${(from.x2 + to.x1) / 2} ${controlY} ${to.x1} ${to.y}`;
+  const controlY = from.motion === "up" ? from.y - 18 : from.y + 18;
+  const d = `M ${from.x1} ${from.y} Q ${(from.x1 + to.x1) / 2} ${controlY} ${to.x1} ${to.y}`;
   return (
     <path
       d={d}
@@ -222,7 +232,7 @@ export function FinishedVanDykeAppearance() {
   const binds = vanDykeBinds();
 
   return (
-    <IllustrationFrame caption="Finished Van Dyke — dramatic chevrons with two-pleat binds at every peak and valley.">
+    <IllustrationFrame caption="Finished Van Dyke — every traveling stitch catches an old pleat and one new pleat, then a lock repeats through that same pair.">
       <SvgRoot viewBox="0 0 600 300" aria-label="Finished Van Dyke stitch on pleated fabric">
         <PleatFabric
           count={VAN_DYKE_COUNT}
@@ -245,7 +255,7 @@ export function FinishedVanDykeAppearance() {
           fill={ILLUSTRATION.inkMuted}
           fontFamily="var(--font-body), sans-serif"
         >
-          The turn points are not plain wave turns: each one binds two neighboring pleats together.
+          Every adjacent pair is stitched twice: travel through old + new, then lock through that same pair.
         </text>
       </SvgRoot>
     </IllustrationFrame>
@@ -253,10 +263,10 @@ export function FinishedVanDykeAppearance() {
 }
 
 export function VanDykePleatRowsDiagram() {
-  const binds = vanDykeBinds({ bindCount: 3 });
+  const binds = vanDykeBinds({ bindCount: 5 });
 
   return (
-    <IllustrationFrame caption="Van Dyke row diagram — bind two pleats at each valley and peak, then travel diagonally to the next turn.">
+    <IllustrationFrame caption="Van Dyke row diagram — neighboring pairs overlap continuously; no pleat is skipped between locks.">
       <SvgRoot viewBox="0 0 600 285" aria-label="Pleat and row diagram for Van Dyke stitch">
         <PleatFabric
           count={VAN_DYKE_COUNT}
@@ -275,12 +285,12 @@ export function VanDykePleatRowsDiagram() {
           <TravelLine key={i} from={bind} to={binds[i + 1]} color={ILLUSTRATION.threadAlt} />
         ))}
         <DirectionArrow
-          x1={binds[0].x2 + 10}
+          x1={binds[0].x1 - 4}
           y1={binds[0].y - 8}
-          x2={binds[1].x1 - 10}
+          x2={binds[1].x1 + 4}
           y2={binds[1].y + 8}
           color={ILLUSTRATION.dustyBlue}
-          label="wave-like diagonal travel"
+          label="right to left"
         />
         <text
           x={300}
@@ -290,7 +300,7 @@ export function VanDykePleatRowsDiagram() {
           fill={ILLUSTRATION.inkMuted}
           fontFamily="var(--font-body), sans-serif"
         >
-          Bind pair, travel diagonally, bind pair. The bind is what makes this Van Dyke, not plain wave.
+          TRAVEL through old + new pleat, then LOCK through the same pair. Repeat with one new pleat.
         </text>
       </SvgRoot>
     </IllustrationFrame>
@@ -321,24 +331,24 @@ export function VanDykeNeedlePath({
         width={VAN_DYKE_WIDTH}
         height={205}
         showLabels={false}
-        highlightPleat={Math.min(activeBindIndex * 4 + 1, VAN_DYKE_COUNT)}
+        highlightPleat={Math.max(VAN_DYKE_COUNT - activeBindIndex - 1, 1)}
       />
       <RowGuides showLabels={showLabels} />
       <VanDykePath binds={binds} upto={activeOp} activeOp={activeOp} />
       {isTravel ? (
         <>
           <DirectionArrow
-            x1={activeBind.x2}
+            x1={activeBind.x1}
             y1={activeBind.y}
             x2={nextBind.x1}
             y2={nextBind.y}
             color={ILLUSTRATION.burgundy}
-            label={nextBind.kind === "peak" ? "rise to peak" : "drop to valley"}
+            label={nextBind.motion === "up" ? "move up" : "move down"}
           />
           <Needle
-            x={nextBind.x1 - 10}
-            y={nextBind.y + (nextBind.kind === "peak" ? 24 : -34)}
-            angle={nextBind.kind === "peak" ? -42 : 42}
+            x={nextBind.x1 + 10}
+            y={nextBind.y + (nextBind.motion === "up" ? 24 : -34)}
+            angle={nextBind.motion === "up" ? -42 : 42}
             length={56}
           />
         </>
@@ -350,7 +360,7 @@ export function VanDykeNeedlePath({
             x2={activeBind.x2}
             y2={activeBind.y + (activeBind.kind === "peak" ? -10 : 10)}
             color={ILLUSTRATION.burgundy}
-            label="bind two"
+            label="lock same pair"
           />
           <Needle
             x={activeBind.x2 - 8}
@@ -363,10 +373,10 @@ export function VanDykeNeedlePath({
       {showLabels && (
         <g fontSize="10" fill={ILLUSTRATION.inkMuted} fontFamily="var(--font-body), sans-serif">
           <text x={300} y={30} textAnchor="middle">
-            Current operation in gold: alternate bind-pair turns with long diagonal travel.
+            Gold operation: traveling stitch through old + new, followed by a lock through the same pair.
           </text>
           <text x={VAN_DYKE_START_X + VAN_DYKE_WIDTH} y={270} textAnchor="end">
-            Plain wave turns on one pleat; Van Dyke locks two pleats at each turn.
+            Right-handed demonstration: work right to left; no empty pleats between locks.
           </text>
         </g>
       )}
@@ -376,28 +386,28 @@ export function VanDykeNeedlePath({
 
 const VAN_DYKE_STEPS = [
   {
-    title: "Bind the valley pair",
-    body: "Begin at the lower row by catching two neighboring pleat mountains together. This pair-bind is firm enough to mark the valley but not tight enough to flatten the folds.",
+    title: "Set up the first pair",
+    body: "At the right edge, come up between the first two working pleats and pass through the second pleat halfway down. Lock the first and second pleats, exiting from the same hole.",
   },
   {
-    title: "Travel diagonally upward",
-    body: "Leave the bound pair and travel across the face like a wave, climbing evenly toward the peak row. Keep the diagonal broad; Van Dyke should look dramatic.",
+    title: "Travel through old + new",
+    body: "Move left and up one step. Pass horizontally through two pleats: the old pleat from the first lock and one new pleat. Keep the floss below the needle while moving upward.",
   },
   {
-    title: "Bind the peak pair",
-    body: "At the top turn, catch two pleats together again. This is the defining difference from plain wave, which simply changes direction without binding a pair.",
+    title: "Lock the same pair",
+    body: "Pass through those exact same two pleats again, exiting from the same hole and angling the needle toward the next downward step. The traveling thread stays between the locks.",
   },
   {
-    title: "Travel diagonally downward",
-    body: "Descend to the next lower turn with the same diagonal length and tension. Avoid pulling the peak bind downward as you leave it.",
+    title: "Travel down through old + new",
+    body: "Move left and down one step through the old pleat plus one new pleat. Keep the floss above the needle while moving downward.",
   },
   {
-    title: "Bind the next valley",
-    body: "Catch the next pair at the lower row. Peaks and valleys should alternate cleanly: bind, travel, bind, travel.",
+    title: "Lock that same pair",
+    body: "Repeat the locking stitch through the same two pleats used for the downward traveling stitch. Only a traveling stitch introduces a new pleat.",
   },
   {
-    title: "Check the chevron rhythm",
-    body: "A finished repeat should read as a bold V or chevron with locked tips. If the tips look like ordinary wave points, you missed the bind.",
+    title: "Repeat without gaps",
+    body: "Continue travel then lock, moving right to left. The horizontal locks should meet edge to edge—there are no unused pleats between them.",
   },
 ];
 
@@ -469,7 +479,7 @@ export function VanDykeFrontBackCross() {
   const binds = vanDykeBinds({ bindCount: 3 });
 
   return (
-    <IllustrationFrame caption="Front, back, and cross-section — Van Dyke shows locked chevron tips with longer diagonal reverse carries.">
+    <IllustrationFrame caption="Front, back, and cross-section — every overlapping pair receives a traveling pass and a locking pass.">
       <SvgRoot viewBox="0 0 600 320" aria-label="Van Dyke stitch front, back, and cross-section">
         <text x={100} y={24} textAnchor="middle" fontSize="12" fill={ILLUSTRATION.ink} fontFamily="var(--font-display), serif">
           Front
@@ -496,7 +506,7 @@ export function VanDykeFrontBackCross() {
             />
           ))}
           <text x={90} y={137} textAnchor="middle" fontSize="9" fill={ILLUSTRATION.inkMuted} fontFamily="var(--font-body), sans-serif">
-            Back shows long diagonals plus compact pair-bind backs.
+            Back shows a short locking return for every traveling pair.
           </text>
         </g>
 
@@ -518,14 +528,14 @@ export function VanDykeFrontBackCross() {
           ))}
           <path d="M 17 92 Q 30 101 43 92 L 69 28 Q 82 19 95 28 L 121 92" fill="none" stroke={ILLUSTRATION.burgundy} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           <text x={70} y={128} textAnchor="middle" fontSize="8" fill={ILLUSTRATION.inkMuted} fontFamily="var(--font-body), sans-serif">
-            Pair binds pinch two mountains only at the turns.
+            Every step joins two neighboring mountains.
           </text>
         </g>
 
         <line x1={200} y1={18} x2={200} y2={175} stroke={ILLUSTRATION.creamDeeper} />
         <line x1={400} y1={18} x2={400} y2={175} stroke={ILLUSTRATION.creamDeeper} />
         <text x={300} y={248} textAnchor="middle" fontSize="11" fill={ILLUSTRATION.inkMuted} fontFamily="var(--font-body), sans-serif">
-          Keep binds compact at the tips; let the diagonals carry the width of the chevron.
+          Seat each lock neatly; do not skip a pleat between overlapping pairs.
         </text>
       </SvgRoot>
     </IllustrationFrame>
@@ -580,7 +590,7 @@ function TensionMini({
 
 export function VanDykeTensionDiagram() {
   return (
-    <IllustrationFrame caption="Van Dyke tension — the bind and the diagonal need different handling.">
+    <IllustrationFrame caption="Van Dyke tension — seat the traveling stitch, then secure the same pair without crushing it.">
       <SvgRoot viewBox="0 0 720 145" aria-label="Van Dyke stitch tension examples">
         <TensionMini x={0} label="Loose binds" bindSize={3} diagonal={10} color={ILLUSTRATION.burgundySoft} />
         <TensionMini x={180} label="Ideal" bindSize={9} diagonal={0} color={ILLUSTRATION.burgundy} />
@@ -589,10 +599,10 @@ export function VanDykeTensionDiagram() {
       </SvgRoot>
       <ul className="mx-auto mt-4 grid max-w-2xl gap-2 text-sm text-ink-muted sm:grid-cols-2">
         <li>
-          <strong className="text-ink">Loose binds:</strong> peak and valley pairs spread apart; chevrons look unfinished.
+          <strong className="text-ink">Loose locks:</strong> the two passes separate and the continuous chain looks unfinished.
         </li>
         <li>
-          <strong className="text-ink">Ideal:</strong> tips are locked, diagonals stay broad, pleats remain round.
+          <strong className="text-ink">Ideal:</strong> each overlapping pair is secure while the pleats remain round.
         </li>
         <li>
           <strong className="text-ink">Tight tips:</strong> pair-binds pucker and drag the diagonals inward.
@@ -630,7 +640,7 @@ export function VanDykeMistakeDiagrams() {
   ];
 
   return (
-    <IllustrationFrame caption="Common Van Dyke mistakes — check every peak and valley for a two-pleat bind.">
+    <IllustrationFrame caption="Common Van Dyke mistakes — check that every traveling pair is repeated by a lock through the same two pleats.">
       <div className="grid gap-4 sm:grid-cols-2">
         {mistakes.map((m) => (
           <div key={m.title} className="rounded border border-border bg-cream/50 p-3">

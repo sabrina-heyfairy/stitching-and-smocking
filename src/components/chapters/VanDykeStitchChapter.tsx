@@ -22,19 +22,19 @@ import {
 } from "@/components/chapters/StitchChapterLayout";
 
 const toc = STANDARD_TOC.map((item) => {
-  if (item.id === "pleats") return { ...item, label: "Pleat & bind diagram" };
-  if (item.id === "theory") return { ...item, label: "Why Van Dyke chevrons hold" };
+  if (item.id === "pleats") return { ...item, label: "Old + new pleat diagram" };
+  if (item.id === "theory") return { ...item, label: "Why Van Dyke locks hold" };
   return item;
 });
 
 const troubleshooting = [
   {
     problem: "Looks like plain wave",
-    fix: "The peak and valley turns were not bound as pairs. Unpick to the first turn that lacks a two-pleat bind, catch both neighboring mountains, then resume the diagonal travel.",
+    fix: "A traveling stitch was not followed by a locking stitch through the same two pleats. Unpick to the first incomplete pair and restore the travel-then-lock sequence.",
   },
   {
     problem: "Peaks twist or lean sideways",
-    fix: "Usually a single-pleat catch or uneven depth across the pair. Bind two adjacent mountains at the same height and top-third depth before leaving the peak.",
+    fix: "Usually the traveling and locking passes used different pleats or different depths. Both passes must use the same old-and-new pair before you move on.",
   },
   {
     problem: "Chevron is too shallow",
@@ -45,8 +45,8 @@ const troubleshooting = [
     fix: "The pair bind is too tight. Ease the bind first, then the outgoing diagonal. The bind should mark the point without collapsing the two pleats.",
   },
   {
-    problem: "Repeat spacing becomes irregular",
-    fix: "Peak-to-valley travel lengths are inconsistent. Mark the next peak and valley pleat pairs on a sample; do not decide turn points by eye mid-row.",
+    problem: "There are gaps between locks",
+    fix: "A traveling stitch skipped a new pleat. Each traveling stitch keeps the old pleat and picks up the immediately adjacent new pleat, so the locks meet with no empty pleats.",
   },
 ];
 
@@ -114,7 +114,7 @@ function VanDykeGarmentExamples() {
 
 function VanDykeTheoryDiagram() {
   return (
-    <IllustrationFrame caption="Van Dyke versus plain wave — same diagonal travel, different turn mechanics.">
+    <IllustrationFrame caption="Van Dyke versus plain wave — Van Dyke uses two passes through every overlapping pair.">
       <SvgRoot viewBox="0 0 600 270" aria-label="Comparison of Van Dyke and plain wave mechanics">
         <text x={170} y={28} textAnchor="middle" fontSize="13" fill={ILLUSTRATION.ink} fontFamily="var(--font-display), serif">
           Plain wave
@@ -141,7 +141,7 @@ function VanDykeTheoryDiagram() {
           <DirectionArrow x1={76} y1={74} x2={103} y2={42} color={ILLUSTRATION.dustyBlue} label="bind two" />
           <Needle x={112} y={18} angle={25} length={54} />
           <text x={135} y={168} textAnchor="middle" fontSize="10" fill={ILLUSTRATION.inkMuted} fontFamily="var(--font-body), sans-serif">
-            locks two pleats at each peak and valley
+            travel through old + new, then lock the same pair
           </text>
         </g>
       </SvgRoot>
@@ -158,7 +158,7 @@ export function VanDykeStitchChapter() {
       toc={toc}
       prev={{ href: "/stitches/trellis/", label: "Trellis" }}
       next={{ href: "/stitches/surface-honeycomb/", label: "Surface Honeycomb" }}
-      sources="Van Dyke mechanics here follow standard English smocking usage: the stitch travels diagonally like wave, but each peak and valley is secured by binding two adjacent pleats together. Manuals vary in exact repeat width and starting direction; the essential invariant is pair-binding at every turn."
+      sources="Van Dyke mechanics follow Lisa Hawkes's Pink Hollybush Designs tutorial, which credits SAGA teachers Barbara Meger and Nancy Malitz: work opposite the usual back-stitch direction; every traveling stitch passes through an old pleat and one new pleat, and every lock repeats through that same pair."
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
@@ -167,7 +167,7 @@ export function VanDykeStitchChapter() {
             <Link href="/stitches/wave-stitch/" className="text-dusty-blue-deep">
               Wave Stitch
             </Link>{" "}
-            but adds a two-pleat bind at every peak and valley, creating a bold locked chevron.
+            but is constructed differently: every traveling stitch catches two pleats, then a locking stitch repeats through that same pair.
           </p>
         </div>
       }
@@ -176,36 +176,31 @@ export function VanDykeStitchChapter() {
         <h2 className="font-serif text-3xl text-ink">Finished appearance</h2>
         <p className="mt-3 text-ink-muted">
           Van Dyke makes dramatic V-shaped chevrons. The diagonals are broad like wave, but the
-          tips are heavier and more deliberate because each peak and valley catches two pleats
-          together.
+          line is dense and secure because consecutive pairs overlap by one pleat and every pair is stitched twice.
         </p>
         <FinishedVanDykeAppearance />
       </section>
 
       <section id="pleats" className="scroll-mt-24">
-        <h2 className="font-serif text-3xl text-ink">Pleat &amp; bind diagram</h2>
+        <h2 className="font-serif text-3xl text-ink">Old pleat + new pleat diagram</h2>
         <p className="mt-3 text-ink-muted">
-          Think of the repeat as <strong className="text-ink">bind pair, travel, bind pair</strong>.
-          Peaks and valleys are not just turning points; they are compact two-pleat locks. The
-          diagonal between them behaves like wave.
+          Think of the repeat as <strong className="text-ink">travel through old + new, lock the same pair</strong>.
+          On the next traveling stitch, the previous new pleat becomes the old pleat and the immediately
+          adjacent pleat becomes new.
         </p>
         <VanDykePleatRowsDiagram />
         <ul className="mt-2 space-y-2 text-sm text-ink-muted">
           <li>
-            <strong className="text-ink">Peak bind:</strong> catch two neighboring mountains
-            together on the upper row before descending.
+            <strong className="text-ink">Traveling stitch:</strong> pass horizontally through the old pleat and one new pleat at the next height.
           </li>
           <li>
-            <strong className="text-ink">Valley bind:</strong> catch two neighboring mountains
-            together on the lower row before ascending.
+            <strong className="text-ink">Locking stitch:</strong> pass through those exact same two pleats again and exit from the same hole.
           </li>
           <li>
-            <strong className="text-ink">Diagonal travel:</strong> move between peak and valley
-            like a wave, keeping slope and stitch depth even.
+            <strong className="text-ink">Continuous pairs:</strong> introduce only one new pleat at a time; leave no empty pleats between locks.
           </li>
           <li>
-            <strong className="text-ink">Advanced control:</strong> binds and diagonals require
-            different tension; do not pull them with the same force.
+            <strong className="text-ink">Direction:</strong> a right-handed smocker normally works right to left; a left-handed smocker reverses this.
           </li>
         </ul>
       </section>
@@ -213,8 +208,8 @@ export function VanDykeStitchChapter() {
       <section id="construction" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Animated construction</h2>
         <p className="mt-3 text-ink-muted">
-          Follow the rhythm slowly: bind the valley pair, travel to the peak, bind the peak pair,
-          then travel down to the next valley.
+          Follow the rhythm slowly: traveling stitch through old + new, locking stitch through the same pair,
+          then repeat one step higher or lower.
         </p>
         <VanDykeConstructionAnimation />
       </section>
@@ -222,8 +217,7 @@ export function VanDykeStitchChapter() {
       <section id="needle-path" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Needle path diagram</h2>
         <p className="mt-3 text-ink-muted">
-          The active operation is gold. Odd steps travel diagonally; even steps lock a peak or
-          valley pair.
+          The active operation is gold. Each traveling stitch and the lock that follows it use the same pair of pleats.
         </p>
         <IllustrationFrame
           caption="Needle path — step through bind and travel operations"
@@ -246,7 +240,7 @@ export function VanDykeStitchChapter() {
               <button
                 type="button"
                 className="rounded border border-border bg-paper px-3 py-1 text-xs text-ink-muted hover:bg-cream-deep"
-                onClick={() => setPathStep((s) => Math.min(9, s + 1))}
+                onClick={() => setPathStep((s) => Math.min(17, s + 1))}
               >
                 Next operation
               </button>
@@ -257,8 +251,8 @@ export function VanDykeStitchChapter() {
         </IllustrationFrame>
         <div className="callout-tip callout">
           <p className="text-sm text-ink-muted">
-            <strong className="text-ink">Memory aid:</strong> “Lock the tip, sweep the side.” If
-            you only sweep the side, you are stitching wave, not Van Dyke.
+            <strong className="text-ink">Memory aid:</strong> “Old plus new; same two again.” Only
+            the traveling stitch introduces a new pleat.
           </p>
         </div>
       </section>
@@ -266,9 +260,8 @@ export function VanDykeStitchChapter() {
       <section id="front-back" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Front · Back · Cross-section</h2>
         <p className="mt-3 text-ink-muted">
-          The front shows compact locked tips and broad diagonals. The back shows longer diagonal
-          carries plus small bind backs. In cross-section, only the turn points pull two mountains
-          together.
+          The front shows overlapping two-pleat stitches climbing and descending. The back shows the
+          short returns created by locking each traveling pair; every step—not only the turns—uses two pleats.
         </p>
         <VanDykeFrontBackCross />
       </section>
@@ -276,8 +269,8 @@ export function VanDykeStitchChapter() {
       <section id="tension" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Thread tension</h2>
         <p className="mt-3 text-ink-muted">
-          Bind tension and travel tension are separate skills. The bind should secure a pair; the
-          diagonal should remain smooth and long enough to make the chevron dramatic.
+          Pull each traveling stitch taut, then seat its lock without crushing the pleats. Keep the
+          working thread below the needle while traveling upward and above it while traveling downward.
         </p>
         <VanDykeTensionDiagram />
       </section>
@@ -285,8 +278,8 @@ export function VanDykeStitchChapter() {
       <section id="mistakes" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Common mistakes</h2>
         <p className="mt-3 text-ink-muted">
-          Van Dyke mistakes usually happen at the turns. Check every peak and valley before the
-          next diagonal hides the problem.
+          Van Dyke mistakes usually happen when a lock uses the wrong pair or a traveling stitch skips
+          a pleat. Check the old/new overlap before moving to the next pair.
         </p>
         <VanDykeMistakeDiagrams />
       </section>
@@ -303,8 +296,8 @@ export function VanDykeStitchChapter() {
       <section id="variations" className="scroll-mt-24">
         <h2 className="font-serif text-3xl text-ink">Variations</h2>
         <p className="mt-3 text-ink-muted">
-          Keep the pair-bind rule intact; variations should change scale, spacing, or placement,
-          not remove the defining turn.
+          Keep the travel-then-lock rule intact; variations may change vertical spacing and direction,
+          but must not skip pleats or lock a different pair.
         </p>
         <VariationGrid
           variants={[
@@ -340,12 +333,12 @@ export function VanDykeStitchChapter() {
       </section>
 
       <section id="theory" className="scroll-mt-24">
-        <h2 className="font-serif text-3xl text-ink">Why Van Dyke chevrons hold</h2>
+        <h2 className="font-serif text-3xl text-ink">Why Van Dyke locks hold</h2>
         <p className="mt-3 text-ink-muted">
-          Plain wave changes direction by stepping from one height to another. Van Dyke turns with
-          a bind: two adjacent pleats are caught together at the point before the thread travels
-          away diagonally. That small lock gives each peak and valley visual weight, so the repeat
-          reads as a deliberate chevron rather than a flowing wave.
+          Unlike wave, Van Dyke does not take a single backward bite on each new pleat. A traveling
+          stitch first joins the old pleat to one new pleat; a second locking pass immediately secures
+          that same pair. Because the next pair overlaps the last by one pleat, the locks form an
+          unbroken, exceptionally secure chain along the chevron.
         </p>
         <VanDykeTheoryDiagram />
         <div className="callout mt-4">
