@@ -96,7 +96,7 @@ function BullionRoseMap() {
 export default function MotifsPage() {
   return (
     <article className="site-container py-12 md:py-16">
-      <nav className="mb-4 text-sm text-ink-faint"><Link href="/embroidery/" className="no-underline hover:text-ink">Embroidery</Link><span className="mx-2">/</span><span className="text-ink-muted">Decorative stitches</span></nav>
+      <nav className="mb-4 text-sm text-ink-faint"><Link href="/stitches/" className="no-underline hover:text-ink">Stitches</Link><span className="mx-2">/</span><span className="text-ink-muted">Decorative stitches</span></nav>
       <p className="label-caps mb-3 text-dusty-blue">Step-by-step motif guide</p>
       <h1 className="font-serif text-4xl text-ink md:text-5xl">Bullion Roses & Decorative Stitches</h1>
       <p className="mt-4 max-w-3xl text-ink-muted">Start with one complete bullion rose, then use the stitch library below to build sprays, vines, bows, borders, monograms, and appliqué details around English smocking.</p>

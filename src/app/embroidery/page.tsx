@@ -32,7 +32,7 @@ export default function EmbroideryIndexPage() {
       </p>
       <p className="mt-2 text-sm text-ink-faint">
         {complete} of {embroideryStitches.length} companion stitches complete ·{" "}
-        <Link href="/embroidery/motifs/" className="text-dusty-blue-deep">
+        <Link href="/stitches/decorative/" className="text-dusty-blue-deep">
           Bullion roses & decorative stitches
         </Link>
       </p>
@@ -95,7 +95,7 @@ export default function EmbroideryIndexPage() {
           around your smocking.
         </p>
         <Link
-          href="/embroidery/motifs/"
+          href="/stitches/decorative/"
           className="mt-4 inline-flex rounded border border-border bg-paper px-4 py-2 text-sm text-ink no-underline hover:bg-cream-deep"
         >
           Open decorative stitch guide

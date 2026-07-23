@@ -49,6 +49,19 @@ export default function StitchesIndexPage() {
         tension guidance, troubleshooting, and practice exercises. Filter by difficulty and type.
       </p>
 
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <Link href="/embroidery/" className="rounded border border-border bg-paper/70 p-4 no-underline hover:border-dusty-blue/40">
+          <span className="label-caps text-dusty-blue">Decorative stitches</span>
+          <span className="mt-1 block font-serif text-xl text-ink">Surface embroidery stitch library</span>
+          <span className="mt-1 block text-sm text-ink-muted">Bullion, French knot, lazy daisy, feather, satin, stem, and more.</span>
+        </Link>
+        <Link href="/stitches/decorative/" className="rounded border border-border bg-paper/70 p-4 no-underline hover:border-dusty-blue/40">
+          <span className="label-caps text-dusty-blue">Motifs & heirloom work</span>
+          <span className="mt-1 block font-serif text-xl text-ink">Bullion roses and decorative techniques</span>
+          <span className="mt-1 block text-sm text-ink-muted">Step-by-step roses, motif recipes, and heirloom construction details.</span>
+        </Link>
+      </div>
+
       <div className="stitch-controls mt-8 flex flex-col gap-3 rounded border border-border bg-paper/80 p-4 sm:flex-row sm:flex-wrap sm:items-center">
         <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs text-ink-faint">
           Search

@@ -57,7 +57,7 @@ export default function GarmentsPage() {
             <li>Center the plate on the center front pleat.</li>
             <li>
               Embroider sprays on the flat fabric above the smocking when the pattern allows —
-              see <Link href="/embroidery/motifs/">motifs</Link>.
+              see <Link href="/stitches/decorative/">decorative stitches and motifs</Link>.
             </li>
             <li>
               Starter plate:{" "}
