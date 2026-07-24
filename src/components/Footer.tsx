@@ -40,11 +40,6 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/stitches/cable-stitch/" className="text-ink-muted no-underline hover:text-ink">
-                Cable stitch (complete chapter)
-              </Link>
-            </li>
-            <li>
               <Link href="/search/" className="text-ink-muted no-underline hover:text-ink">
                 Search
               </Link>

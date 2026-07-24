@@ -57,7 +57,7 @@ export function WaveStitchChapter() {
         <div className="min-w-0 max-w-3xl">
           <div className="callout">
             <p className="text-sm leading-relaxed text-ink-muted">
-              <strong className="text-ink">Publication-quality chapter.</strong> Wave builds on{" "}
+              <strong className="text-ink">Before you begin.</strong> Wave builds on{" "}
               <Link href="/stitches/cable-stitch/" className="text-dusty-blue-deep">
                 Cable Stitch
               </Link>

@@ -55,9 +55,9 @@ export function CableStitchChapter() {
         <div className="min-w-0 max-w-3xl">
           <div className="callout">
             <p className="text-sm leading-relaxed text-ink-muted">
-              <strong className="text-ink">Publication-quality chapter.</strong> This is the
-              gold-standard template for every stitch in the encyclopedia. If you can work a
-              cable from these illustrations alone, the page is complete.
+              <strong className="text-ink">Start here.</strong> Cable is the foundation for many
+              smocking patterns. Use the diagrams to learn consistent stitch depth and tension
+              before adding vertical movement.
             </p>
           </div>
 
