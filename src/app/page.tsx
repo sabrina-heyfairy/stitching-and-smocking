@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { sections } from "@/lib/navigation";
 import { stitches } from "@/lib/stitches";
-import { DifficultyBadge, StatusBadge } from "@/components/Badge";
+import { DifficultyBadge } from "@/components/Badge";
 
 export default function HomePage() {
-  const complete = stitches.filter((s) => s.status === "complete");
+  const stitchGuides = stitches.filter((s) => s.status === "complete");
 
   return (
     <>
@@ -134,15 +134,15 @@ export default function HomePage() {
         <div className="site-container">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="label-caps mb-3">Publication-quality chapters</p>
-              <h2 className="font-serif text-3xl text-ink">Completed stitches</h2>
+              <p className="label-caps mb-3">Learn the core techniques</p>
+              <h2 className="font-serif text-3xl text-ink">Smocking stitch guides</h2>
             </div>
             <Link href="/stitches/" className="text-sm text-dusty-blue-deep no-underline hover:text-burgundy">
               Full stitch index →
             </Link>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {complete.map((s) => (
+            {stitchGuides.map((s) => (
               <Link
                 key={s.slug}
                 href={`/stitches/${s.slug}/`}
@@ -150,7 +150,6 @@ export default function HomePage() {
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <DifficultyBadge difficulty={s.difficulty} />
-                  <StatusBadge status={s.status} />
                 </div>
                 <h3 className="mt-3 font-serif text-2xl text-ink">{s.title}</h3>
                 <p className="mt-2 text-sm text-ink-muted">{s.description}</p>
@@ -160,10 +159,10 @@ export default function HomePage() {
           <div className="mt-4 rounded border border-dashed border-border bg-cream/40 p-6">
             <p className="label-caps mb-2">Stitch encyclopedia</p>
             <p className="text-sm leading-relaxed text-ink-muted">
-              All eight core English smocking stitches are complete to publication standard —
-              illustrations, animations, tension studies, mistakes, and troubleshooting included.
+              Learn the eight core English smocking stitches with illustrations, animations,
+              tension studies, common mistakes, and troubleshooting.
             </p>
-            <p className="mt-3 text-sm text-ink-faint">{complete.length} stitch chapters complete</p>
+            <p className="mt-3 text-sm text-ink-faint">{stitchGuides.length} step-by-step stitch guides</p>
           </div>
         </div>
       </section>

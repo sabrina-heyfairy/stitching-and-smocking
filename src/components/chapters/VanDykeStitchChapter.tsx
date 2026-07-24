@@ -162,7 +162,7 @@ export function VanDykeStitchChapter() {
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
-            <strong className="text-ink">Publication-quality chapter.</strong> Van Dyke is an
+            <strong className="text-ink">Advanced stitch.</strong> Van Dyke is an
             advanced English smocking stitch. It borrows the diagonal travel of{" "}
             <Link href="/stitches/wave-stitch/" className="text-dusty-blue-deep">
               Wave Stitch

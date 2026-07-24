@@ -57,7 +57,7 @@ export function HoneycombStitchChapter() {
         <div className="min-w-0 max-w-3xl">
           <div className="callout">
             <p className="text-sm leading-relaxed text-ink-muted">
-              <strong className="text-ink">Publication-quality chapter.</strong> Honeycomb is
+              <strong className="text-ink">Before you begin.</strong> Honeycomb is
               intermediate because of the alternating-row stagger. Be solid on{" "}
               <Link href="/stitches/cable-stitch/" className="text-dusty-blue-deep">
                 Cable

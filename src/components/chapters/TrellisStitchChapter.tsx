@@ -162,7 +162,7 @@ export function TrellisStitchChapter() {
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
-            <strong className="text-ink">Publication-quality chapter.</strong> Trellis is an
+            <strong className="text-ink">Before you begin.</strong> Trellis is an
             intermediate stitch built directly on{" "}
             <Link href="/stitches/wave-stitch/" className="text-dusty-blue-deep">
               Wave Stitch

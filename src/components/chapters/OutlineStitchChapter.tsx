@@ -32,7 +32,7 @@ export function OutlineStitchChapter() {
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
-            <strong className="text-ink">Publication-quality chapter.</strong> Outline stitch is
+            <strong className="text-ink">Foundation stitch.</strong> Outline stitch is
             the smooth-cord control row of English smocking: one gathering row, shallow mountain
             bites, and the working thread kept below the needle when working left-to-right.
           </p>

@@ -33,7 +33,7 @@ export function StemStitchChapter() {
       callout={
         <div className="callout">
           <p className="text-sm leading-relaxed text-ink-muted">
-            <strong className="text-ink">Publication-quality chapter.</strong> Stem stitch is the
+            <strong className="text-ink">Foundation stitch.</strong> Stem stitch is the
             same single-row family as cable, but the needle stays on the same side of the working
             thread every time. That consistency makes a twisted rope, not an alternating braid.
           </p>

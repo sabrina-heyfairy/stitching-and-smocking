@@ -215,9 +215,16 @@ export default function PracticePathPage() {
                   >
                     <div className="flex items-start gap-2">
                       <PracticeCheckbox id={`${pi}-${step.title}`} label={step.title} />
-                      <span className="min-w-0">
-                        <span className="font-serif text-xl text-ink">{step.title}</span>
-                        <span className="mt-1 block text-sm text-ink-muted">{step.body}</span>
+                      <span className="min-w-0 flex-1">
+                        <Link
+                          href={step.links[0].href}
+                          className="group block rounded no-underline outline-none focus-visible:ring-2 focus-visible:ring-dusty-blue"
+                          aria-label={`${step.title}: ${step.body}`}
+                        >
+                          <span className="font-serif text-xl text-ink group-hover:text-burgundy">{step.title}</span>
+                          <span className="mt-1 block text-sm text-ink-muted group-hover:text-ink">{step.body}</span>
+                          <span className="mt-2 block text-xs text-dusty-blue-deep">Open lesson →</span>
+                        </Link>
                         <span className="mt-3 flex flex-wrap gap-2">
                           {step.links.map((l) => (
                             <Link
